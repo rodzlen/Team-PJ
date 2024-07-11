@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  
+  <div class="container">   
+
+    <!-- 헤더 : 로고, 상단 메뉴, 로그인 -->
+    <header class="header">
+      <!-- 로고 -->
+      <a href="/" class="header-logo">프로젝트</a>
+
+      <!-- 상단 메뉴 -->
+      <nav class="header-nav">
+        <ul>
+        <li><a href="/#">Home</a></li>
+        <li><a href="/#">asd</a></li>
+        <li><a href="/#">zxc</a></li>
+        </ul>
+        </nav>
+
+      <!--유저 로그인 -->
+      <div class="header-button">
+        <% if (locals.isLoggedIn) { %>
+          <a href="/#">로그아웃</a>
+        <% } else { %>
+          <a href="/#">로그인</a>
+        <% } %>
+        <% if (!locals.isLoggedIn) { %>
+        <a href='/#'>회원가입</a>
+        
+        <a href='/#'>관리자 로그인</a>
+        <% } %>
+        </div>
+        </header> 
+
+    <!-- 메인 : 실제 내용이 들어갈 부분 -->    
+    <main class="main">
+      <%- body %>
+      
+    </main>
+  </div>  
+<footer>
+    <div>
+    <p> Copyright © kim. All rights reserved.</p>
+    </div>
+    <div>H.P 010-1234-56789</div>
+
+</footer>
+<script>
+</script>
+</body>
+<script>
+  window.addEventListener('scroll', function() {
+  var footer = document.querySelector('footer');
+  var scrollHeight = document.documentElement.scrollHeight;
+  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  var clientHeight = document.documentElement.clientHeight;
+  
+  // 스크롤이 맨 아래에 도달했을 때 footer를 보이도록 함
+  if (scrollHeight - scrollTop - clientHeight < 1) {
+    footer.style.display = 'block';
+  } else {
+    footer.style.display = 'none';
+  }
+});
+</script>
+</html>
