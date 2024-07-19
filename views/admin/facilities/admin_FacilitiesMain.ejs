@@ -16,7 +16,7 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="<%= employee.photo || 'path/to/default/image.jpg' %>" alt="Profile Image" class="facility-image">
+                                <img src="<%= employee.photo || '/path/to/default/image.jpg' %>" alt="Profile Image" class="facility-image">
                                 <div class="employee-name"><%= employee.name %></div>
                                 <ul class="employee-info">
                                     <li>직급: <%= employee.role %></li>
@@ -37,19 +37,19 @@
     <div class="container facility-container">
         <% facilities.forEach((facility) => { %>
             <div class="facility-card">
-                <img src="<%= facility.photo || 'path/to/default/image.jpg' %>" alt="Profile Image" class="facility-image">
+                <img src="<%= facility.photo || '/path/to/default/image.jpg' %>" alt="Facility Image" class="facility-image">
                 <div class="facility-name"><%= facility.facility_name %></div>
                 <ul class="facility-info">
                     <li>주요 시설: <%= facility.main_facilities %></li>
                 </ul>
-                <a class="btn btn-warning" href="/facilitiesedit/<%= facility.id %>">수정/삭제</a>
+                <a class="btn btn-warning" href="/admin/adminfacilitiesedit/<%= facility.id %>">수정/삭제</a>
             </div>
         <% }); %>
     </div>
     <div class="btnBox">
-        <button onclick="location.href = '/facilitiesCreate'" class="w-50 mb-5 mt-2 btn btn-success">
+        <button onclick="location.href='/admin/adminfacilitiescreate'" class="w-50 mb-5 mt-2 btn btn-success">
           글쓰기
         </button>
-      </div>
+    </div>
 </body>
 </html>
