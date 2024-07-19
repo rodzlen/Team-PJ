@@ -4,8 +4,10 @@ const db_info = {
   port: "3306",
   user: "root",
   password: "1234",
+
   database: "kindergarten",
 };
+
 
 const db = mysql.createConnection(db_info);
 
