@@ -15,7 +15,7 @@
 </aside>
 
 <div>
-    <h3><%= locals.title></h3>
+    <h3><%= locals.title %></h3>
     <table >
         <thead>
             <tr>
@@ -25,22 +25,23 @@
             </tr>
         </thead>
         <tbody>
-            <% FreeBoard.forEach((FreeBoard, index) => { %>
+            <% data.forEach((FreeBoard, index) => { %>
             <tr>
                 <td><%= index + 1 %></td>
-                <td><a href="/freeboard/<%= freeboard.id %>"><%= FreeBoard.title %></a></td>
+                <td><a href="/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
                 <td><%= FreeBoard.date %></td>
             </tr>
             <% }) %>
-            <form action="/freeborad" method="GET" >
+            <form action="/freeboard" method="GET" >
                 <input type="text" name="search" placeholder="검색">
                 <select name="type">
-                  <option value="title">제목</option>
-                  <option value="writer">작성자</option>
-                  <option value="title||writer" default="default">제목+작성자</option>
+                    <option value="title">제목</option>
+                    <option value="createBy">작성자</option>
+                    <option value="title||writer" default="default">제목+작성자</option>
                 </select>
                 <button type="submit">검색</button>
-              </form>
+            </form>
+            <button onclick="location.href='/freeboard/add'" >글쓰기</button>
         </tbody>
     </table>
 </div>

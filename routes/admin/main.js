@@ -14,6 +14,7 @@ http://localhost:8500/admin/notice/admin_notice
 
 // 공지사항 메인
 router.get("/notice", asyncHandler(async (req, res) => {
+  const locals = {title: "공지사항"}
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
 
@@ -38,7 +39,7 @@ router.get("/notice", asyncHandler(async (req, res) => {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      res.render('admin/notice/admin_notice', { data: results });
+      res.render('admin/notice/admin_notice_main', {locals, data: results });
     }
   });
 }));

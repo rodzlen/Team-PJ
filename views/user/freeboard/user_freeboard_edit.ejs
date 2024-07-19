@@ -6,11 +6,15 @@
 </head>
 <div>
   <h1 ><%= locals.title%></h1>
-  <form action="/freeboard/edit/<%= data.id %>" method="POST" >
+  <form action="/freeboard/edit/<%= data.id %>" method="POST" enctype="multipart/form-data">
       <input type="text" name="title" placeholder="<%= data.title %>">
-      <input type="textarea" name="content" placeholder="<%= data._content %>" >
+      <textarea name="content"  ><%= data.content %></textarea>
       <input type="file" name="Image" placeholder="<%= data.Image %>">
       <button type="submit" >수정</button>
-    <a href="/freeboard">뒤로가기</a>   
+    
+  </form>
+  <a href="/freeboard/detail/<%= data.id %>">뒤로가기</a>   
+  <form action="/freeboard/delete/<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+    <button type="submit">삭제</button>
   </form>
 </div>
