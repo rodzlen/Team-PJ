@@ -1,0 +1,130 @@
+:root {
+  /* 커스텀 css 변수 정의 */
+  --brown: #dd8e55;
+  --yellow: #fbd663;
+}
+
+/* 전체 css */
+body {
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  overflow-x: hidden;
+  /*가로축 스크롤 제거*/
+}
+
+.single-day-regular {
+  font-family: "Single Day", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 메인 페이지 */
+/* 헤더 css */
+#header {
+  width: 100%;
+  height: 100px;
+  background-color: var(--yellow);
+  color: #fff;
+  font-family: "Single Day";
+}
+
+#menuBar,
+#categoryBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  font-size: 18pt;
+  font-weight: 600;
+}
+
+#logoImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-top: 3px;
+}
+
+#logoImg:hover {
+  cursor: pointer;
+  transform: rotate(360deg);
+  transition: transform 1.2s ease;
+  /* 회전 효과에 대한 transition 추가 */
+}
+
+#company {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20pt;
+}
+
+#user {
+  width: 10%;
+  min-width: 150px;
+  font-size: 12pt;
+  font-weight: 400;
+}
+
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  /* 한 줄에 강제로 표시되도록 설정 */
+}
+
+li {
+  flex: 1;
+  /* 각 항목이 같은 너비로 자동 조정되도록 설정 */
+  white-space: nowrap;
+  /* 텍스트가 넘칠 경우 줄바꿈을 방지 */
+  margin-right: 100px;
+}
+
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+a:hover {
+  cursor: pointer;
+  color: #934a16;
+}
+
+#company:hover > a { 
+  color: #fff !important; /* 우선순위*/
+  transform: scale(1.08); 
+  transition: transform 0.3s ease;
+}
+
+/* 메인 css */
+
+#main {
+  /* 스크롤 때문에 임시로 지정해둔 크기임!! */
+  height: 1000px;
+}
+
+/* 푸터 css */
+footer {
+  background-color: var(--brown);
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  /* position: fixed; */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+footer div {
+  margin-bottom: 10px;
+}
+
+

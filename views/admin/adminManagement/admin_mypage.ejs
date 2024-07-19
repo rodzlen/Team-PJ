@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/admin_mypagestyle.css">
+  <title>사용자 정보</title>
+</head>
+
+<body>
+  <div id="adminMyPage">
+    <h2>유저 관리</h2>
+    <div id="tableCover">
+      <table>
+        <thead>
+          <tr>
+            <th>견주 이름</th>
+            <th>견주 연락처</th>
+            <th>강아지 이름</th>
+            <th>신청 프로그램</th>
+            <th>식단 여부</th>
+            <th>수정</th>
+            <th>삭제</th>
+          </tr>
+        </thead>
+        <tbody id="addUser">
+          <tr>
+            <td><a href="/user_mypage">테스트</a></td>
+            <td>010-0000-0000</td>
+            <td>강아지</td>
+            <td>풀타임</td>
+            <td>예</td>
+            <td><button>수정</button></td>
+            <td><button>삭제</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var tbody = document.getElementById('addUser');
+
+      // 서버에서 가져온 데이터 (임의로 설정한 예시 데이터)
+      var userData = [
+        {
+          name: '테스트1',
+          contact: '010-1111-1111',
+          dogName: '강아지1',
+          program: '풀타임',
+          diet: '아니오'
+        },
+        {
+          name: '테스트2',
+          contact: '010-2222-2222',
+          dogName: '강아지2',
+          program: '파트타임',
+          diet: '예'
+        },
+        {
+          name: '테스트3',
+          contact: '010-3333-3333',
+          dogName: '강아지3',
+          program: '풀타임',
+          diet: '아니오'
+        }
+      ];
+
+      // userData 배열에 있는 모든 사용자를 테이블에 추가하는 함수
+      function addUserToTable(user) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${user.name}</td>
+          <td>${user.contact}</td>
+          <td>${user.dogName}</td>
+          <td>${user.program}</td>
+          <td>${user.diet}</td>
+          <td><button>수정</button></td>
+          <td><button>삭제</button></td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      // userData 배열에 있는 사용자들을 테이블에 추가
+      userData.forEach(function (user) {
+        addUserToTable(user);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

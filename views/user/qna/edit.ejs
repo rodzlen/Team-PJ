@@ -1,0 +1,17 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/qna_style.css"> <!-- CSS 파일 임포트 -->
+</head>
+
+<div>
+  <h1 ><%= locals.title%></h1>
+  <form action="/user/qnaboard/edit/<%= qnaboard.id %>" method="POST" >
+      <input type="text" name="title" placeholder="<%= qnaboard.title %>">
+      <input type="textarea" name="content" placeholder="<%= qnaboard._content %>" >
+      <input type="file" name="Image" placeholder="<%= qnaboard.Image %>">
+      <button type="submit" >수정</button>
+    <a href="/qnaboard">뒤로가기</a>   
+  </form>
+</div>

@@ -1,0 +1,214 @@
+:root {
+    /* 커스텀 css 변수 정의 */
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
+  
+  /* 전체 css */
+  body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+  }
+
+/* 로그인 및 회원가입 페이지 */
+textarea {
+    width: 410px;
+    height: 30px;
+    resize: none;
+    /* 사용자가 텍스트 영역 크기를 조정할 수 없도록 함 */
+  }
+  
+  #login {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #fff;
+  }
+  
+  .login-content {
+    width: 420px;
+    padding: 40px;
+    height: 500px;
+    position: absolute;
+    /* 밑의 top, left 참고하여 position 고정 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 요소 넓이의 절반 만큼 왼쪽, 위로 이동하여 중앙에 위치 */
+    z-index: 1;
+    /* 높은 숫자일수록 위 */
+    background: #FFF;
+    box-shadow: 0 0px 70px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid var(--yellow);
+    float: left;
+    transition: 0.2s;
+  }
+  
+  .login-content-signin.ng-hide:not(.ng-hide-animate) {
+    transition-delay: 0s;
+    display: block !important;
+    /* important로 css 우선순위 높음 */
+    opacity: 0;
+    /* 완전히 투명하게 처리 */
+    z-index: -1;
+    /* 요소를 뒤로 보내기 */
+    transform: translate(-45%, -50%);
+    /* 요소의 위치 변경 */
+  }
+  
+  .login-content-signup.ng-hide:not(.ng-hide-animate) {
+    transition-delay: 0s;
+    display: block !important;
+    opacity: 0;
+    z-index: -1;
+    transform: translate(-55%, -50%);
+  }
+  
+  .login-content h2 {
+    text-align: left;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    /* 자간 조정 */
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .login-content form.wrapBox {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .login-content form.wrapBox input {
+    margin-top: 20px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0;
+    padding-left: 0;
+    box-shadow: none;
+    transition: 0.1;
+  }
+  
+  /* 여기까지 했어용 */
+  .login-content form.wrapBox input:valid {
+    border-bottom: 1px solid var(--yellow);
+  }
+  
+  .login-content form.wrapBox input:focus:invalid {
+    border-bottom: 1px solid var(--brown);
+  }
+  
+  .login-content form.wrapBox button {
+    display: inline-block;
+    margin-top: 30px;
+    border: 2px solid var(--yellow);
+    background: var(--yellow);
+    border-radius: 25px;
+    padding: 3px 12px 5px 12px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    transition: all 0.1s ease-out;
+  }
+  
+  .login-content form.wrapBox button:hover {
+    cursor: pointer;
+    color: var(--yellow);
+    background: #fff;
+    border: 2px solid var(--yellow);
+  }
+  
+  .login-content .outer-link {
+    display: inline-block;
+    margin-top: 50px;
+    padding: 5px 0;
+    display: block;
+    color: rgba(0, 0, 0, 0.4);
+    transition: all 0.1s ease-out;
+  }
+  
+  .login-content .outer-link:hover {
+    color: rgba(0, 0, 0, 0.8);
+    text-decoration: none;
+  }
+  
+  .login-content-signin>div,
+  .login-content-signup>div {
+    overflow: hidden;
+    top: 50%;
+    position: relative;
+    transform: translateY(-50%);
+  }
+  
+  .login-content-signin {
+    margin-left: -130px;
+  }
+  
+  .login-content-signup {
+    margin-left: 130px;
+  }
+  
+  .switcher {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 660px;
+    height: 400px;
+    box-shadow: 0 0px 20px rgba(0, 0, 0, 0.03);
+  }
+  
+  .switcher>div {
+    width: 40%;
+    margin-top: 125px;
+  }
+  
+  .switcher>div.switcher-signin {
+    float: left;
+  }
+  
+  .switcher>div.switcher-signup {
+    float: right;
+  }
+  
+  .switcher>div h3 {
+    color: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .switcher>div button {
+    display: block;
+    margin: 20px auto 0 auto;
+    outline: 0;
+    background: none;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    font-size: 14px;
+    padding: 4px 12px 5px 12px;
+    transition: all 0.1s ease-out;
+  }
+  
+  .switcher>div button:hover {
+    cursor: pointer;
+    border: 2px solid var(--yellow);
+    color: rgba(0, 0, 0, 0.8);
+  }
+  
+  .switcher-signin.ng-hide:not(.ng-hide-animate),
+  .switcher-signup.ng-hide:not(.ng-hide-animate) {
+    display: block !important;
+    opacity: 0;
+    transform: translateY(10px);
+  }
