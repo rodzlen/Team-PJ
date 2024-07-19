@@ -9,6 +9,8 @@ const multer = require("multer");
 
 
 
+//관리자 
+http://localhost:8500/admin/notice/admin_notice
 
 // 공지사항 메인
 router.get("/notice", asyncHandler(async (req, res) => {
