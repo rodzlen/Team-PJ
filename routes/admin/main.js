@@ -36,7 +36,7 @@ router.get("/notice", asyncHandler(async (req, res) => {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      res.render('admin/notice/notice', { data: results });
+      res.render('admin/notice/admin_notice', { data: results });
     }
   });
 }));
@@ -52,7 +52,7 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
       if (results.length > 0) {
-        res.render('admin/notice/notice-detail', { data: results[0] });
+        res.render('admin/notice/admin_notice-detail', { data: results[0] });
       } else {
         res.status(404).send('공지사항을 찾을 수 없습니다.');
       }
@@ -65,7 +65,7 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
 // 공지사항 추가 페이지
 router.get("/notice/add", asyncHandler(async (req, res) => {
   const locals= {title : "공지사항 추가"}
-  res.render("admin/notice/add", { locals });
+  res.render("admin/notice/admin_add", { locals });
 }));
 
 // 공지사항 추가 처리
@@ -108,7 +108,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const locals = {title: "공지사항 수정"}
     const post = await notices.findById(req.params.id);
-    res.render("admin/notice/edit", { locals, post });
+    res.render("admin/notice/admin_edit", { locals, post });
   })
 );
 // 공지사항 수정 처리
@@ -134,7 +134,7 @@ router.post(
   asyncHandler(async (req, res) => {
     try {
       await NoticeBoard.findByIdAndDelete(req.params.id);
-      res.redirect("/admin/notice");
+      res.redirect("/admin/admin_notice");
     } catch (error) {
       console.error(error);
       res.status(500).send('<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
@@ -146,7 +146,7 @@ router.post(
 router.get('/qna', async (req, res) => {
   try {
       const [questions] = await db.query('SELECT * FROM Questions');
-      res.render('admin/qna/qna', { questions });
+      res.render('admin/qna/admin_qna', { questions });
   } catch (err) {
       console.error(err);
       res.status(500).send('서버 오류');
@@ -161,7 +161,7 @@ router.get('/qna/detail/:id', async (req, res) => {
       if (questions.length === 0) {
           return res.status(404).send('질문을 찾을 수 없습니다.');
       }
-      res.render('admin/qna/qna-detail', { question: questions[0], answers, isAdmin: req.user.isAdmin });
+      res.render('admin/qna/admin_qna-detail', { question: questions[0], answers, isAdmin: req.user.isAdmin });
   } catch (err) {
       console.error(err);
       res.status(500).send('서버 오류');
@@ -232,7 +232,7 @@ router.post(
 
     // 데이터베이스에 삽입할 SQL 쿼리
     const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
-                  VALUES (?, ?, ?, ?)`;
+               VALUES (?, ?, ?, ?)`;
 
     // 쿼리 실행
     db.query(
@@ -279,6 +279,7 @@ router.post(
   })
 );
 
+
 // 오늘 산책 사진 업로드를 위한 Multer 설정
 const todayWalkStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -292,8 +293,8 @@ const todayWalkStorage = multer.diskStorage({
 
 const uploadTodayWalk = multer({ storage: todayWalkStorage });
 
-// 관리자 대시보드 라우트: GET /admin/admindashboard
-router.get("/admindashboard", (req, res) => {
+// 관리자 대시보드 라우트: GET /admin/admin_dashboard
+router.get("/admin_dashboard", (req, res) => {
   const formData = {
     ownerName: req.query.ownerName || "",
     petName: req.query.petName || "",
@@ -305,11 +306,12 @@ router.get("/admindashboard", (req, res) => {
     classInfo: req.query.classInfo || "",
     feed: req.query.feed || "",
   };
-  res.render("dashboard/admin/admindashboard", {
+  res.render("admin/dashboard/admin_dashboard", {
     title: "관리자 대시보드",
     formData,
   });
 });
+
 
 // 이미지 업로드 라우트: POST /dashboard/admin/uploadphoto
 router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
@@ -413,14 +415,14 @@ router.post(
   }
 );
 
-// 게시물 리스트 라우트: GET /admin/class/adminpostlist
-router.get("/class/adminpostlist", (req, res) => {
+// 게시물 리스트 라우트: GET /admin/class/admin_postlist
+router.get("/class/admin_postlist", (req, res) => {
   db.query("SELECT * FROM Dogs", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("dashboard/admin/adminpostlist", { data: posts });
+    res.render("admin/dashboard/admin_postlist", { data: posts });
   });
 });
 
