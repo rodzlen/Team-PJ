@@ -1,49 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
     <link rel="stylesheet" href="/css/notice_style.css"> <!-- CSS 파일 임포트 -->
-  </head>
+</head>
+<body>
+    <!-- 카테고리 메뉴 -->
+    <aside class="category-menu">
+        <h3>카테고리</h3>
+        <ul>
+            <li><a href="/admin/notice">공지사항</a></li>
+            <li><a href="/admin/QnA">QnA</a></li>
+            <li><a href="/admin/freeboard">자유게시판</a></li>
+        </ul>
+    </aside>
 
-<aside>
-    <h3>카테고리</h3>
-    <ul>
-        <li><a href="/admin/notice">공지사항</a></li>
-        <li><a href="/admin/QnA">QnA</a></li>
-        <li><a href="admin/freeboard">자유게시판</a></li>
-    </ul>
-</aside>
+    <!-- 검색 폼과 공지사항 목록 -->
+    <div class="main-content">
+        <h3>공지사항</h3>
 
-<div >
-    <h3>공지사항</h3>
-    <table >
-        <thead>
-            <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성일</th>
-                <th>작성자</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% data.forEach(function(e1){ %>
-            <tr>
-                <td><%=e1.id %></td>
-                <td class="notice-title"><a href="/admin/notice/detail/<%= e1.id %>"><%= e1.title %></a></td>
-                <td><%= e1.post_date %></td>
-                <td><%= e1.createBy %></td>
-            </tr>
-            <% }) %>
-            <form action="/admin/notice" method="GET" >
-                <input type="text" name="search" placeholder="검색">
-                <select name="type">
-                  <option value="title">제목</option>
-                  <option value="createBy">작성자</option>
-                  <option value="title||createBy" default="default">제목+작성자</option>
-                </select>
-                <button type="submit">검색</button>
-              </form>
-        </tbody>
-    </table>
-    <button onclick="location.href='/admin/notice/add'">글쓰기</button>
-</div>
+        <!-- 검색 폼 -->
+        <form class="search-form" action="/admin/notice" method="GET">
+            <input type="text" name="search" placeholder="제목 검색">
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 공지사항 목록 테이블 -->
+        <table class="notice-table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>작성자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach(function(e1) { %>
+                <tr>
+                    <td><%= e1.id %></td>
+                    <td class="notice-title"><a href="/admin/notice/detail/<%= e1.id %>"><%= e1.title %></a></td>
+                    <td><%= e1.post_date %></td>
+                    <td><%= e1.createBy %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="write-button">
+            <button onclick="location.href='/admin/notice/add'">글쓰기</button>
+        </div>
+    </div>
+</body>
+</html>

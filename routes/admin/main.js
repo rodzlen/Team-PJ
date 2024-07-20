@@ -13,6 +13,7 @@ const multer = require("multer");
 http://localhost:8500/admin/notice/admin_notice
 
 // 공지사항 메인
+// /admin/notice
 router.get("/notice", asyncHandler(async (req, res) => {
   const locals = {title: "공지사항"}
   const searchQuery = req.query.search || "";

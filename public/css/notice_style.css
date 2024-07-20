@@ -1,0 +1,145 @@
+/* 모든 요소의 기본 마진과 패딩 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 전체 페이지 바탕색과 마진 설정 */
+body {
+    font-family: '나눔고딕', 'Nanum Gothic', '맑은 고딕', Malgun Gothic, Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f0f0;
+    margin: 20px;
+}
+
+/* 전체 컨테이너 설정 */
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 사이드바 (카테고리 섹션) 설정 */
+aside {
+    width: 200px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+aside h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+aside ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+aside ul li {
+    margin-bottom: 8px;
+}
+
+aside ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+aside ul li a:hover {
+    color: #333;
+}
+
+/* 메인 콘텐츠 설정 */
+.main-content {
+    flex: 1;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-content h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.notice-title a {
+    color: #007bff; /* 부트스트랩 블루 */
+    text-decoration: none;
+}
+
+.notice-title a:hover {
+    text-decoration: underline;
+}
+
+/* 검색 폼 설정 */
+.search-form {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.search-form input[type="text"],
+.search-form select {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+.search-form button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3; /* 부트스트랩 블루의 짙은 색상 */
+}
+
+/* 버튼 설정 */
+.button-container {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-container button:hover {
+    background-color: #0056b3; /* 부트스트랩 블루의 짙은 색상 */
+}
