@@ -9,12 +9,11 @@ const multer = require("multer");
 
 
 
-//관리자 
-http://localhost:8500/admin/notice/admin_notice
+
+
 
 // 공지사항 메인
 router.get("/notice", asyncHandler(async (req, res) => {
-  const locals = {title: "공지사항"}
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
 
@@ -55,7 +54,7 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
       if (results.length > 0) {
-        res.render('admin/notice/admin_notice-detail', { data: results[0] });
+        res.render('admin/notice/admin_notice_detail', { data: results[0] });
       } else {
         res.status(404).send('공지사항을 찾을 수 없습니다.');
       }
@@ -164,7 +163,7 @@ router.get('/qna/detail/:id', async (req, res) => {
       if (questions.length === 0) {
           return res.status(404).send('질문을 찾을 수 없습니다.');
       }
-      res.render('admin/qna/admin_qna-detail', { question: questions[0], answers, isAdmin: req.user.isAdmin });
+      res.render('admin/qna/admin_qna_detail', { question: questions[0], answers, isAdmin: req.user.isAdmin });
   } catch (err) {
       console.error(err);
       res.status(500).send('서버 오류');
@@ -235,7 +234,7 @@ router.post(
 
     // 데이터베이스에 삽입할 SQL 쿼리
     const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
-               VALUES (?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?)`;
 
     // 쿼리 실행
     db.query(
@@ -282,7 +281,6 @@ router.post(
   })
 );
 
-
 // 오늘 산책 사진 업로드를 위한 Multer 설정
 const todayWalkStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -314,7 +312,6 @@ router.get("/admin_dashboard", (req, res) => {
     formData,
   });
 });
-
 
 // 이미지 업로드 라우트: POST /dashboard/admin/uploadphoto
 router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
@@ -611,9 +608,35 @@ router.get("/adminfacilitiesMain", (req, res) => {
 });
 
 
-// 시설 수정 페이지
-http://localhost:8500/admin/adminfacilitiesedit/22
+// 시설 생성 페이지
+router.get("/adminfacilitiescreate", (req, res) => {
+  res.render("admin/facilities/admin_FacilitiesCreate");
+});
 
+
+// 시설 생성 
+
+router.post('/adminfacilitiescreate', upload.single('image'), (req, res) => {
+  try {
+    const { facility_name, main_facilities = '', operating_hours = '', contact_info = '' } = req.body;
+    const photo = req.file ? req.file.path : '';
+
+    const query = `INSERT INTO Facilities (facility_name, main_facilities, operating_hours, contact_info, photo) VALUES (?, ?, ?, ?, ?)`;
+
+    db.query(query, [facility_name, main_facilities, operating_hours, contact_info, photo], (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.redirect('/admin/facilities/admin_FacilitiesMain');
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// 시설 수정 페이지
 router.get("/adminfacilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
@@ -628,21 +651,12 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
   });
 });
 
-
-
-
-
 // 시설 정보 수정 처리
-router.post("/adminfacilitiesedit", upload.single('image'), (req, res) => {
+router.post("/admin/edit", upload.single('image'), (req, res) => {
   const id = req.body.id;
-  const name = req.body.facility_name || 'default_name'; // name이 NULL이면 기본값 설정
-  const features = req.body.main_facilities || 'default_features'; // features가 NULL이면 기본값 설정
+  const name = req.body.facility_name || 'default_name';
+  const features = req.body.main_facilities || 'default_features';
   const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
-
-  if (!name) {
-    res.status(400).send("Facility name cannot be null.");
-    return;
-  }
 
   const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, photo = ? WHERE id = ?`;
 
@@ -651,43 +665,23 @@ router.post("/adminfacilitiesedit", upload.single('image'), (req, res) => {
       console.log(err);
       res.send(err);
     } else {
-      res.redirect("/facilitiesMain");
+      res.redirect("admin/facilities/admin_FacilitiesMain");
     }
   });
 });
 
-// 시설 생성 페이지
-router.get("/adminfacilitiescreate", (req, res) => {
-  res.render("admin/facilities/admin_FacilitiesCreate");
-});
 
-// 시설 생성 페이지
-router.post('/facilitiescreate', upload.single('image'), (req, res) => {
-  const { facility_name, main_facilities = '', operating_hours = '', contact_info = '' } = req.body;
-  const photo = req.file ? req.file.path : '';
-
-  const query = `INSERT INTO Facilities (facility_name, main_facilities, operating_hours, contact_info, photo) VALUES (?, ?, ?, ?, ?)`;
-
-  db.query(query, [facility_name, main_facilities, operating_hours, contact_info, photo], (err, result) => {
+// 시설 정보 삭제 처리
+router.post('/admin/delete', (req, res) => {
+  const id = req.body.id;
+  const query = "DELETE FROM Facilities WHERE id = ?";
+  
+  db.query(query, [id], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
     } else {
-      res.redirect('/facilitiesMain'); // 생성 후 리다이렉트할 경로
-    }
-  });
-}); 
-
-// 시설 삭제 
-router.post("/delete", (req, res) => {
-  const id = req.body.id;
-  const query = "DELETE FROM Facilities WHERE id = ?";
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.send(err);
-    } else {
-      res.redirect("/facilitiesMain");
+      res.redirect("/admin/facilities/admin_FacilitiesMain");
     }
   });
 });
@@ -698,7 +692,7 @@ router.get("/adminmainpage", (req, res) => {
 });
 
 
-//어드민 캘린더
+// 어드민 캘린더 페이지 
 router.get('/adminCalendar', (req, res) => {
   res.render('admin/calendar/admin_Calendar');
 });

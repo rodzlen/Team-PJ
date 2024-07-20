@@ -8,9 +8,9 @@ const upload = require("../../config/upload")
 const multer = require("multer");
 //게시글 검색 기능
 
-function search(query, searchQuery, typeQuery) {
-  let queryParams = [];
 
+let queryParams = [];
+function search(query, searchQuery, typeQuery) {
   if (searchQuery) {
     if (typeQuery === "title") {
       query += " WHERE title LIKE ?";
@@ -34,7 +34,7 @@ router.get("/notice", asyncHandler(async (req, res) => {
   const typeQuery = req.query.type || "";
 
   let query = "SELECT * FROM noticeBoard";
-  
+  let queryParams = [];
   search(query, searchQuery, typeQuery);  
 
   db.query(query, queryParams, (err, results) => {
@@ -500,4 +500,55 @@ router.get("/class/u_alldayClassPosts", (req, res) => {
 router.get("/class/u_onedayClassPosts", (req, res) => {
   res.render("dashboard/user/class/u_onedayClassPosts", { data: posts });
 });
+
+// 유저 캘린더 화면
+router.get("/userCalendar", (req, res) => {
+  res.render("user/calendar/user_Calendar");
+});
+
+// 유저 메인페이지 화면
+router.get("/usermainpage", (req, res) => {
+  res.render("mainpage");
+});
+
+
+// 유저 시설소개 직원소개 메인페이지
+router.get("/userfacilitiesMain", (req, res) => {
+  const facilitiesQuery = "SELECT * FROM Facilities";
+  const staffQuery = "SELECT * FROM Staff";
+
+  const facilitiesPromise = new Promise((resolve, reject) => {
+    db.query(facilitiesQuery, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
+  const staffPromise = new Promise((resolve, reject) => {
+    db.query(staffQuery, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
+  Promise.all([facilitiesPromise, staffPromise])
+    .then(([facilitiesResult, staffResult]) => {
+      res.render("user/facilities/user_FacilitiesMain", { // 경로 수정
+        facilities: facilitiesResult,
+        staff: staffResult
+      });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+
+
 module.exports = router;
