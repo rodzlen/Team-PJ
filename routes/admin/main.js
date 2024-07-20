@@ -16,6 +16,7 @@ const multer = require("multer");
 router.get("/notice", asyncHandler(async (req, res) => {
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
+  const locals = {title : "공지사항"}
 
   let query = "SELECT * FROM noticeBoard";
   let queryParams = [];
@@ -67,7 +68,7 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
 // 공지사항 추가 페이지
 router.get("/notice/add", asyncHandler(async (req, res) => {
   const locals= {title : "공지사항 추가"}
-  res.render("admin/notice/admin_add", { locals });
+  res.render("admin/notice/admin_notice_add", { locals });
 }));
 
 // 공지사항 추가 처리
@@ -79,6 +80,7 @@ router.post(
       const { title, content, admin_id } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
+      const createBy = "작성자 테스트" // 임시데이터 session에서 받아와야댐 
 
       // MySQL 쿼리
       const query = `
@@ -102,27 +104,66 @@ router.post(
   })
 );
 
-
-// 공지사항 수정 페이지
+//공지 수정 페이지
 router.get(
-  "/admin/notice/edit/:id",
-  
+  "/notice/edit/:id",
   asyncHandler(async (req, res) => {
-    const locals = {title: "공지사항 수정"}
-    const post = await notices.findById(req.params.id);
-    res.render("admin/notice/admin_edit", { locals, post });
+    const locals = { title: "공지사항 수정" };
+    const id = req.params.id;
+
+    try {
+      // MySQL 쿼리로 공지사항 조회
+      const query = 'SELECT * FROM NoticeBoard WHERE id = ?';
+
+      // db.query를 사용할 때 쿼리 문자열과 파라미터를 명확히 전달
+      db.query(query, [id], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('서버 오류');
+        } 
+
+        if (result.length === 0) {
+          return res.status(404).send('공지사항을 찾을 수 없습니다.');
+        }
+
+        // 쿼리 결과를 post로 전달하여 EJS 템플릿에 렌더링
+        res.render("admin/notice/admin_notice_edit", { locals, post: result[0] });
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('서버 오류');
+    }
   })
 );
-// 공지사항 수정 처리
+ // 공지사항 수정 처리
 router.post(
-  "/admin/notice/edit/:id",
-  upload.single('Image'),
+  "/notice/edit/:id",
+  upload.single('image'),
   asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const { title, content } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    // 현재 날짜와 시간을 가져옴
+    const post_date = new Date();
+
     try {
-      const { title, content} = req.body;
-      const Image = req.file ? req.file.filename : null;
-      await NoticeBoard.findByIdAndUpdate(req.params.id, { title, content,Image, date });
-      res.redirect("/admin/notice/edit/:id");
+      // MySQL 쿼리
+      const query = `
+        UPDATE NoticeBoard
+        SET title = ?, content = ?, image = ?, post_date = ?
+        WHERE id = ?
+      `;
+      const values = [title, content, image, post_date, id];
+
+      db.query(query, values, (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
+        } else {
+          res.redirect(`/admin/notice`);
+        }
+      });
     } catch (error) {
       console.error(error);
       res.status(500).send('<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
@@ -132,17 +173,25 @@ router.post(
 
 // 공지사항 삭제
 router.post(
-  "/admin/notice/delete/:id",
+  "/notice/delete/:id",
   asyncHandler(async (req, res) => {
+    const noticeId = req.params.id;
+
     try {
-      await NoticeBoard.findByIdAndDelete(req.params.id);
-      res.redirect("/admin/admin_notice");
+      // MySQL 쿼리로 공지사항 삭제
+      const query = 'DELETE FROM NoticeBoard WHERE id = ?';
+      await db.query(query, [noticeId]);
+
+      // 성공적으로 삭제 후 리디렉션
+      res.redirect('/admin/notice');
     } catch (error) {
       console.error(error);
+      // 오류 발생 시 사용자에게 알림
       res.status(500).send('<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
     }
   })
 );
+
 
 // QnA 목록 페이지
 router.get('/qna', async (req, res) => {
