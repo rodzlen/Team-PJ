@@ -713,7 +713,8 @@ router.post('/adminstaffcreate', upload.single('photo'), (req, res) => {
 
 // 직원 수정 페이지
 router.get("/adminstaffedit/:id", (req, res) => {
-  const ID = req.params.staff_id;
+  const ID = req.params.id;
+ 
   const query = "SELECT * FROM staff WHERE staff_id = ?";
   db.query(query, [ID], (err, result) => {
     if (err) {
@@ -728,11 +729,11 @@ router.get("/adminstaffedit/:id", (req, res) => {
 
 // 직원 정보 수정 처리
 router.post("/adminstaffedit/:id", upload.single('photo'), (req, res) => {
-  const id = req.body.staff_id;
+  const id = req.params.id; // URL에서 직원 ID 가져오기
   const name = req.body.name || 'default_name'; // name이 NULL이면 기본값 설정
   const role = req.body.role || 'default_role'; // role이 NULL이면 기본값 설정
   const contact_info = req.body.contact_info || 'default_contact_info';
-  const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
+  const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
 
   // name 필드가 존재하지 않으면 오류 처리
   if (!name) {
@@ -742,12 +743,12 @@ router.post("/adminstaffedit/:id", upload.single('photo'), (req, res) => {
 
   const query = `UPDATE Staff SET name = ?, role = ?, photo = ?, contact_info = ? WHERE staff_id = ?`;
 
-  db.query(query, [name, role, photo, id, contact_info], (err, result) => {
+  db.query(query, [name, role, photo, contact_info, id], (err, result) => {
     if (err) {
       console.log(err);
       res.send(err);
     } else {
-      res.redirect("/admin/adminFacilitiesMain");
+      res.redirect("/adminstaffedit/:id");
     }
   });
 });
