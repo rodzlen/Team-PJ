@@ -235,7 +235,7 @@ router.post(
 
     // 데이터베이스에 삽입할 SQL 쿼리
     const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
-               VALUES (?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?)`;
 
     // 쿼리 실행
     db.query(
@@ -471,27 +471,6 @@ router.get("/class/a_onedayClassPosts", (req, res) => {
     res.render("dashboard/admin/class/a_onedayClassPosts", { data: posts });
   });
 });
-
-// 관리자 강아지 정보 수정 페이지 라우트: GET /dashboard/admin/adminedit
-// router.get("/adminedit", (req, res) => {
-//   const post = {
-//     id: 1,
-//     photo: "/path/to/default/photo.jpg",
-//     pet_name: "강아지 이름",
-//     owner_name: "주인 이름",
-//     walk_date: "2024-07-16",
-//     walk_time: "10:00",
-//     walk_photo: "/path/to/default/walk_photo.jpg",
-//     staff_name: "담당자 이름",
-//     note_info: "특이 사항",
-//     schedule_id: "시간표 ID",
-//     class_info: "수업 정보",
-//   };
-//   res.render("dashboard/admin/adminedit", {
-//     title: "강아지 정보 수정",
-//     post: post,
-//   });
-// });
 
 // 강아지 정보 수정 페이지 라우트: GET /dashboard/admin/edit/:id
 router.get("/admin/adminedit/:id", async (req, res) => {
