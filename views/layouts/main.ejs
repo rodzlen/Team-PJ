@@ -1,75 +1,81 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
+  <title>댕댕이사관학교</title>
+  <link rel="stylesheet" href="/css/layoutstyle.css">
 
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- 구글 폰트 연결ㄴ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-  
-  <div class="container">   
 
-    <!-- 헤더 : 로고, 상단 메뉴, 로그인 -->
-    <header class="header">
-      <!-- 로고 -->
-      <a href="/" class="header-logo">프로젝트</a>
+  <div id="container">
 
-      <!-- 상단 메뉴 -->
-      <nav class="header-nav">
-        <ul>
-        <li><a href="/#">Home</a></li>
-        <li><a href="/#">asd</a></li>
-        <li><a href="/#">zxc</a></li>
-        </ul>
-        </nav>
-
-      <!--유저 로그인 -->
-      <div class="header-button">
-        <% if (locals.isLoggedIn) { %>
-          <a href="/#">로그아웃</a>
-        <% } else { %>
-          <a href="/#">로그인</a>
-        <% } %>
-        <% if (!locals.isLoggedIn) { %>
-        <a href='/#'>회원가입</a>
-        
-        <a href='/#'>관리자 로그인</a>
-        <% } %>
+    <!-- 헤더 -->
+    <header id="header">
+      <div id="menuBar">
+        <div id="company">
+          <img id="logoImg" src="/img/logo.png" alt="companyLogo">
+          &nbsp; <a href="/">댕댕이 사관학교</a>
         </div>
-        </header> 
+        <div id="user">
+          <a href="/user_login">로그인</a>
+           &nbsp;&nbsp;
+          <a href="/admin_login">관리자로그인</a></div> <!-- 로그인 후 : 내정보 / 로그아웃-->
+      </div>
+      <div id="categoryBar">
+        <div class="Category">
+          <ol>
+            <li><a href="#">직원 및 시설 소개</a></li>
+            <li><a href="#">시간표 안내</a></li>
+            <li><a href="#">유치원 신청</a></li>
+            <li><a href="#">커뮤니티</a></li>
+            <li><a href="#">강아지 정보</a></li>
+          </ol>
+        </div>
+      </div>
+    </header>
 
-    <!-- 메인 : 실제 내용이 들어갈 부분 -->    
-    <main class="main">
+    <!-- 바디 : 유저/관리자 등 페이지 전환 -->
+    <main id="main">
       <%- body %>
-      
     </main>
-  </div>  
-<footer>
-    <div>
-    <p> Copyright © kim. All rights reserved.</p>
-    </div>
-    <div>H.P 010-1234-56789</div>
+  </div>
 
-</footer>
-<script>
-</script>
+  <!-- 푸터 -->
+  <footer id="footer">
+    <div id="contact">
+      <p>Korea It Academy. 032-262-5890</p>
+      <p>김휘수. 010-0000-0000</p>
+      <p>권석주. 010-0000-0000</p>
+      <p>안다빈. 010-0000-0000</p>
+      <p>장채연. 010-0000-0000</p>
+    </div>
+  </footer>
+  <script>
+  </script>
 </body>
-<script>
-  window.addEventListener('scroll', function() {
-  var footer = document.querySelector('footer');
-  var scrollHeight = document.documentElement.scrollHeight;
-  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-  var clientHeight = document.documentElement.clientHeight;
-  
-  // 스크롤이 맨 아래에 도달했을 때 footer를 보이도록 함
-  if (scrollHeight - scrollTop - clientHeight < 1) {
-    footer.style.display = 'block';
-  } else {
-    footer.style.display = 'none';
-  }
-});
-</script>
+<!-- <script>
+  window.addEventListener('scroll', function () {
+    var footer = document.querySelector('footer');
+    var scrollHeight = document.documentElement.scrollHeight;
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    var clientHeight = document.documentElement.clientHeight;
+
+    // 스크롤이 맨 아래에 도달했을 때 footer를 보이도록 함
+    if (scrollHeight - scrollTop - clientHeight < 1) {
+      footer.style.display = 'block';
+    } else {
+      footer.style.display = 'none';
+    }
+  });
+</script> -->
 </html>
