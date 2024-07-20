@@ -45,17 +45,20 @@ CREATE TABLE Staff (
 CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
-    pet_name VARCHAR(15) NOT NULL,
-    owner_name VARCHAR(15) NOT NULL,
+    pet_name VARCHAR(255) NOT NULL,
+    owner_name VARCHAR(255) NOT NULL,
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB ,
-    teacher VARCHAR(15) NOT NULL,
-    class_info VARCHAR(15) NOT null,
+    teacher VARCHAR(255) NOT NULL,
+    class_info INT,
     note_info TEXT,
-    feed BOOLEAN NOT NULL
+    feed BOOLEAN NOT NULL,
+    FOREIGN KEY (pet_name) REFERENCES Users(username),
+    FOREIGN KEY (owner_name) REFERENCES Users(username),
+    FOREIGN KEY (teacher) REFERENCES Staff(staff_name),
+    FOREIGN KEY (class_info) REFERENCES class(class_id)
 );
-
 insert into dogs (pet_name, owner_name, walk_date, walk_time, teacher, class_info, feed)
   values ("puppy", "aaa", "2024-07-07", "12:10", "t", "morning", true);
   
