@@ -16,7 +16,7 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="img/<%= employee.photo %>" alt="Profile Image" class="facility-image">
+                                <img src="/img/<%= employee.photo %>" alt="Profile Image" class="facility-image">
                                 <ul class="employee-info">
                                     <li>이름: <%= employee.name %></li>
                                     <li>직급: <%= employee.role %></li>
@@ -33,26 +33,35 @@
             </table>
         </div>
         <button onclick="location.href='/admin/adminstaffcreate'" class="w-50 mb-5 mt-2 btn btn-success">
-            글쓰기
+            직원추가
           </button>
     </div>
 
     <h2>시설소개</h2>
     <div class="container facility-container">
-        <% facilities.forEach((facility) => { %>
-            <div class="facility-card">
-                <img src="/img/<%= facility.photo %>" alt="Uploaded Image">       
-                         <div class="facility-name"><%= facility.facility_name %></div>
-                <ul class="facility-info">
-                    <li>주요 시설: <%= facility.main_facilities %></li>
-                </ul>
-                <a class="btn btn-warning" href="/admin/adminfacilitiesedit/<%= facility.id %>">수정/삭제</a>
-            </div>
-        <% }); %>
+        <table class="facility-table">
+            <tr>
+                <% facilities.forEach((facility, index) => { %>
+                    <td>
+                        <div class="facility-card">
+                            <img src="/img/<%= facility.photo %>" alt="Uploaded Image">       
+                            <ul class="facility-info">
+                                <li>시설 이름: <%= facility.facility_name %></li>
+                                <li>주요 시설: <%= facility.main_facilities %></li>
+                            </ul>
+                            <a class="btn btn-warning" href="/admin/adminfacilitiesedit/<%= facility.id %>">수정/삭제</a>
+                        </div>
+                    </td>
+                    <% if ((index + 1) % 3 === 0) { %>
+                        </tr><tr>
+                    <% } %>
+                <% }); %>
+            </tr>
+        </table>
     </div>
     <div class="btnBox">
         <button onclick="location.href='/admin/adminfacilitiescreate'" class="w-50 mb-5 mt-2 btn btn-success">
-          글쓰기
+          시설추가
         </button>
     </div>
 </body>

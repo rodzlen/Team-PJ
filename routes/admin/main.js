@@ -616,7 +616,7 @@ router.get("/adminfacilitiescreate", (req, res) => {
 
 
 // 시설 생성 
-router.post('/adminfacilitiescreate', upload.single('photo'), (req, res) => {
+router.post('/adminfacilitiescreate', upload.single('image'), (req, res) => {
   try {
     const { facility_name, main_facilities = '', operating_hours = '', contact_info = '' } = req.body;
     const photo = req.file ? req.file.path : '';
@@ -652,7 +652,7 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
 });
 
 // 시설 정보 수정 처리
-router.post("/adminfacilitiesedit/:id", upload.single('photo'), (req, res) => {
+router.post("/adminfacilitiesedit/:id", upload.single('image'), (req, res) => {
   const id = req.body.id;
   const name = req.body.facility_name || 'default_name';
   const features = req.body.main_facilities || 'default_features';
@@ -695,7 +695,7 @@ router.get("/adminstaffcreate", (req, res) => {
 
 
 // 직원 생성 
-router.post('/adminstaffcreate', upload.single('photo'), (req, res) => {
+router.post('/adminstaffcreate', upload.single('image'), (req, res) => {
   const { name, role, contact_info = '' } = req.body;
   const photo = req.file ? req.file.path : '';
 
@@ -728,16 +728,16 @@ router.get("/adminstaffedit/:id", (req, res) => {
 });
 
 // 직원 정보 수정 처리
-router.post("/adminstaffedit/:id", upload.single('photo'), (req, res) => {
+router.post("/adminstaffedit/:id", upload.single('image'), (req, res) => {
   const id = req.params.id; // URL에서 직원 ID 가져오기
-  const name = req.body.name || 'default_name'; // name이 NULL이면 기본값 설정
-  const role = req.body.role || 'default_role'; // role이 NULL이면 기본값 설정
-  const contact_info = req.body.contact_info || 'default_contact_info';
+  const name = req.body.name ? req.body.name.trim() : 'default_name'; // name이 NULL이면 기본값 설정
+  const role = req.body.role ? req.body.role.trim() : 'default_role'; // role이 NULL이면 기본값 설정
+  const contact_info = req.body.contact_info ? req.body.contact_info.trim() : 'default_contact_info';
   const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
 
-  // name 필드가 존재하지 않으면 오류 처리
+  // 필수 필드가 존재하지 않으면 오류 처리
   if (!name) {
-    res.status(400).send("Staff name cannot be null.");
+    res.status(400).send("직원 이름은 필수 입력 항목입니다.");
     return;
   }
 
@@ -746,9 +746,9 @@ router.post("/adminstaffedit/:id", upload.single('photo'), (req, res) => {
   db.query(query, [name, role, photo, contact_info, id], (err, result) => {
     if (err) {
       console.log(err);
-      res.send(err);
+      res.status(500).send("데이터베이스 오류가 발생했습니다.");
     } else {
-      res.redirect("/adminstaffedit/:id");
+      res.redirect("/admin/adminFacilitiesMain");
     }
   });
 });
@@ -764,7 +764,7 @@ router.post('/delete2', (req, res) => {
       console.log(err);
       res.status(500).send(err);
     } else {
-      res.redirect("/admin/facilities/admin_FacilitiesMain");
+      res.redirect("/admin/adminFacilitiesMain");
     }
   });
 });
