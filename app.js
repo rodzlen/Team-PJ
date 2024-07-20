@@ -18,7 +18,7 @@ app.use(expressLayouts);
 
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");

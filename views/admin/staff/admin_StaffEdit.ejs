@@ -12,30 +12,33 @@
     id="facilitiesedit"
     style="height: 100vh"
     class="container d-flex flex-column justify-content-center"
-    action="/admin/adminfacilitiesedit/<%=Data.id %>"
+    action="/admin/adminstaffedit/<%=Data2.staff_id %>"
     method="post"
     enctype="multipart/form-data"
   >
-    <h2 class="text-center">시설 관리</h2>
-    <input type="hidden" name="id" value="<%= Data.id %>">
+    <h2 class="text-center">Edit Facility</h2>
+    <input type="hidden" name="id" value="<%= Data2.staff_id %>">
     <div class="d-flex justify-content-center">
-      시설 이름<input name="facility_name" class="w-50 form-control text-center" type="text" value="<%= Data.facility_name %>" />
+      직원 이름<input name="name" class="w-50 form-control text-center" type="text" value="<%= Data2.name %>" />
     </div>
     <div class="d-flex justify-content-center">
-      주요 시설<input name="main_facilities" class="w-50 form-control text-center" type="text" value="<%= Data.main_facilities %>" />
+      직원 직급<input name="role" class="w-50 form-control text-center" type="text" value="<%= Data2.role %>" />
+    </div>
+    <div class="d-flex justify-content-center">
+      직원 경력<input name="contact_info" class="w-50 form-control text-center" type="text" value="<%= Data2.contact_info %>" />
     </div>
     <div class="d-flex justify-content-center mt-3">
       <label for="image">Upload Image:</label>
       <input name="image" class="form-control-file" type="file" />
     </div>
-    <input type="hidden" name="existingPhoto" value="<%= Data.photo %>">
+    <input type="hidden" name="existingPhoto" value="<%= Data2.photo %>">
     <div class="text-center mt-3">
-      <input type="submit" class="btn btn-primary" value="제출하기">
+      <button type="submit" class="btn btn-primary">수정하기</button>
     </div>
   </form>
   
-  <form id="delete" action="/admin/delete" method="post">
-    <input type="hidden" name="id" value="<%= Data.id %>">
+  <form id="delete" action="/admin/delete2" method="post">
+    <input type="hidden" name="id" value="<%= Data2.staff_id %>">
     <div class="text-center mt-3">
       <button type="submit" form="delete" class="btn m-3 btn-danger">삭제</button>
     </div>
