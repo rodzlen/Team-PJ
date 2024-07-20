@@ -1,64 +1,62 @@
-/* 모든 요소의 기본 마진과 패딩 초기화 */
-* {
-    margin: 0;
-    padding: 0;
+/* 전체 페이지 설정 */
+:root {
+    /* 커스텀 css 변수 정의 */
+    --brown: #934a16;
+    --yellow: #ffe65e; 
 }
 
-/* 전체 페이지 바탕색과 마진 설정 */
 body {
-    font-family: '나눔고딕', 'Nanum Gothic', '맑은 고딕', Malgun Gothic, Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f0f0f0;
-    margin: 20px;
-}
-
-/* 전체 컨테이너 설정 */
-.container {
-    display: flex;
-    justify-content: space-between;
-}
-
-/* 사이드바 (카테고리 섹션) 설정 */
-aside {
-    width: 200px;
-    background-color: #fff;
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden; /*가로축 스크롤 제거*/
+  }
+/* 카테고리 메뉴 설정 */
+.category-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    background-color: beige;
     padding: 15px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-aside h3 {
+.category-menu h3 {
     color: #333;
     font-size: 18px;
     margin-bottom: 10px;
 }
 
-aside ul {
+.category-menu ul {
     list-style-type: none;
     padding: 0;
 }
 
-aside ul li {
+.category-menu ul li {
     margin-bottom: 8px;
 }
 
-aside ul li a {
+.category-menu ul li a {
     color: #666;
     text-decoration: none;
     font-size: 16px;
 }
 
-aside ul li a:hover {
+.category-menu ul li a:hover {
     color: #333;
 }
 
 /* 메인 콘텐츠 설정 */
 .main-content {
-    flex: 1;
+    margin: 0 auto;
+    width: 100%;
     background-color: #fff;
-    padding: 15px;
+    padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* 가운데 정렬 */
 }
 
 .main-content h3 {
@@ -67,46 +65,20 @@ aside ul li a:hover {
     margin-bottom: 15px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th,
-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-table th {
-    background-color: #f2f2f2;
-}
-
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.notice-title a {
-    color: #007bff; /* 부트스트랩 블루 */
-    text-decoration: none;
-}
-
-.notice-title a:hover {
-    text-decoration: underline;
-}
-
 /* 검색 폼 설정 */
 .search-form {
-    margin-top: 15px;
-    display: flex;
+    margin-bottom: 30px;
+    text-align: center; /* 가운데 정렬 */
+}
+
+.search-container {
+    display: inline-flex;
     align-items: center;
 }
 
-.search-form input[type="text"],
-.search-form select {
+.search-form input[type="text"] {
+    width: 500px;
     padding: 8px;
-    margin-right: 10px;
     border-radius: 3px;
     border: 1px solid #ccc;
 }
@@ -115,31 +87,65 @@ table tr:nth-child(even) {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
-    background-color: #007bff;
+    background-color: var(--yellow);
     color: #fff;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 .search-form button:hover {
-    background-color: #0056b3; /* 부트스트랩 블루의 짙은 색상 */
+    background-color: #fff;
+    color: var(--yellow);
+    border: 2px solid var(--yellow);
 }
 
-/* 버튼 설정 */
-.button-container {
-    margin-top: 15px;
-    text-align: right;
+/* 공지사항 목록 테이블 설정 */
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.button-container button {
-    padding: 10px 20px;
+.notice-table th,
+.notice-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.notice-table th {
+    background-color: #f2f2f2;
+}
+
+.notice-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.notice-title a {
+    text-decoration: none;
+}
+
+/* 글쓰기 버튼 설정 */
+.write-button {
+    text-align: center; 
+    margin-top: 20px;
+}
+
+.write-button button {
+    padding: 8px 15px;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff;
+    border-radius: 3px;
+    background-color: var(--yellow);
     color: #fff;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
-.button-container button:hover {
-    background-color: #0056b3; /* 부트스트랩 블루의 짙은 색상 */
+.write-button button:hover {
+    background-color: #fff;
+    color: var(--yellow);
+    border: 2px solid var(--yellow);
 }

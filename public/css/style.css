@@ -1,4 +1,7 @@
-/* 노란색 #ffe65e 갈색 #934a16 */
+:root { /* 커스텀 css 변수 정의 */
+  --brown: #934a16;
+  --yellow: #ffe65e; 
+}
 
 /* 전체 css */
 body {
@@ -114,11 +117,6 @@ footer div {
 
 
 /* 로그인 및 회원가입 페이지 */
-:root { /* 커스텀 css 변수 정의 */
-  --brown: #934a16;
-  --yellow: #ffe65e; 
-}
-
 textarea {
   width: 410px;
   height: 50px;
