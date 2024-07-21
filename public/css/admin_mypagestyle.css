@@ -1,14 +1,14 @@
 :root {
     --brown: #dd8e55;
     --yellow: #fbd663;
-}
+  }
 
 body {
-    padding: 0;
-    margin: 0;
+    padding: 0px;
+    margin: 0px;
     width: 100vw;
     overflow-x: hidden;
-    background-color: #fff;
+    /*가로축 스크롤 제거*/
 }
 
 #adminMyPage {

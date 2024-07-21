@@ -1,16 +1,16 @@
-/* 전체 페이지 설정 */
 :root {
-    /* 커스텀 css 변수 정의 */
-    --brown: #934a16;
-    --yellow: #ffe65e; 
-}
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
 
 body {
     padding: 0px;
     margin: 0px;
     width: 100vw;
-    overflow-x: hidden; /*가로축 스크롤 제거*/
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
 }
+
 #cover {
     display: flex;
     flex-direction: column;

@@ -1,9 +1,7 @@
-/* 전체 페이지 설정 */
 :root {
-    /* 커스텀 css 변수 정의 */
-    --brown: #934a16;
-    --yellow: hsl(51, 100%, 68%);
-}
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
 
 body {
     padding: 0px;
@@ -12,7 +10,6 @@ body {
     overflow-x: hidden;
     /*가로축 스크롤 제거*/
 }
-
 #add {
     width: 100%;
     display: flex;

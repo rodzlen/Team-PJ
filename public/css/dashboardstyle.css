@@ -7,9 +7,8 @@ body {
   padding: 0px;
   margin: 0px;
   width: 100vw;
-  overflow-x: hidden; /* 가로축 스크롤 제거 */
-  background-color: #f0f0f0; /* 배경색을 변경하였습니다. */
-  font-family: Arial, sans-serif; /* 폰트 지정 */
+  overflow-x: hidden;
+  /*가로축 스크롤 제거*/
 }
 
 #dashboard {
