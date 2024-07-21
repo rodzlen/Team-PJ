@@ -19,6 +19,11 @@ body {
     padding: 20px 0px;
 }
 
+#freeboard a {
+    color: #000; 
+    text-decoration: none; 
+}
+
 #cover {
     width: 100%;
     display: flex;
