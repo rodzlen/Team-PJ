@@ -1,0 +1,133 @@
+/* 전체 페이지 설정 */
+:root {
+    /* 커스텀 css 변수 정의 */
+    --brown: #934a16;
+    --yellow: #ffe65e; 
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden; /*가로축 스크롤 제거*/
+  }
+
+body {
+    width: 100vw;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* 카테고리 메뉴 설정 */
+.category-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    background-color: beige;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-menu h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.category-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.category-menu ul li {
+    margin-bottom: 8px;
+}
+
+.category-menu ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.category-menu ul li a:hover {
+    color: #333;
+}
+
+.main-content {
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+form {
+    margin-top: 15px;
+    text-align: center;
+}
+
+form input[type="text"], form select {
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+form button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #218838;
+}

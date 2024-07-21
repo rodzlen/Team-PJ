@@ -48,6 +48,10 @@ body {
     color: #333;
 }
 
+#freeTable td a {
+    color: #000; 
+}
+
 /* 메인 콘텐츠 설정 */
 .main-content {
     margin: 0 auto;
@@ -87,18 +91,13 @@ body {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
-    background-color: var(--yellow);
+    background-color: #007bff;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    margin-left: 5px;
 }
 
 .search-form button:hover {
-    background-color: #fff;
-    color: var(--yellow);
-    border: 2px solid var(--yellow);
+    background-color: #0056b3;
 }
 
 /* 공지사항 목록 테이블 설정 */
@@ -112,6 +111,7 @@ body {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
+    color: #000;
 }
 
 .notice-table th {
@@ -136,16 +136,12 @@ body {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
-    background-color: var(--yellow);
+    background-color: #28a745;
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    margin-left: 5px;
+    margin-top: 10px;
 }
 
 .write-button button:hover {
-    background-color: #fff;
-    color: var(--yellow);
-    border: 2px solid var(--yellow);
+    background-color: #218838;
 }
