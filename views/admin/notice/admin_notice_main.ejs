@@ -17,14 +17,16 @@
         </ul>
     </aside>
 
-    <!-- 검색 폼과 공지사항 목록 -->
-    <div class="main-content">
-        <h3>공지사항</h3>
-
+    <div id="cover">
+    <h3>공지사항</h3>
+    <!-- 메인 콘텐츠 -->
+    <div id="main-content">
         <!-- 검색 폼 -->
         <form class="search-form" action="/admin/notice" method="GET">
-            <input type="text" name="search" placeholder="제목 검색" style="width: 500px;">
-            <button type="submit">검색</button>
+            <div class="search-container">
+                <input type="text" name="search" placeholder="제목 검색">
+                <button type="submit">검색</button>
+            </div>
         </form>
 
         <!-- 공지사항 목록 테이블 -->
@@ -54,5 +56,6 @@
             <button onclick="location.href='/admin/notice/add'">글쓰기</button>
         </div>
     </div>
+</div>
 </body>
 </html>
