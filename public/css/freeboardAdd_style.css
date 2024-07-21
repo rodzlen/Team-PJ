@@ -2,18 +2,15 @@
 :root {
     /* 커스텀 css 변수 정의 */
     --brown: #934a16;
-    --yellow: hsl(51, 100%, 68%); 
+    --yellow: hsl(51, 100%, 68%);
 }
 
 body {
     padding: 0px;
     margin: 0px;
     width: 100vw;
-    overflow-x: hidden; /*가로축 스크롤 제거*/
-  }
-
-#add a {
-color: #000;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
 }
 
 #add {
@@ -22,6 +19,10 @@ color: #000;
     flex-direction: column;
     align-items: center;
     padding: 20px 0px;
+}
+
+#add a {
+    color: #000;
 }
 
 #cover {
@@ -42,10 +43,10 @@ form {
 
 #top {
     display: flex;
-    
+
 }
 
-form input[type="text"], textarea {
+form input[type="text"] {
     width: 400px;
     height: 30px;
     font-size: 18px;
@@ -57,7 +58,11 @@ form input[type="text"], textarea {
 textarea {
     width: 600px;
     height: 500px;
-    resize: none; 
+    resize: none;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
 }
 
 #btnBox {
@@ -93,4 +98,3 @@ textarea {
 #backBtn:hover {
     background-color: #0056b3;
 }
-
