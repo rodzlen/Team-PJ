@@ -1,0 +1,26 @@
+
+#priceTable {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+
+#calendarBox {
+    width: 100%;
+}
+
+.fc-event-title {
+    white-space: normal;       /* 텍스트를 줄바꿈 있게 표시 */
+    overflow: hidden;          /* 내용이 오버플로우 되면 숨김 처리 */
+    text-overflow: ellipsis;   /* 오버플로우 되는 텍스트를 '...'으로 표시 */
+    max-width: 100%;           /* 최대 너비 설정 */
+    font-size: 0.75em;         /* 폰트 사이즈 조정, 필요에 따라 조절 */
+    line-height: 1.2;          /* 라인 높이 조정, 필요에 따라 조절 */
+}
+
+.fc-event-time {
+    font-size: 0.75em;
+    font-weight: bold;
+    padding-bottom: 2px; /* 시간과 제목 사이의 간격 조정 */
+}
