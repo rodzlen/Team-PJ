@@ -1,20 +1,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= locals.title %></title>
-  <link rel="stylesheet" href="/css/freeboard_style.css"> <!-- CSS 파일 임포트 -->
+  <title>
+    <%= locals.title %>
+  </title>
+  <link rel="stylesheet" href="/css/freeboardEdit_style.css"> <!-- CSS 파일 임포트 -->
 </head>
-<div>
-  <h1 ><%= locals.title%></h1>
-  <form action="/freeboard/edit/<%= data.id %>" method="POST" enctype="multipart/form-data">
-      <input type="text" name="title" placeholder="<%= data.title %>">
-      <textarea name="content"  ><%= data.content %></textarea>
-      <input type="file" name="Image" placeholder="<%= data.Image %>">
-      <button type="submit" >수정</button>
+<div id="edit">
+  <h3>
+    <%= locals.title%>
+  </h3>
+  <div id="cover">
+    <form action="/freeboard/edit/<%= data.id %>" method="POST" enctype="multipart/form-data">
+      <div id="top">
+      <input type="text" name="title" placeholder="<%= data.title %>">&nbsp;
+      <input type="file" name="Image" placeholder="<%= data.Image %>"><br>
+    </div>
+      <textarea name="content"><%= data.content %></textarea><br>
+      
+      <div id="btnBox">
+      <button id="editBtn" type="submit">수정</button>
+    </form>
     
-  </form>
-  <a href="/freeboard/detail/<%= data.id %>">뒤로가기</a>   
-  <form action="/freeboard/delete/<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-    <button type="submit">삭제</button>
-  </form>
+    <!-- <a href="/freeboard/detail/<%= data.id %>">뒤로가기</a> -->
+    <form action="/freeboard/delete/<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+      <button id="delBtn" type="submit">삭제</button>
+    </form>
+    <button id="backBtn" onclick="location.href='/freeboard/detail/<%= data.id %>'">뒤로가기</button>
+    </div>
+  </div>
+  </div>
 </div>

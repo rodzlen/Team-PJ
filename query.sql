@@ -1,3 +1,9 @@
+drop database kindergarten;
+
+create database kindergarten;
+
+use kindergarten;
+
 -- 관리자 테이블
 CREATE TABLE Admin (
     a_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -154,24 +160,7 @@ CREATE TABLE Pets (
     FOREIGN KEY (u_id) REFERENCES Users(u_id)
   );
   
-  -- 수업등록 테이블( 실패 )
-CREATE TABLE ClassRegistration (
-    registration_id INT AUTO_INCREMENT PRIMARY KEY,  
-    dog_id INT NOT NULL, 
-    owner_id INT NOT NULL,  
-    class_date DATE NOT NULL,
-    schedule_id INT NOT NULL,  
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    a_id INT,
-    FOREIGN KEY (dog_id) REFERENCES Dogs(dog_id),
-    FOREIGN KEY (owner_id) REFERENCES Users(user_id),
-    FOREIGN KEY (schedule_id) REFERENCES MorningClassSchedule(schedule_id),
-    FOREIGN KEY (schedule_id) REFERENCES AfternoonClassSchedule(schedule_id),
-    FOREIGN KEY (schedule_id) REFERENCES AlldayClassSchedule(schedule_id),
-    FOREIGN KEY (a_id) REFERENCES Admin(a_id)
-);
-
---수업 신청 테이블
+-- 수업 신청 테이블
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_name VARCHAR(100) NOT NULL,

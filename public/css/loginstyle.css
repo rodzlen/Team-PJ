@@ -1,17 +1,15 @@
 :root {
-    /* 커스텀 css 변수 정의 */
-    --brown: #dd8e55;
-    --yellow: #fbd663;
-  }
-  
-  /* 전체 css */
-  body {
-    padding: 0px;
-    margin: 0px;
-    width: 100vw;
-    overflow-x: hidden;
-    /*가로축 스크롤 제거*/
-  }
+  --brown: #dd8e55;
+  --yellow: #fbd663;
+}
+
+body {
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  overflow-x: hidden;
+  /*가로축 스크롤 제거*/
+}
 
 /* 로그인 및 회원가입 페이지 */
 textarea {
