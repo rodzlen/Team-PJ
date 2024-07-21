@@ -17,17 +17,17 @@
     </h3>
     <div id="cover">
 
-      <form action="/freeboard/add" method="POST" enctype="multipart/form-data">
-        <div id="top">
+        <form action="/freeboard/add" method="POST" enctype="multipart/form-data">
+          <div>
           <input type="text" name="title" placeholder="제목" required>&nbsp;
-          <input type="file" name="Image">
-        </div>
-        <textarea name="content" placeholder="내용을 입력해 주세요." required></textarea><br>
-        <div id="btnBox">
-          <button id="addBtn" class="btnBox" type="submit">추가</button>
-          <button id="backBtn" onlcik="window.location.href='/freeboard'">뒤로가기</button>
-        </div>
-      </form>
+          <input class="btnBox" type="file" name="Image"><br>
+          <textarea name="content" placeholder="내용을 입력해 주세요." required></textarea><br>
+          <div id="btnBox">
+            
+            <button id="addBtn" class="btnBox"type="submit">추가</button>
+            <button id="backBtn" onlcik="window.location.href = '/freeboard'">뒤로가기</button>
+            </div>
+        </form>
 
     </div>
   </div>

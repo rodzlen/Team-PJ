@@ -42,7 +42,7 @@ form {
 
 #top {
     display: flex;
-    align-items: baseline;
+    
 }
 
 form input[type="text"], textarea {
