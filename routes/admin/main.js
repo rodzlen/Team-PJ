@@ -6,12 +6,6 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload")
 const multer = require("multer");
 
-
-
-
-//관리자 
-http://localhost:8500/admin/notice/admin_notice
-
 // 공지사항 메인
 // /admin/notice
 router.get("/notice", asyncHandler(async (req, res) => {
@@ -156,6 +150,7 @@ router.get('/qna', async (req, res) => {
       res.status(500).send('서버 오류');
   }
 });
+
 // QnA 상세 페이지
 router.get('/qna/detail/:id', async (req, res) => {
   const questionId = req.params.id;
@@ -171,6 +166,7 @@ router.get('/qna/detail/:id', async (req, res) => {
       res.status(500).send('서버 오류');
   }
 });
+
 router.post('/answer/:id', async (req, res) => {
   const questionId = req.params.id;
   const { admin_id, content } = req.body;
@@ -196,19 +192,19 @@ router.post('qna/delete/:id', async (req, res) => {
 });
 
 
-// 홈 페이지
-router.get(
-  ["/"],
-  asyncHandler(async (req, res) => {
-    res.render("user/home", { layout: mainLayout }); // home에 layout 입히기, layout : false => layout 없이 렌더링
-  })
-);
-
 // 홈 페이지(관리자용)
 router.get(
   ["/admin_main"],
   asyncHandler(async (req, res) => {
     res.render("admin/admin_home", { layout: adminLayout });
+  })
+);
+
+// 홈 페이지(관리자용)
+router.get(
+  ["/application"],
+  asyncHandler(async (req, res) => {
+    res.render("admin/_application/admin_application", { layout: adminLayout });
   })
 );
 

@@ -1,9 +1,9 @@
+/* 전체 css */
 :root { /* 커스텀 css 변수 정의 */
   --brown: #934a16;
   --yellow: #ffe65e; 
 }
 
-/* 전체 css */
 body {
   padding: 0px;
   margin: 0px;
