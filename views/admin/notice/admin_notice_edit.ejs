@@ -6,33 +6,17 @@
   <title><%= locals.title %></title>
   <link rel="stylesheet" href="/css/notice_style.css"> <!-- CSS 파일 임포트 -->
 </head>
-<body>
-  <div>
-    <h1><%= locals.title %></h1>
-    <form action="/admin/notice/edit/<%= post.id %>" method="POST" enctype="multipart/form-data">
-      <div>
-        <label for="title">제목</label>
-        <input type="text" name="title" id="title" value="<%= post.title %>" required>
-      </div>
-      <div>
-        <label for="content">내용</label>
-        <textarea name="content" id="content" required><%= post.content %></textarea>
-      </div>
-      <div>
-        <label for="image">이미지</label>
-        <input type="file" name="image" id="image">
-        <% if (post.image) { %>
-          <p>현재 이미지: <img src="/img/<%= post.image %>" alt="Current Image" style="max-width: 200px;"></p>
-        <% } %>
-      </div>
-      <div>
-        <button type="submit">수정</button>
-        <form action="/admin/notice/delete/<%= post.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');" style="display:inline;">
-          <button type="submit">삭제</button>
-        </form>
-        <a href="/admin/notice">뒤로가기</a>
-      </div>
-    </form>
-  </div>
-</body>
-</html>
+<div>
+  <h1 ><%= locals.title%></h1>
+  <form action="/admin/notice/edit/<%= data.id %>" method="POST">
+      <input type="text" name="title" placeholder="<%= data.title %>">
+      <input type="textarea" name="content" placeholder="<%= data._content %>" >
+      <input type="file" name="Image" placeholder="<%= data.image %>">
+      <button type="submit" >수정</button>
+      <form action="/admin/notice/delete/:<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <button type="submit">삭제</button>
+      </form>
+    <a href="/admin/notice">뒤로가기</a>   
+
+  </form>
+</div>
