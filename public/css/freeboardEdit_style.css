@@ -36,3 +36,69 @@ form {
     display: flex;
     flex-direction: column;
 }
+
+form input[type="text"] {
+    width: 400px;
+    height: 30px;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+textarea {
+    width: 600px;
+    height: 500px;
+    resize: none;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+#btnBox {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#editBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+}
+
+#editBtn:hover {
+    background-color: #218838;
+}
+
+#backBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#backBtn:hover {
+    background-color: #0056b3;
+}
+
+#delBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #fa5329;
+    color: #fff;
+    cursor: pointer;
+}
+
+#delBtn:hover {
+    background-color: #d6431f;
+}

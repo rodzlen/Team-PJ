@@ -12,17 +12,22 @@
   </h3>
   <div id="cover">
     <form action="/freeboard/edit/<%= data.id %>" method="POST" enctype="multipart/form-data">
+      <div id="top">
       <input type="text" name="title" placeholder="<%= data.title %>">&nbsp;
       <input type="file" name="Image" placeholder="<%= data.Image %>"><br>
+    </div>
       <textarea name="content"><%= data.content %></textarea><br>
       
-      <button type="submit">수정</button>
-
+      <div id="btnBox">
+      <button id="editBtn" type="submit">수정</button>
     </form>
-    <button onclick="location.href='/freeboard/detail/<%= data.id %>'"></button>
+    
     <!-- <a href="/freeboard/detail/<%= data.id %>">뒤로가기</a> -->
     <form action="/freeboard/delete/<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
       <button id="delBtn" type="submit">삭제</button>
     </form>
+    <button id="backBtn" onclick="location.href='/freeboard/detail/<%= data.id %>'">뒤로가기</button>
+    </div>
+  </div>
   </div>
 </div>
