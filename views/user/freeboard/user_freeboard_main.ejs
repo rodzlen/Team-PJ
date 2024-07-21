@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/freeboard_style.css"> 
 </head>
 <body>
+    <div id = "freeboard">
     <aside class="category-menu">
         <h3>카테고리</h3>
         <ul>
@@ -16,8 +17,21 @@
         </ul>
     </aside>
 
+    <div id="cover">
+    <h3><%= locals.title %></h3>
     <div class="main-content">
-        <h3><%= locals.title %></h3>
+        <!-- 검색 폼 -->
+        <form action="/freeboard" method="GET">
+            <input type="text" name="search" placeholder="검색">
+            <select name="type">
+                <option value="title">제목</option>
+                <option value="createBy">작성자</option>
+                <option value="title||writer" selected>제목+작성자</option>
+            </select>
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 게시글 목록 테이블 -->
         <table id="freeTable">
             <thead>
                 <tr>
@@ -34,22 +48,15 @@
                         <td><%= FreeBoard.date %></td>
                     </tr>
                 <% }); %>
-                <tr>
-                    <td colspan="3">
-                        <form action="/freeboard" method="GET">
-                            <input type="text" name="search" placeholder="검색">
-                            <select name="type">
-                                <option value="title">제목</option>
-                                <option value="createBy">작성자</option>
-                                <option value="title||writer" selected>제목+작성자</option>
-                            </select>
-                            <button type="submit">검색</button>
-                        </form>
-                        <button onclick="location.href='/freeboard/add'">글쓰기</button>
-                    </td>
-                </tr>
             </tbody>
         </table>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="write-button">
+            <button onclick="location.href='/freeboard/add'">글쓰기</button>
+        </div>
     </div>
+</div>
+</div>
 </body>
 </html>
