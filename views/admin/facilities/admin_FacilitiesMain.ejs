@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>직원 및 시설 소개</title>
-    <link rel="stylesheet" href="/css/admin_facilitiesMain_style.css">
+    <link rel="stylesheet" href="/css/facilitiesMain_style.css">
 </head>
 
 <body>
@@ -49,7 +49,7 @@
 
         <h2>시설소개</h2>
         <div class="cover">
-            <table class="facility-table">
+            <div class="facility-table">
                 <tr>
                     <% facilities.forEach((facility, index)=> { %>
                         <td>
@@ -75,7 +75,7 @@
                     <% } %>
                         <% }); %>
                 </tr>
-            </table>
+            </div>
             <button class="addBtn" onclick="location.href='/admin/adminfacilitiescreate'"
                 class="w-50 mb-5 mt-2 btn btn-success">
                 시설추가

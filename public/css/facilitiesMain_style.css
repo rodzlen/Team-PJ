@@ -1,0 +1,66 @@
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+}
+
+#introduction {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.cover {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 30px 0px;
+}
+
+table {
+  margin: 30px 0px;
+}
+
+.addBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.addBtn:hover {
+  background-color: #218838;
+}
+
+.editBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin: 10px 0px;
+  margin-bottom: 20px;
+}
+
+.editBtn:hover {
+  background-color: #0056b3;
+}
