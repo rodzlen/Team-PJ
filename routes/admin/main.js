@@ -640,14 +640,14 @@ router.get("/adminfacilitiescreate", (req, res) => {
 
 
 // 시설 생성 
-router.post('/adminfacilitiescreate', upload.single('image'), (req, res) => {
+router.post('/adminfacilitiescreate', upload.single('facility_photo'), (req, res) => {
   try {
     const { facility_name, main_facilities = ''} = req.body;
-    const photo = req.file ? req.file.path : '';
+    const facility_photo = req.file ? req.file.path : '';
 
-    const query = `INSERT INTO Facilities (facility_name, main_facilities, photo) VALUES (?, ?, ?)`;
+    const query = `INSERT INTO Facilities (facility_name, main_facilities, facility_photo) VALUES (?, ?, ?)`;
 
-    db.query(query, [facility_name, main_facilities, photo], (err, result) => {
+    db.query(query, [facility_name, main_facilities, facility_photo], (err, result) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(500).send('Internal Server Error');
@@ -676,15 +676,15 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
 });
 
 // 시설 정보 수정 처리
-router.post("/adminfacilitiesedit/:id", upload.single('image'), (req, res) => {
+router.post("/adminfacilitiesedit/:id", upload.single('facility_photo'), (req, res) => {
   const id = req.body.id;
   const name = req.body.facility_name || 'default_name';
   const features = req.body.main_facilities || 'default_features';
-  const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
+  const facility_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
 
-  const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, photo = ? WHERE id = ?`;
+  const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
 
-  db.query(query, [name, features, photo, id], (err, result) => {
+  db.query(query, [name, features, facility_photo, id], (err, result) => {
     if (err) {
       console.log(err);
       res.send(err);
@@ -724,13 +724,13 @@ router.get("/adminstaffcreate", (req, res) => {
 
 
 // 직원 생성 
-router.post('/adminstaffcreate', upload.single('image'), (req, res) => {
+router.post('/adminstaffcreate', upload.single('staff_photo'), (req, res) => {
   const { name, role, contact_info = '' } = req.body;
-  const photo = req.file ? req.file.path : '';
+  const staff_photo = req.file ? req.file.path : '';
 
-  const query = `INSERT INTO Staff (name, role, photo, contact_info) VALUES (?, ?, ?, ?)`;
+  const query = `INSERT INTO Staff (name, role, staff_photo, contact_info) VALUES (?, ?, ?, ?)`;
 
-  db.query(query, [name, role, photo, contact_info], (err, result) => {
+  db.query(query, [name, role, staff_photo, contact_info], (err, result) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
@@ -757,12 +757,12 @@ router.get("/adminstaffedit/:id", (req, res) => {
 });
 
 // 직원 정보 수정 처리
-router.post("/adminstaffedit/:id", upload.single('image'), (req, res) => {
+router.post("/adminstaffedit/:id", upload.single('staff_photo'), (req, res) => {
   const id = req.params.id; // URL에서 직원 ID 가져오기
   const name = req.body.name ? req.body.name.trim() : 'default_name'; // name이 NULL이면 기본값 설정
   const role = req.body.role ? req.body.role.trim() : 'default_role'; // role이 NULL이면 기본값 설정
   const contact_info = req.body.contact_info ? req.body.contact_info.trim() : 'default_contact_info';
-  const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
+  const staff_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
 
   // 필수 필드가 존재하지 않으면 오류 처리
   if (!name) {

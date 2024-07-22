@@ -30,8 +30,8 @@ CREATE TABLE Users (
 CREATE TABLE Facilities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility_name VARCHAR(50) NOT NULL,
-    main_facilities TEXT NOT NULL,
-    photo BLOB
+    main_facilities	 TEXT NOT NULL,
+    facility_photo BLOB
 );
 
 -- 직원소개 테이블
@@ -39,7 +39,8 @@ CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
-    photo BLOB
+    contact_info varchar(40),
+    staff_photo BLOB
 );
 
 
