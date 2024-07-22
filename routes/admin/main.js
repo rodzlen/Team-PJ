@@ -373,11 +373,7 @@ router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
     res.send(`
       <script>
         alert("강아지 사진을 업로드 해주세요.");
-<<<<<<< HEAD
-        window.location.href = "/admin/admindashboard";
-=======
         window.location.href = "/admin/admin_dashboard";
->>>>>>> chae
       </script>
     `);
   } else {
