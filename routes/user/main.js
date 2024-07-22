@@ -36,9 +36,6 @@ const checkLogin = (req, res, next) => {
   next();
 };
 
-
-
-
 // 공지사항 목록 페이지 라우터
 router.get("/notice", asyncHandler(async (req, res) => {
   const locals = { user: req.session.user };

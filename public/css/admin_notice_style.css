@@ -94,6 +94,11 @@ body {
     border: 1px solid #ccc;
 }
 
+select {
+       font-size: 16px;
+    height: 25px;
+}
+
 .search-form button {
     padding: 8px 15px;
     border: none;
