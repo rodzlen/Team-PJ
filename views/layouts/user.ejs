@@ -1,0 +1,67 @@
+<!-- admin 계정으로 로그인 했을 때 헤더와 푸터 -->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>댕댕이사관학교</title>
+    <link rel="stylesheet" href="/css/layoutstyle.css" />
+
+    <!-- 구글 폰트 연결ㄴ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Single+Day&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- 헤더 -->
+      <header id="header">
+        <div id="menuBar">
+          <div id="company">
+            <img id="logoImg" src="/img/logo.png" alt="companyLogo" />
+            &nbsp; <a href="/user_main">댕댕이 사관학교</a>
+          </div>
+          <div id="user">
+            <a href="/user_mypage">내정보</a>
+            &nbsp;&nbsp;
+            <a href="/">로그아웃</a>
+          </div>
+        </div>
+        <div id="categoryBar">
+          <div class="Category">
+            <ol>
+              <li><a href="#">직원 및 시설 소개</a></li>
+              <li><a href="#">시간표 안내</a></li>
+              <li><a href="#">유치원 신청</a></li>
+              <li><a href="#">커뮤니티</a></li>
+              <li><a href="#">강아지 정보</a></li>
+            </ol>
+          </div>
+        </div>
+      </header>
+
+      <main id="main"><%- body %></main>
+    </div>
+
+    <!-- 푸터 -->
+    <footer id="footer">
+      <div id="contact">
+        <p>Korea It Academy. 032-262-5890</p>
+        <p>김휘수. 010-0000-0000</p>
+        <p>권석주. 010-0000-0000</p>
+        <p>안다빈. 010-0000-0000</p>
+        <p>장채연. 010-0000-0000</p>
+      </div>
+    </footer>
+
+    <script></script>
+  </body>
+</html>
+
+<!-- views/layouts/user.ejs -->

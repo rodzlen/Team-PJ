@@ -1,0 +1,47 @@
+<!-- views/dashboard/admin/adminpostlist.ejs -->
+
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시물 리스트 - 관리자</title>
+    <link rel="stylesheet" href="/css/postlist.css" />
+  </head>
+  <body>
+    <div id="content">
+      <div class="admin-title">
+        <h2>오전반 - 관리자</h2>
+        <a href="/dashboard/admin/admindashboard" class="new-post-button">
+          새 게시물 추가
+        </a>
+      </div>
+
+      <div class="search-form">
+        <form action="/dashboard/admin/search" method="GET">
+          <input
+            type="text"
+            id="searchInput"
+            name="keyword"
+            placeholder="검색어를 입력하세요"
+          />
+          <input type="submit" value="검색" class="btn" />
+        </form>
+      </div>
+      <ul class="admin-posts">
+        <% data.forEach(post => { %>
+        <li>
+            <a href="/user/userdashboard/<%= post._id %>">
+                <%= post.title %>
+            </a>
+           
+        </li>
+        <% }) %>
+      </ul>
+
+      
+    <script src="/js/main.js"></script>
+  </body>
+</html>
+
+<!-- views/user/class/u_morningClassPosts.ejs -->
