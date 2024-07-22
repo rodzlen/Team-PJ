@@ -5,11 +5,12 @@ const userLayout = "../views/layouts/user"
 const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
 const upload = require("../../config/upload")
+const multer = require("multer");
+//게시글 검색 기능
+
 
 let queryParams = [];
 function search(query, searchQuery, typeQuery) {
-  
-
   if (searchQuery) {
     if (typeQuery === "title") {
       query += " WHERE title LIKE ?";
@@ -41,7 +42,7 @@ router.get("/notice", asyncHandler(async (req, res) => {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      res.render('user/notice/notice', { data: results });
+      res.render('user/notice/user_notice_main', { data: results });
     }
   });
 }));
@@ -57,7 +58,7 @@ router.get("/notice/:id", asyncHandler(async (req, res) => {
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
       if (results.length > 0) {
-        res.render('user/notice/notice-detail', { data: results[0] });
+        res.render('user/notice/user_notice_detail', { data: results[0] });
       } else {
         res.status(404).send('공지사항을 찾을 수 없습니다.');
       }
@@ -67,6 +68,7 @@ router.get("/notice/:id", asyncHandler(async (req, res) => {
 
 // 자유게시판 목록
 router.get("/freeboard", asyncHandler(async (req, res) => {
+  const locals = {title: "자유게시판"};
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
 
@@ -79,14 +81,15 @@ router.get("/freeboard", asyncHandler(async (req, res) => {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      res.render('user/freeboard/freeboard', { data: results });
+      res.render('user/freeboard/user_freeboard_main', {locals, data: results });
     }
   });
 }));
 
 
 // 자유게시판 세부 내용 페이지 라우터
-router.get("/freeboard/:id", asyncHandler(async (req, res) => {
+router.get("/freeboard/detail/:id", asyncHandler(async (req, res) => {
+  const locals = {title: req.params.title}
   const id = req.params.id;
 
    const query = "SELECT * FROM freeBoard WHERE id = ?";
@@ -96,9 +99,9 @@ router.get("/freeboard/:id", asyncHandler(async (req, res) => {
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
       if (results.length > 0) {
-        res.render('user/freeboard/freeboard-detail', { data: results[0] });
+        res.render('user/freeboard/user_freeboard_detail', { locals,data: results[0] });
       } else {
-        res.status(404).send('공지사항을 찾을 수 없습니다.');
+        res.status(404).send('게시글을 찾을 수 없습니다.');
       }
     }
   });
@@ -107,70 +110,139 @@ router.get("/freeboard/:id", asyncHandler(async (req, res) => {
 // 자유게시판 글쓰기 페이지
 router.get("/freeboard/add", asyncHandler(async (req, res) => {
   const locals= {title : "새 게시글 작성"}
-  res.render("user/freeboard/add", { locals });// 임시 데이터
+  res.render("user/freeboard/user_freeboard_add", { locals });
 }));
+
+
 //자유게시판 글쓰기 처리
 router.post(
   "/freeboard/add",
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    try {
-      const { title, content, user_id } = req.body;
+    try { 
+      const { title, content  } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
 
       // MySQL 쿼리
       const query = `
-        INSERT INTO freeboard (title, content, image, post_date, createBy, user_id)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO freeboard (title, content, image, post_date)
+        VALUES (?, ?, ?, ?)
       `;
-      const values = [title, content, image, post_date, createBy, user_id];
+      const values = [title, content, image, post_date];
 
       db.query(query, values, (err, result) => {
         if (err) {
           console.error(err);
-          res.status(500).send('<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>');
+          res.status(500).send('<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/freeboard/add";</script>');
         } else {
           res.redirect("/freeboard");
         }
       });
     } catch (error) {
       console.error(error);
-      res.status(500).send('<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>');
+      res.status(500).send('<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>');
     }
   })
 );
-// QnA 목록 페이지
-router.get('/qna', async (req, res) => {
-  const searchQuery = req.query.search || "";
-  const typeQuery = req.query.type || "";
-
-     let query ='SELECT * FROM Questions';
-     let queryParams = [];
-     search(query, searchQuery, typeQuery);
-     db.query(query, queryParams, (err, results) => {
+// 자유게시판 수정 페이지
+router.get(
+  "/freeboard/edit/:id",
+  asyncHandler(async (req, res) => {
+    const locals = { title: "게시글 수정" };
+    const id = req.params.id;
+    const query = 'SELECT * FROM freeboard WHERE id = ?';
+    db.query(query, [id], (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send('서버 오류가 발생했습니다.');
       } else {
-        res.render('/user/qna', { data: results });
+        if (results.length > 0) {
+          res.render('user/freeboard/user_freeboard_edit', { locals, data: results[0] });
+        } else {
+          res.status(404).send('게시글을 찾을 수 없습니다.');
+        }
       }
     });
-  });
+  })
+);
+// 자유게시판 수정 처리
+router.post(
+  "/freeboard/edit/:id",
+  upload.single('image'),
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const { title, content } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    let query = 'UPDATE freeboard SET title = ?, content = ?';
+    const values = [title, content];
+
+    if (image) {
+      query += ', image = ?';
+      values.push(image);
+    }
+
+    query += ' WHERE id = ?';
+    values.push(id);
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/freeboard/edit/' + id + '";</script>');
+      } else {
+        res.redirect('/freeboard/detail/' + id);
+      }
+    });
+  })
+);
+// 자유게시판 삭제
+router.post(
+  "/freeboard/delete/:id",
+  async (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM freeboard WHERE id = ?';
+
+    db.query(query, [id], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>');
+      } else {
+        res.redirect("/freeboard");
+      }
+    });
+  }
+);
+
+
 //qna 목록 
 router.get("/qna", asyncHandler(async (req, res) => {
- 
-
-  let query = 'SELECT q.id AS question_id, q.question, q.question_date, q.asked_by,  a.id AS answer_id, a.answer, a.answer_date, a.answered_by  FROM Questions q  LEFT JOIN Answers a ON q.id = a.question_id';
+  const locals ={title:"QnA 게시판"}
+  let query = 'SELECT q.question_id, q.title AS question_title, q.question, q.question_date, q.question_by, a.answer_id, a.title AS answer_title, a.answer, a.answer_date, a.answered_by FROM Questions q LEFT JOIN Answers a ON q.question_id = a.question_id';
+  const searchQuery = req.query.search || "";
+  const typeQuery = req.query.type || "";
   let queryParams = [];
-  search(query, searchQuery, typeQuery);
-
+  const search = (query, searchQuery, typeQuery)=> {
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE q.title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "question_by") {
+        query += " WHERE q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||question_by") {
+        query += " WHERE q.title LIKE ? OR q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+  }
+search(query, searchQuery, typeQuery)
   db.query(query, queryParams, (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      res.render('/user/qna', { data: results });
+      res.render('user/qna/user_qna_main', { locals, data: results });
     }
   });
 }));
@@ -178,16 +250,32 @@ router.get("/qna", asyncHandler(async (req, res) => {
 router.get("/qna/detail/:id", asyncHandler(async (req, res) => {
   const id = req.params.id;
   
-  const query = "SELECT * FROM qnaboard WHERE id = ?";
-  db.query(query, [id], (err, results) => {
+  const questionQuery = "SELECT * FROM Questions WHERE question_id = ?";
+  const answerQuery = "SELECT * FROM Answers WHERE question_id = ?";
+  const locals = { title: "QnA 상세" };
+
+  db.query(questionQuery, [id], (err, questionResults) => {
     if (err) {
       console.error(err);
       res.status(500).send('서버 오류가 발생했습니다.');
     } else {
-      if (results.length > 0) {
-        res.render('user/qna/qna-detail', { data: results[0] });
+      if (questionResults.length > 0) {
+        db.query(answerQuery, [id], (err, answerResults) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send('서버 오류가 발생했습니다.');
+          } else {
+            res.render('user/qna/user_qna_detail', {
+              locals,
+              question: questionResults[0],
+              answers: answerResults,
+             // isAdmin: req.session.isAdmin || false, // 관리자 여부 확인
+           //   adminId: req.session.adminId || null   // 관리자 ID
+            });
+          }
+        });
       } else {
-        res.status(404).send('공지사항을 찾을 수 없습니다.');
+        res.status(404).send('질문을 찾을 수 없습니다.');
       }
     }
   });
@@ -195,61 +283,82 @@ router.get("/qna/detail/:id", asyncHandler(async (req, res) => {
 // qna 작성 페이지
 router.get("/qna/ask", asyncHandler(async (req, res) => {
   const locals= {title : "질문 작성"}
-  res.render("user/qna/ask", { locals });
+  res.render("user/qna/user_qna_ask", { locals });
 }));
 
 //qna 작성 처리 페이지
 // 질문 제출
 router.post('/qna/ask', async (req, res) => {
-  const { user_id, title, content } = req.body;
+  const { title, content } = req.body;  // session 구현시 user_id 추가
+  const question_by = "김"; // 임시 데이터
+
   try {
-      await db.query('INSERT INTO Questions (user_id, title, content) VALUES (?, ?, ?)', [user_id, title, content]);
-      res.redirect('/qna');
-  } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
-  }
-});
-// 질문 수정 페이지
-router.get('/qna/edit/:id', async (req, res) => {
-  const questionId = req.params.id;
-  try {
-      const [questions] = await db.query('SELECT * FROM Questions WHERE id = ?', [questionId]);
-      if (questions.length === 0) {
-          return res.status(404).send('질문을 찾을 수 없습니다.');
+    // 프라미스 기반으로 db.query를 래핑
+    const query = 'INSERT INTO Questions (question_by, title, question) VALUES (?, ?, ?)';
+    const values = [question_by, title, content];
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('서버 오류');
+      } else {
+        res.redirect('/qna');
       }
-      res.render('user/qna/edit', { question: questions[0] });
+    });
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send('서버 오류');
   }
 });
-// 질문 수정 제출
-router.post('/edit/:id', async (req, res) => {
+// QnA 질문 수정 페이지
+router.get('/qna/edit/:id', asyncHandler(async (req, res) => {
   const questionId = req.params.id;
-  const { title, content } = req.body;
-  try {
-      await db.query('UPDATE Questions SET title = ?, content = ? WHERE id = ?', [title, content, questionId]);
-      res.redirect('/qna/detail/' + questionId);
-  } catch (err) {
+  const locals = { title: '질문 수정' };
+
+  db.query('SELECT * FROM Questions WHERE question_id = ?', [questionId], (err, questions) => {
+    if (err) {
       console.error(err);
-      res.status(500).send('서버 오류');
-  }
-});
+      res.status(500).send('서버 오류가 발생했습니다.');
+    } else {
+      if (questions.length === 0) {
+        return res.status(404).send('질문을 찾을 수 없습니다.');
+      }
+      res.render('user/qna/user_qna_edit', { locals, question: questions[0] });
+    }
+  });
+}));
+// 질문 수정 제출
+router.post('/qna/edit/:id', asyncHandler(async (req, res) => {
+  const questionId = req.params.id;
+  const { title, question } = req.body;
+
+  db.query(
+    'UPDATE Questions SET title = ?, question = ? WHERE question_id = ?',
+    [title, question, questionId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send('서버 오류가 발생했습니다.');
+      } else {
+        res.redirect(`/qna/detail/${questionId}`);
+      }
+    }
+  );
+}));
 
 // 질문 삭제
-router.post('/qna/delete/:id', async (req, res) => {
+router.post('/qna/delete/:id', asyncHandler(async (req, res) => {
   const questionId = req.params.id;
   try {
-      await db.query('DELETE FROM Questions WHERE id = ?', [questionId]);
-      await db.query('DELETE FROM Answers WHERE question_id = ?', [questionId]);
-      res.redirect('/qna');
+    // 질문과 관련된 답변 모두 삭제
+    await db.query('DELETE FROM Answers WHERE question_id = ?', [questionId]);
+    await db.query('DELETE FROM Questions WHERE question_id = ?', [questionId]);
+    res.redirect('/qna');
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send('서버 오류');
   }
-});
-
+}));
 
 
 

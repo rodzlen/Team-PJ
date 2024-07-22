@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 강아지 정보 관리 페이지</title>
+  <link rel="stylesheet" href="/css/dashboardstyle.css">
+</head>
+
+<body>
+  <div id="dashboard">
+    <h3>강아지 정보</h3>
+
+    <div id="cover">
+      <!-- 강아지 사진 업로드 폼 -->
+      <form id="infoForm" action="/admin/saveinfo" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label for="dog_photo">강아지 사진 업로드</label>
+          <input type="file" id="dog_photo" name="dog_photo" accept="image/*" required>
+        </div>
+
+        <!-- 기존 입력 폼 -->
+        <div class="form-group">
+          <label for="pet_name">강아지 이름</label>
+          <input type="text" id="pet_name" name="pet_name" placeholder="강아지 이름" value="<%= formData.pet_name %>"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="owner_name">주인 이름</label>
+          <input type="text" id="owner_name" name="owner_name" placeholder="주인 이름" value="<%= formData.owner_name %>"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="walk_date">날짜</label>
+          <input type="date" id="walk_date" name="walk_date" value="<%= formData.walk_date %>">
+        </div>
+        <div class="form-group">
+          <label for="walk_time">산책 시간</label>
+          <input type="time" id="walk_time" name="walk_time" value="<%= formData.walk_time %>">
+        </div>
+
+        <!-- 오늘의 산책 사진 업로드 폼 -->
+        <div class="form-group">
+          <label for="walk_photo">오늘의 산책 사진</label>
+          <input type="file" id="walk_photo" name="walk_photo" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+          <label for="teacher">담당자 이름</label>
+          <select id="teacher" name="teacher">
+            <option value="담당자1" <%=formData.teacher==='담당자1' ? 'selected' : '' %>>담당자1</option>
+            <option value="담당자2" <%=formData.teacher==='담당자2' ? 'selected' : '' %>>담당자2</option>
+            <option value="담당자3" <%=formData.teacher==='담당자3' ? 'selected' : '' %>>담당자3</option>
+            <option value="담당자4" <%=formData.teacher==='담당자4' ? 'selected' : '' %>>담당자4</option>
+            <option value="담당자5" <%=formData.teacher==='담당자5' ? 'selected' : '' %>>담당자5</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="class_info">수업 정보</label>
+          <select id="class_info" name="class_info">
+            <option value="오전" <%=formData.class_info==='오전' ? 'selected' : '' %>>오전</option>
+            <option value="오후" <%=formData.class_info==='오후' ? 'selected' : '' %>>오후</option>
+            <option value="종일" <%=formData.class_info==='종일' ? 'selected' : '' %>>종일</option>
+            <option value="일일" <%=formData.class_info==='일일' ? 'selected' : '' %>>일일</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="note_info">특이사항</label>
+          <textarea id="note_info" name="note_info" rows="4" placeholder="특이사항"><%= formData.note_info %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>급식 신청</label>
+          <div>
+            <input type="radio" id="feedYes" name="feed" value="1" <%=formData.feed===true ? 'checked' : '' %>>
+            예
+          </div>
+          <div>
+            <input type="radio" id="feedNo" name="feed" value="0" <%=formData.feed===false ? 'checked' : '' %>>
+            아니오
+          </div>
+        </div>
+        <div id="btnBox">
+          <button type="submit">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

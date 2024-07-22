@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= locals.title %>
+  </title>
+  <link rel="stylesheet" href="/css/freeboardAdd_style.css"> <!-- CSS 파일 임포트 -->
+</head>
+
+<body>
+  <div id="add">
+    <h3>
+      <%= locals.title %>
+    </h3>
+    <div id="cover">
+
+      <form action="/freeboard/add" method="POST" enctype="multipart/form-data">
+        <div id="top">
+          <input type="text" name="title" placeholder="제목" required>&nbsp;
+          <input class="btnBox" type="file" name="Image"><br>
+        </div>
+        <textarea name="content" placeholder="내용을 입력해 주세요." required></textarea><br>
+
+        <div id="btnBox">
+          <button id="addBtn" class="btnBox" type="submit">추가</button>
+      </form>
+      <button id="backBtn" onclick="location.href='/freeboard'">목록으로</button>
+    </div>
+  </div>
+  </div>
+</body>
+
+</html>

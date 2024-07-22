@@ -11,13 +11,24 @@ body {
     /*가로축 스크롤 제거*/
 }
 
-#cover {
+#freeboard {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
     padding: 20px 0px;
 }
 
+#freeboard a {
+    color: #000; 
+    text-decoration: none; 
+}
+
+#cover {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 /* 카테고리 메뉴 설정 */
 .category-menu {
     position: fixed;
@@ -55,42 +66,54 @@ body {
     color: #333;
 }
 
-/* 메인 콘텐츠 설정 */
-#main-content {
-    margin: 0 auto;
-    width: 80%; /* 메인 콘텐츠 너비 80%로 조정 */
+.main-content {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background-color: #fff;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center; /* 가운데 정렬 */
 }
 
-#main-content h3 {
+h3 {
     color: #333;
     font-size: 24px;
     margin-bottom: 15px;
 }
 
-/* 검색 폼 설정 */
-.search-form {
-    margin-bottom: 30px;
-    text-align: center; /* 가운데 정렬 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
 }
 
-.search-container {
-    display: inline-flex;
-    align-items: center;
+table, th, td {
+    border: 1px solid #ddd;
 }
 
-.search-form input[type="text"] {
-    width: 500px;
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+form input[type="text"], form select {
     padding: 8px;
     border-radius: 3px;
     border: 1px solid #ccc;
+    margin-right: 5px;
 }
 
-.search-form button {
+form button {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
@@ -99,43 +122,11 @@ body {
     cursor: pointer;
 }
 
-.search-form button:hover {
+form button:hover {
     background-color: #0056b3;
 }
 
-/* 공지사항 목록 테이블 설정 */
-.notice-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.notice-table th,
-.notice-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    color: #000;
-}
-
-.notice-table th {
-    background-color: #f2f2f2;
-}
-
-.notice-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.notice-title a {
-    text-decoration: none;
-}
-
-/* 글쓰기 버튼 설정 */
-.write-button {
-    text-align: center; 
-    margin-top: 20px;
-}
-
-.write-button button {
+button {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
@@ -145,6 +136,6 @@ body {
     margin-top: 10px;
 }
 
-.write-button button:hover {
+button:hover {
     background-color: #218838;
 }

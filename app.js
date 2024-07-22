@@ -7,9 +7,6 @@ const adminRoutes = require('./routes/admin/main');
 const path = require('path');
 const connectDB = require("./config/db");
 
-
-
-
 connectDB(); 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -20,7 +17,6 @@ app.use(expressLayouts);
 
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
-
 
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "ejs");
