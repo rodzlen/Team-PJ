@@ -11,26 +11,26 @@
 
     <div id="userMyPage">
         <h2>내 정보 수정</h2>
-        <form class="wrapBox" id="userForm">
+        <form class="wrapBox" id="userForm" action="/users/mypage/update">  
             <div id="coverU">
                 <fieldset id="userInfo">
                     <legend>견주 정보</legend>
-                    <input type="text" id="user_id" placeholder="id" disabled><br>
+                    <input type="text" id="user_id" placeholder="<%= locals.user.user_id %>" disabled><br>
                     <input type="password" id="current_password" placeholder="기존 비밀번호"><br>
                     <input type="password" id="confirm_password" placeholder="기존 비밀번호 확인"><br>
-                    <input type="text" id="user_name" placeholder="견주이름" disabled><br>
-                    <input type="tel" id="user_phone" placeholder="견주연락처"><br>
+                    <input type="text" id="user_name" placeholder="<%= locals.user.user_name %>" disabled><br>
+                    <input type="tel" id="user_phone" placeholder="<%= locals.user.user_phone %>"><br>
                 </fieldset>
             </div>
 
             <div id="coverD">
                 <fieldset id="dogInfo">
                     <legend>대표 강아지 정보</legend><br>
-                    <input type="text" class="form-control" id="pet_name" placeholder="강아지 이름"><br>
+                    <input type="text" class="form-control" id="pet_name" placeholder="<%= locals.user.pet_name %>"><br>
                     <div>
                         강아지 성별
                         <label>
-                            <input type="radio" name="sex" id="male" value="male">
+                            <input type="radio" name="sex" id="male" value="male" >
                             남
                         </label>
                         <label>
@@ -50,7 +50,8 @@
                         </label>
                     </div><br>
                     <div>
-                        <textarea class="form-control form-control-notes" id="peculiarity" placeholder="기존 특이사항"></textarea>
+                        <label>특이사항</label >
+                        <textarea class="form-control form-control-notes" id="peculiarity" placeholder="<%= locals.user.peculiarity%>"></textarea>
                     </div><br>
                     <div id="add">
                         <button type="button" id="addBtn">+ 내 강아지 추가</button>

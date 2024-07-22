@@ -1,6 +1,7 @@
 :root {
     --brown: #dd8e55;
     --yellow: #fbd663;
+<<<<<<< HEAD
   }
 
 body {
@@ -9,6 +10,17 @@ body {
     width: 100vw;
     overflow-x: hidden;
     /*가로축 스크롤 제거*/
+=======
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    overflow-x: hidden;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif; /* 폰트 지정 */
+>>>>>>> chae
 }
 
 #userMyPage {

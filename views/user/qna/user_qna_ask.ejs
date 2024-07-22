@@ -1,13 +1,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>질문 작성하기</title>
+  <title><%= locals.title %></title>
   <link rel="stylesheet" href="/css/qna_styles.css">
 </head>
 <body>
-  <h1>질문 작성하기</h1>
-  <form action="/qna/add" method="POST">
-      <input type="hidden" name="user_id" value="<%= userId %>">
+  <h1><%= locals.title %></h1>
+  <form action="/qna/ask" method="POST">
+    <!-- <input type="hidden" name="user_id" value="">  session 구현시 추가 -->
       <div>
           <label for="title">제목</label>
           <input type="text" id="title" name="title" required>
@@ -17,5 +17,6 @@
           <textarea id="content" name="content" required></textarea>
       </div>
       <button type="submit">제출</button>
+      <button onclick= 'location.href="/qna"'>뒤로가기</button>
   </form>
 </body>

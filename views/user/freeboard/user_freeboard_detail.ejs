@@ -8,7 +8,7 @@
     <h3><%= data.title %></h3>
     <div id="cover">
     <textarea><%= data.content %></textarea>
-    <img><%= data.image %></img>
+    <img src="/img/<%= data.image %>">
     <p>작성일: <%= data.post_date %></p>
     <div id="btnBox">
     <button id="backBtn" onclick="location.href='/freeboard'">목록으로</button>

@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
     <link rel="stylesheet" href="/css/notice_style.css"> <!-- CSS 파일 임포트 -->
-  </head>
+</head>
 
 <aside>
     <h3>카테고리</h3>
@@ -27,9 +27,9 @@
             </tr>
         </thead>
         <tbody>
-            <% data.forEach(function(e1){ %>
+            <% data.forEach(function(e1,index){ %>
             <tr>
-                <td><%=e1.id %></td>
+                <td><%=index +1 %></td>
                 <td class="notice-title"><a href="/notice/<%= e1.id %>"><%= e1.title %></a></td>
                 <td><%= e1.post_date %></td>
                 <td><%= e1.createBy %></td>
