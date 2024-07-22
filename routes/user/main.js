@@ -24,7 +24,7 @@ function search(query, searchQuery, typeQuery) {
   return { query, queryParams };
 }
 
-// 공지사항 목록 페이지 라우터
+// 공지사항 검색 목록 페이지 라우터
 router.get(
   "/notice",
   asyncHandler(async (req, res) => {

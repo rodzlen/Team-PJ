@@ -6,8 +6,13 @@ const userRoutes = require("./routes/user/main");
 const adminRoutes = require("./routes/admin/main");
 const path = require("path");
 const connectDB = require("./config/db");
+const methodOverride = require("method-override");
+
+// method-override 미들웨어 설정
+app.use(methodOverride("_method"));
 
 connectDB();
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
