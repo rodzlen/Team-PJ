@@ -1,0 +1,27 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/notice_style.css" />
+  <!-- CSS 파일 임포트 -->
+</head>
+<div class="notice-detail-box">
+  <h3><%= data.title %></h3>
+  <p><%= data.content %></p>
+  <img src="/img/<%= data.image %>" alt="Uploaded Image" />
+  <p>작성일: <%= data.post_date %></p>
+  <br />
+  <p>wkrtjdwk: <%= data.createBy %></p>
+  <br />
+  <a href="/admin/notice">목록으로</a><br />
+  <a href="/admin/notice/edit/:<%= data.id%>">수정</a><br />
+  <form
+    action="/admin/notice/delete/:<%= data.id %>"
+    method="POST"
+    onsubmit="return confirm('정말 삭제하시겠습니까?');"
+  >
+    <button type="submit">삭제</button>
+  </form>
+</div>
+
+<!-- views/admin/notice/notice-detail.ejs -->

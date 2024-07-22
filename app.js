@@ -16,14 +16,13 @@ app.use(expressLayouts);
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
 
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.set('layout', './layouts/main');
-app.set('layout extractScripts', true);
+app.set("layout", "./layouts/main");
+app.set("layout extractScripts", true);
 
-
-
-
-app.listen(port,()=>{
+app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
-})
+});
+
+// app.js
