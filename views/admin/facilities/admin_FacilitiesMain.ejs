@@ -46,8 +46,8 @@
             <tr>
                 <% facilities.forEach((facility, index) => { %>
                     <td>
-                        <div class="facility-card">
-                            <img src="/img/<%= facility.photo %>" alt="Uploaded Image" class="facility-image">
+                        <div class="facility-card">     
+                            <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
                             <ul class="facility-info">
                                 <li>시설 이름: <%= facility.facility_name %></li>
                                 <li>주요 시설: <%= facility.main_facilities %></li>
