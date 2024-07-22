@@ -19,12 +19,8 @@ body {
   padding: 20px 0px;
 }
 
-#introduction a {
-  color: black;
-}
-
 .cover {
-  width: 50%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,14 +30,11 @@ body {
   margin: 30px 0px;
 }
 
-#btnBox {
-  width: 50%;
-  display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 50px;
+table {
+  margin: 30px 0px;
 }
 
-#addBtn {
+.addBtn {
   width: 100px;
   padding: 8px 15px;
   border: none;
@@ -49,13 +42,14 @@ body {
   background-color: #28a745;
   color: #fff;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
-#addBtn:hover {
+.addBtn:hover {
   background-color: #218838;
 }
 
-#editBtn {
+.editBtn {
   width: 100px;
   padding: 8px 15px;
   border: none;
@@ -63,22 +57,10 @@ body {
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
+  margin: 10px 0px;
+  margin-bottom: 20px;
 }
 
-#editBtn:hover {
+.editBtn:hover {
   background-color: #0056b3;
-}
-
-#delBtn {
-  width: 100px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 3px;
-  background-color: #fa5329;
-  color: #fff;
-  cursor: pointer;
-}
-
-#delBtn:hover {
-  background-color: #d6431f;
 }
