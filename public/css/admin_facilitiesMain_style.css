@@ -19,6 +19,10 @@ body {
   padding: 20px 0px;
 }
 
+#introduction a {
+  color: black;
+}
+
 .cover {
   width: 50%;
   display: flex;

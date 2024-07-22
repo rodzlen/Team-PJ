@@ -569,7 +569,6 @@ router.delete("/admin/delete/:id", async (req, res) => {
   }
 });
 
-
 //시설 정보 및 직원 소개
 router.get("/adminfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
@@ -607,10 +606,34 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
+// 시설 생성 페이지
+router.get("/adminfacilitiescreate", (req, res) => {
+  res.render("admin/facilities/admin_FacilitiesCreate");
+});
+
+
+// 시설 생성 
+router.post('/adminfacilitiescreate', upload.single('image'), (req, res) => {
+  try {
+    const { facility_name, main_facilities = ''} = req.body;
+    const photo = req.file ? req.file.path : '';
+
+    const query = `INSERT INTO Facilities (facility_name, main_facilities, photo) VALUES (?, ?, ?)`;
+
+    db.query(query, [facility_name, main_facilities, photo], (err, result) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).send('Internal Server Error');
+      }
+      res.redirect('/admin/adminFacilitiesMain');
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 // 시설 수정 페이지
-http://localhost:8500/admin/adminfacilitiesedit/22
-
 router.get("/adminfacilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
@@ -625,21 +648,12 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
   });
 });
 
-
-
-
-
 // 시설 정보 수정 처리
-router.post("/adminfacilitiesedit", upload.single('image'), (req, res) => {
+router.post("/adminfacilitiesedit/:id", upload.single('image'), (req, res) => {
   const id = req.body.id;
-  const name = req.body.facility_name || 'default_name'; // name이 NULL이면 기본값 설정
-  const features = req.body.main_facilities || 'default_features'; // features가 NULL이면 기본값 설정
+  const name = req.body.facility_name || 'default_name';
+  const features = req.body.main_facilities || 'default_features';
   const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
-
-  if (!name) {
-    res.status(400).send("Facility name cannot be null.");
-    return;
-  }
 
   const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, photo = ? WHERE id = ?`;
 
@@ -648,9 +662,16 @@ router.post("/adminfacilitiesedit", upload.single('image'), (req, res) => {
       console.log(err);
       res.send(err);
     } else {
-      res.redirect("/facilitiesMain");
+      res.redirect("/admin/adminFacilitiesMain");
     }
   });
+});
+
+
+// 시설 생성 페이지
+// http://localhost:8500/admin/adminfacilitiescreate
+router.get("/adminfacilitiescreate", (req, res) => {
+  res.render("admin/facilities/admin_FacilitiesCreate");
 });
 
 // 시설 생성 페이지
@@ -676,19 +697,101 @@ router.post('/facilitiescreate', upload.single('image'), (req, res) => {
   });
 }); 
 
-// 시설 삭제 
-router.post("/delete", (req, res) => {
+// 시설 정보 삭제 처리
+router.post('/delete', (req, res) => {
   const id = req.body.id;
   const query = "DELETE FROM Facilities WHERE id = ?";
+  
   db.query(query, [id], (err, result) => {
     if (err) {
       console.log(err);
-      res.send(err);
+      res.status(500).send(err);
     } else {
-      res.redirect("/facilitiesMain");
+      res.redirect("/admin/adminFacilitiesMain");
     }
   });
 });
+
+// 직원 생성 페이지
+router.get("/adminstaffcreate", (req, res) => {
+  res.render("admin/staff/admin_StaffCreate");
+});
+
+
+// 직원 생성 
+router.post('/adminstaffcreate', upload.single('image'), (req, res) => {
+  const { name, role, contact_info = '' } = req.body;
+  const photo = req.file ? req.file.path : '';
+
+  const query = `INSERT INTO Staff (name, role, photo, contact_info) VALUES (?, ?, ?, ?)`;
+
+  db.query(query, [name, role, photo, contact_info], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.redirect('/admin/adminFacilitiesMain'); // 생성 후 리다이렉트할 경로
+    }
+  });
+});
+
+// 직원 수정 페이지
+router.get("/adminstaffedit/:id", (req, res) => {
+  const ID = req.params.id;
+ 
+  const query = "SELECT * FROM staff WHERE staff_id = ?";
+  db.query(query, [ID], (err, result) => {
+    if (err) {
+      res.send(err);    
+    } else if (result.length === 0) {
+      res.send("찾으시는 페이지가 존재하지 않습니다.");
+    } else {
+      res.render("admin/staff/admin_StaffEdit", { Data2: result[0] });
+    }
+  });
+});
+
+// 직원 정보 수정 처리
+router.post("/adminstaffedit/:id", upload.single('image'), (req, res) => {
+  const id = req.params.id; // URL에서 직원 ID 가져오기
+  const name = req.body.name ? req.body.name.trim() : 'default_name'; // name이 NULL이면 기본값 설정
+  const role = req.body.role ? req.body.role.trim() : 'default_role'; // role이 NULL이면 기본값 설정
+  const contact_info = req.body.contact_info ? req.body.contact_info.trim() : 'default_contact_info';
+  const photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
+
+  // 필수 필드가 존재하지 않으면 오류 처리
+  if (!name) {
+    res.status(400).send("직원 이름은 필수 입력 항목입니다.");
+    return;
+  }
+
+  const query = `UPDATE Staff SET name = ?, role = ?, photo = ?, contact_info = ? WHERE staff_id = ?`;
+
+  db.query(query, [name, role, photo, contact_info, id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("데이터베이스 오류가 발생했습니다.");
+    } else {
+      res.redirect("/admin/adminFacilitiesMain");
+    }
+  });
+});
+
+// 직원 정보 삭제 처리
+router.post('/delete2', (req, res) => {
+  const id = req.body.staff_id;
+  const query = "DELETE FROM staff WHERE staff_id = ?";
+  
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.redirect("/admin/adminFacilitiesMain");
+    }
+  });
+});
+
 
 // 어드민 메인페이지
 router.get("/adminmainpage", (req, res) => {
