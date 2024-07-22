@@ -58,8 +58,6 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
   });
 }));
 
-
-
 // 공지사항 추가 페이지
 router.get("/notice/add", asyncHandler(async (req, res) => {
   const locals= {title : "공지사항 추가"}
@@ -130,6 +128,7 @@ router.get(
     }
   })
 );
+
  // 공지사항 수정 처리
 router.post(
   "/notice/edit/:id",
