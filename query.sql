@@ -165,4 +165,3 @@ CREATE TABLE ClassRegistration (
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
 );
-
