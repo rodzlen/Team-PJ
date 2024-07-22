@@ -18,6 +18,10 @@ body {
     padding: 20px 0px;
 }
 
+#cover a {
+    color: #000;
+}
+
 /* 카테고리 메뉴 설정 */
 .category-menu {
     position: fixed;
