@@ -7,8 +7,6 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload")
 const multer = require("multer");
 //게시글 검색 기능
-
-
 let queryParams = [];
 function search(query, searchQuery, typeQuery) {
   if (searchQuery) {
@@ -26,6 +24,16 @@ function search(query, searchQuery, typeQuery) {
 
   return { query, queryParams };
 }
+
+//세션에 로그인 정보 담겨있는지 확인
+const checkLogin = (req, res, next) => {
+  if (!req.session.user_id) {
+    return res.status(401).send('<script>alert("로그인이 필요합니다"); window.location.href="/";</script>');
+  } 
+  next();
+};
+
+
 
 
 // 공지사항 목록 페이지 라우터
@@ -108,7 +116,8 @@ router.get("/freeboard/detail/:id", asyncHandler(async (req, res) => {
 }));
 
 // 자유게시판 글쓰기 페이지
-router.get("/freeboard/add", asyncHandler(async (req, res) => {
+router.get("/freeboard/add",checkLogin, asyncHandler(async (req, res) => {
+  checkLogin
   const locals= {title : "새 게시글 작성"}
   res.render("user/freeboard/user_freeboard_add", { locals });
 }));
@@ -116,7 +125,7 @@ router.get("/freeboard/add", asyncHandler(async (req, res) => {
 
 //자유게시판 글쓰기 처리
 router.post(
-  "/freeboard/add",
+  "/freeboard/add",checkLogin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
     try { 
@@ -149,6 +158,7 @@ router.post(
 router.get(
   "/freeboard/edit/:id",
   asyncHandler(async (req, res) => {
+    checkLogin;
     const locals = { title: "게시글 수정" };
     const id = req.params.id;
     const query = 'SELECT * FROM freeboard WHERE id = ?';
@@ -200,6 +210,7 @@ router.post(
 router.post(
   "/freeboard/delete/:id",
   async (req, res) => {
+    checkLogin;
     const id = req.params.id;
     const query = 'DELETE FROM freeboard WHERE id = ?';
 
@@ -425,8 +436,11 @@ router.post("/users/login", asyncHandler(async (req, res) => {
       res.status(500).json({ error: '로그인 중 에러가 발생했습니다.' });
     } else {
       if (results.length > 0) {
-        // 로그인 성공
-        res.json({ message: '로그인 성공!' });
+        const user = results[0];
+        req.session.user = user; // 세션에 사용자 정보 저장
+        console.log(user.user_id)
+        res.json({ message: user.user_id + '님 환영합니다!' });
+
       } else {
         // 로그인 실패
         res.status(401).json({ error: '아이디 또는 비밀번호가 일치하지 않습니다.' });
@@ -434,6 +448,7 @@ router.post("/users/login", asyncHandler(async (req, res) => {
     }
   });
 }));
+
 
 /* */
 // 사용자 정보 가져오기
