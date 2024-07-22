@@ -102,16 +102,6 @@ a:hover {
   transition: transform 0.3s ease;
 }
 
-/* 메인 css */
-
-<<<<<<< HEAD
-=======
-#main {
-  /* 스크롤 때문에 임시로 지정해둔 크기임!! */
-  height: 1000px;
-}
-
->>>>>>> chae
 /* 푸터 css */
 footer {
   background-color: var(--brown);
