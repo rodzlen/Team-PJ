@@ -667,35 +667,11 @@ router.post("/adminfacilitiesedit/:id", upload.single('image'), (req, res) => {
   });
 });
 
-
 // 시설 생성 페이지
 // http://localhost:8500/admin/adminfacilitiescreate
 router.get("/adminfacilitiescreate", (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
 });
-
-// 시설 생성 페이지
-// http://localhost:8500/admin/adminfacilitiescreate
-router.get("/adminfacilitiescreate", (req, res) => {
-  res.render("admin/facilities/admin_FacilitiesCreate");
-});
-
-// 시설 생성 페이지
-router.post('/facilitiescreate', upload.single('image'), (req, res) => {
-  const { facility_name, main_facilities = '', operating_hours = '', contact_info = '' } = req.body;
-  const photo = req.file ? req.file.path : '';
-
-  const query = `INSERT INTO Facilities (facility_name, main_facilities, operating_hours, contact_info, photo) VALUES (?, ?, ?, ?, ?)`;
-
-  db.query(query, [facility_name, main_facilities, operating_hours, contact_info, photo], (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send(err);
-    } else {
-      res.redirect('/facilitiesMain'); // 생성 후 리다이렉트할 경로
-    }
-  });
-}); 
 
 // 시설 정보 삭제 처리
 router.post('/delete', (req, res) => {
