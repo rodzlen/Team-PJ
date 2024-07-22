@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>게시물 리스트 - 관리자</title>
-    <link rel="stylesheet" href="/css/postlist.css" />
+    //<link rel="stylesheet" href="/css/postlist.css" />
   </head>
   <body>
     <div id="content">
@@ -34,7 +34,12 @@
             <a href="/user/userdashboard/<%= post._id %>">
                 <%= post.title %>
             </a>
-           
+            <div class="admin-post-controls">
+                <a href="/adminedit/<%= post._id %>" class="btn">편집</a>
+                <form action="/delete/<%= post._id %>?_method=DELETE" method="POST">
+                    <input type="submit" value="삭제" class="btn-delete btn">
+                </form>
+            </div>
         </li>
         <% }) %>
       </ul>
@@ -44,4 +49,4 @@
   </body>
 </html>
 
-<!-- views/dashboard/admin/a_morningClassPosts -->
+<!-- views/admin/class/admin_morningClassPosts -->

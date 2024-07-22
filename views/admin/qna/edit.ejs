@@ -1,0 +1,57 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QnA 상세</title>
+  <link rel="stylesheet" href="/css/qna_styles.css" />
+</head>
+<body>
+  <h1>QnA 상세</h1>
+  <h2><%= question.title %></h2>
+  <p><%= question.content %></p>
+  <p>작성일: <%= question.created_at %></p>
+  <p>작성자: <%= question.user_id %></p>
+
+  <h3>답변</h3>
+  <% answers.forEach(function(answer) { %>
+  <div>
+    <p><%= answer.content %></p>
+    <p>작성일: <%= answer.created_at %></p>
+    <p>작성자: <%= answer.admin_id %></p>
+  </div>
+  <% }) %> <% if (!answers.length) { %>
+  <p>아직 답변이 없습니다.</p>
+  <% } %> <% if (isAdmin) { %>
+  <h3>답변 작성</h3>
+  <form action="/admin/qna/answer/<%= question.id %>" method="POST">
+    <textarea name="content" required></textarea>
+    <input type="hidden" name="admin_id" value="<%= adminId %>" />
+    <button type="submit">답변하기</button>
+  </form>
+  <% } %>
+
+  <h3>관리</h3>
+  <form
+    action="/admin/qna/delete/question/<%= question.id %>"
+    method="POST"
+    onsubmit="return confirm('정말 삭제하시겠습니까?');"
+  >
+    <button type="submit">질문 삭제</button>
+  </form>
+  <form action="/admin/qna/edit/<%= question.id %>" method="GET">
+    <button type="submit">질문 수정</button>
+  </form>
+  <% answers.forEach(function(answer) { %>
+  <form
+    action="/admin/qna/delete/answer/<%= answer.id %>"
+    method="POST"
+    onsubmit="return confirm('정말 삭제하시겠습니까?');"
+  >
+    <input type="hidden" name="questionId" value="<%= question.id %>" />
+    <button type="submit">답변 삭제</button>
+  </form>
+  <% }) %>
+
+  <a href="/qna">목록으로</a>
+</body>
+
+<!-- views/admin/qna/edit.ejs -->
