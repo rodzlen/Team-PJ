@@ -266,7 +266,7 @@ router.get(
 
 // 마이페이지(관리자용)
 router.get(
-  "/admin_mypage",
+  "/admin/admin_mypage",
   asyncHandler(async (req, res) => {
     res.render("admin/adminManagement/admin_mypage", { layout: adminLayout });
   })
@@ -316,6 +316,12 @@ router.post(
         if (results.length > 0) {
           // 로그인 성공
           res.json({ message: "로그인 성공!" });
+          req.session.user = {
+            id: results[0].id,
+            name: results[0].admin_name,
+            role: 'admin'
+          };
+          
         } else {
           // 로그인 실패
           res
