@@ -10,3 +10,71 @@ body {
     overflow-x: hidden;
     /*가로축 스크롤 제거*/
 }
+
+#introduction {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.cover {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 30px 0px;
+}
+
+#btnBox {
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 50px;
+}
+
+#addBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+}
+
+#addBtn:hover {
+  background-color: #218838;
+}
+
+#editBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+#editBtn:hover {
+  background-color: #0056b3;
+}
+
+#delBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #fa5329;
+  color: #fff;
+  cursor: pointer;
+}
+
+#delBtn:hover {
+  background-color: #d6431f;
+}
