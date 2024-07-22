@@ -28,7 +28,7 @@
                                 </button>
                             </div>
                         </td>
-                        <% if ((index + 1) % 3 === 0) { %>
+                        <% if ((index + 1) % 5 === 0) { %>
                             </tr><tr>
                         <% } %>
                     <% }); %>
@@ -47,7 +47,7 @@
                 <% facilities.forEach((facility, index) => { %>
                     <td>
                         <div class="facility-card">
-                            <img src="/img/<%= facility.photo %>" alt="Uploaded Image">       
+                            <img src="/img/<%= facility.photo %>" alt="Uploaded Image" class="facility-image">
                             <ul class="facility-info">
                                 <li>시설 이름: <%= facility.facility_name %></li>
                                 <li>주요 시설: <%= facility.main_facilities %></li>

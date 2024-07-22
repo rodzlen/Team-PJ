@@ -801,6 +801,7 @@ router.post('/delete2', (req, res) => {
 
 
 
+
 // 어드민 메인페이지
 router.get("/adminmainpage", (req, res) => {
   res.render("mainpage");
