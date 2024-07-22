@@ -124,6 +124,7 @@ CREATE TABLE FreeBoard (
     content TEXT NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     image BLOB,
+    createBy VARCHAR(50) NOT NULL,
     a_id INT,
     FOREIGN KEY (a_id) REFERENCES Admin(a_id)
 );
