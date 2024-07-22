@@ -13,8 +13,6 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(expressLayouts);
 
-app.use('/img', express.static(path.join(__dirname, 'public/img')));
-
 
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
