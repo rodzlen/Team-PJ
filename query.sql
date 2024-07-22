@@ -124,6 +124,7 @@ CREATE TABLE FreeBoard (
     content TEXT NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     image BLOB,
+    createBy VARCHAR(50) NOT NULL,
     a_id INT,
     FOREIGN KEY (a_id) REFERENCES Admin(a_id)
 );
@@ -158,8 +159,8 @@ CREATE TABLE Pets (
     peculiarity VARCHAR(100),
     u_id INT,  
     FOREIGN KEY (u_id) REFERENCES Users(u_id)
-  );
-  
+);
+
 -- 수업 신청 테이블
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
