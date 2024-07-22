@@ -109,7 +109,7 @@ router.get(
     try {
       // MySQL 쿼리로 공지사항 조회
       const query = 'SELECT * FROM NoticeBoard WHERE id = ?';
-
+      
       // db.query를 사용할 때 쿼리 문자열과 파라미터를 명확히 전달
       db.query(query, [id], (err, result) => {
         if (err) {
@@ -642,12 +642,12 @@ router.get("/adminfacilitiescreate", (req, res) => {
 // 시설 생성 
 router.post('/adminfacilitiescreate', upload.single('image'), (req, res) => {
   try {
-    const { facility_name, main_facilities = '', operating_hours = '', contact_info = '' } = req.body;
+    const { facility_name, main_facilities = ''} = req.body;
     const photo = req.file ? req.file.path : '';
 
-    const query = `INSERT INTO Facilities (facility_name, main_facilities, operating_hours, contact_info, photo) VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO Facilities (facility_name, main_facilities, photo) VALUES (?, ?, ?)`;
 
-    db.query(query, [facility_name, main_facilities, operating_hours, contact_info, photo], (err, result) => {
+    db.query(query, [facility_name, main_facilities, photo], (err, result) => {
       if (err) {
         console.error('Database error:', err);
         return res.status(500).send('Internal Server Error');
