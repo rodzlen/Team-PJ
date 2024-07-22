@@ -429,7 +429,7 @@ router.get(
   "/user_login",
   asyncHandler(async (req, res) => {
     const locals = {user: req.session.user}
-    res.render("user/userManagement/user_login", { locals, layout: false });
+    res.render("user/userManagement/user_login", { locals, layout: mainLayout });
   })
 );
 
@@ -455,12 +455,10 @@ router.post("/users/signup", asyncHandler(async (req, res) => {
   db.query(query, value, (err, results) => {
     if (err) {
       console.error('회원가입 중 에러 발생:', err);
-      res.status(500).json({ error: '회원가입 중 에러가 발생했습니다.' });
-      res.render("user_home", { layout: mainLayout });
+      res.status(500).send('<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/";</script>');
     } else {
       console.log('회원가입 성공:', results);
-      res.json({ message: '회원가입이 성공적으로 완료되었습니다.' });
-      res.render("user_home", { layout: userLayout });
+      return res.send('<script>alert("회원가입이 성공적으로 완료되었습니다!"); window.location.href="/";</script>');
     }
   });
 }));

@@ -126,22 +126,21 @@
     <div class="login-content login-content-signup" style="display: none;">
       <div>
         <h2>회원가입</h2>
-        <form class="wrapBox" onsubmit="handleSignup(event)" role="form">
+        <form class="wrapBox" action="/users/signup" role="form" method="post">
           <input type="text" name="user_id" class="form-control" placeholder="아이디" required>
           <input type="password" name="user_pw" class="form-control" placeholder="비밀번호" required>
           <input type="password" name="user_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>
           <input type="text" name="user_name" class="form-control" placeholder="견주이름" required>
           <input type="tel" name="user_phone" class="form-control" placeholder="견주연락처" required>
           <input type="text" name="pet_name" class="form-control" placeholder="강아지이름" required>
-
           <div>
             강아지 성별
             <label>
-              <input type="radio" name="sex" value="Male" required>
+              <input type="radio" name="pet_gender" value="Male" required>
               남
             </label>
             <label>
-              <input type="radio" name="sex" value="Female" required>
+              <input type="radio" name="pet_gender" value="Female" required>
               여
             </label>
           </div>
@@ -149,11 +148,11 @@
           <div>
             중성화 여부
             <label>
-              <input type="radio" name="neutering" value="yes" required>
+              <input type="radio" name="pet_neutering" value="yes" required>
               예
             </label>
             <label>
-              <input type="radio" name="neutering" value="no" required>
+              <input type="radio" name="pet_neutering" value="no" required>
               아니오
             </label>
           </div>
