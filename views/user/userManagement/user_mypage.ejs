@@ -11,46 +11,47 @@
 
     <div id="userMyPage">
         <h2>내 정보 수정</h2>
-        <form class="wrapBox" id="userForm">
+        <form class="wrapBox" id="userForm" action="/users/mypage/update" method="post">  
             <div id="coverU">
                 <fieldset id="userInfo">
                     <legend>견주 정보</legend>
-                    <input type="text" id="user_id" placeholder="id" disabled><br>
-                    <input type="password" id="current_password" placeholder="기존 비밀번호"><br>
-                    <input type="password" id="confirm_password" placeholder="기존 비밀번호 확인"><br>
-                    <input type="text" id="user_name" placeholder="견주이름" disabled><br>
-                    <input type="tel" id="user_phone" placeholder="견주연락처"><br>
+                    <input type="text" name="user_id" id="user_id" placeholder="<%= locals.user.user_id %>" readonly><br>
+                    <input type="password" name="current_password" id="current_password" placeholder="기존 비밀번호" required><br>
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="기존 비밀번호 확인" required><br>
+                    <input type="text" name="user_name" id="user_name" placeholder="<%= locals.user.user_name %>" readonly><br>
+                    <input type="tel" name="user_phone" id="user_phone" placeholder="<%= locals.user.user_phone %>" required><br>
                 </fieldset>
             </div>
 
             <div id="coverD">
                 <fieldset id="dogInfo">
                     <legend>대표 강아지 정보</legend><br>
-                    <input type="text" class="form-control" id="pet_name" placeholder="강아지 이름"><br>
+                    <input type="text" name="pet_name" id="pet_name" placeholder="<%= locals.user.pet_name %>" required><br>
                     <div>
                         강아지 성별
                         <label>
-                            <input type="radio" name="sex" id="male" value="male">
+                            <input type="radio" name="sex" id="male" value="male" required>
                             남
                         </label>
                         <label>
-                            <input type="radio" name="sex" id="female" value="female">
+                            <input type="radio" name="sex" id="female" value="female" required>
                             여
                         </label>
                     </div><br>
                     <div>
                         중성화 여부
                         <label>
-                            <input type="radio" name="neutering" id="yes" value="yes">
+                            <input type="radio" name="neutering" id="yes" value="yes" required>
                             예
                         </label>
                         <label>
-                            <input type="radio" name="neutering" id="no" value="no">
+                            <input type="radio" name="neutering" id="no" value="no" required>
                             아니오
                         </label>
                     </div><br>
                     <div>
-                        <textarea class="form-control form-control-notes" id="peculiarity" placeholder="기존 특이사항"></textarea>
+                        <label>특이사항</label>
+                        <textarea name="peculiarity" id="peculiarity" placeholder="<%= locals.user.peculiarity %>"></textarea>
                     </div><br>
                     <div id="add">
                         <button type="button" id="addBtn">+ 내 강아지 추가</button>
@@ -74,25 +75,25 @@
             fetch('/users/mypage/info')
                 .then(response => response.json())
                 .then(data => {
-                    var id = document.getElementById('user_id').value = data.user_id;
+                    document.getElementById('user_id').value = data.user_id;
                     document.getElementById('user_name').value = data.user_name;
                     document.getElementById('user_phone').value = data.user_phone;
                     document.getElementById('pet_name').value = data.pet_name;
-                    
+
                     // 강아지 성별 설정
                     if (data.pet_gender === 'male') {
                         document.getElementById('male').checked = true;
                     } else if (data.pet_gender === 'female') {
                         document.getElementById('female').checked = true;
                     }
-                    
+
                     // 중성화 여부 설정
                     if (data.pet_neutering === 'yes') {
                         document.getElementById('yes').checked = true;
                     } else if (data.pet_neutering === 'no') {
                         document.getElementById('no').checked = true;
                     }
-                    
+
                     document.getElementById('peculiarity').value = data.peculiarity;
                 })
                 .catch(error => {
@@ -100,7 +101,7 @@
                     alert('사용자 정보를 불러오는 도중 오류가 발생했습니다.');
                 });
         });
-        
+
         // 회원 탈퇴 버튼 클릭 시 처리
         document.getElementById('withdrawBtn').addEventListener('click', () => {
             if (confirm('정말로 회원 탈퇴하시겠습니까?')) {
