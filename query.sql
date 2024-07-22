@@ -39,6 +39,7 @@ CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
+    contact_info VARCHAR(40),
     photo BLOB
 );
 
