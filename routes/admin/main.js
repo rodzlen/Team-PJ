@@ -5,6 +5,15 @@ const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
 const upload = require("../../config/upload")
 const multer = require("multer");
+const bcrypt = require("bcrypt")
+
+//세션에 로그인 정보 담겨있는지 확인
+const checkAdminLogin = (req, res, next) => {
+  if (!req.session.user ||!req.session.user.user_id) {
+    return res.status(401).send('<script>alert("로그인이 필요합니다"); window.location.href="/";</script>');
+  } 
+  next();
+};
 
 // 공지사항 메인
 // /admin/notice
@@ -61,7 +70,7 @@ router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
 
 
 // 공지사항 추가 페이지
-router.get("/notice/add", asyncHandler(async (req, res) => {
+router.get("/notice/add",checkAdminLogin, asyncHandler(async (req, res) => {
   const locals= {title : "공지사항 추가"}
   res.render("admin/notice/admin_notice_add", { locals });
 }));
@@ -69,6 +78,7 @@ router.get("/notice/add", asyncHandler(async (req, res) => {
 // 공지사항 추가 처리
 router.post(
   "/notice/add",
+  checkAdminLogin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
@@ -102,6 +112,7 @@ router.post(
 //공지 수정 페이지
 router.get(
   "/notice/edit/:id",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const locals = { title: "공지사항 수정" };
     const id = req.params.id;
@@ -133,6 +144,7 @@ router.get(
  // 공지사항 수정 처리
 router.post(
   "/notice/edit/:id",
+  checkAdminLogin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
     const id = req.params.id;
@@ -169,6 +181,7 @@ router.post(
 // 공지사항 삭제
 router.post(
   "/notice/delete/:id",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const noticeId = req.params.id;
 
@@ -215,7 +228,7 @@ router.get('/qna/detail/:id', async (req, res) => {
   }
 });
 
-router.post('/answer/:id', async (req, res) => {
+router.post('/answer/:id',checkAdminLogin, async (req, res) => {
   const questionId = req.params.id;
   const { admin_id, content } = req.body;
   try {
@@ -227,7 +240,7 @@ router.post('/answer/:id', async (req, res) => {
   }
 });
 // 답변 삭제
-router.post('qna/delete/:id', async (req, res) => {
+router.post('qna/delete/:id',checkAdminLogin, async (req, res) => {
   const answerId = req.params.id;
   const { questionId } = req.body;
   try {
@@ -239,6 +252,52 @@ router.post('qna/delete/:id', async (req, res) => {
   }
 });
 
+
+// 수업 신청 수정 페이지
+router.get('/classregistration/:id/edit', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT * FROM ClassRegistration WHERE id = ?`;
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin";</script>');
+    }
+    if (results.length === 0) {
+      return res.status(404).send('<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin";</script>');
+    }
+    const locals = { registration: results[0] };
+    res.render('admin_class_registration_edit', { locals, layout: mainLayout });
+  });
+}));
+
+// 수업 신청 수정 처리
+router.post('/admin/classregistration/:id/edit', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { class_name, feed_status, pickup_status, start_date, end_date, consultation } = req.body;
+
+  const query = `
+    UPDATE ClassRegistration 
+    SET class_name = ?, feed_status = ?, pickup_status = ?, start_date = ?, end_date = ?, consultation = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [
+    class_name, 
+    feed_status === 'on', 
+    pickup_status === 'on', 
+    start_date, 
+    end_date, 
+    consultation, 
+    id
+  ], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classregistration";</script>');
+    }
+    res.send('<script>alert("수업 신청 정보가 성공적으로 수정되었습니다!"); window.location.href="/admin/classregistration";</script>');
+  });
+}));
 
 // 홈 페이지(관리자용)
 router.get(
@@ -274,7 +333,7 @@ router.get(
 
 // 회원가입 처리
 router.post(
-  "/admin/signup",
+  "/signup",
   asyncHandler(async (req, res) => {
     const { admin_id, admin_pw, admin_name, admin_phone } = req.body;
 
@@ -300,38 +359,35 @@ router.post(
 );
 
 // 로그인 처리
-router.post(
-  "/admin/login",
-  asyncHandler(async (req, res) => {
-    const { admin_id, admin_pw } = req.body;
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
-    // 데이터베이스에서 아이디와 비밀번호 확인
-    const sql = `SELECT * FROM Admin WHERE admin_id = ? AND admin_pw = ?`;
+  const query = 'SELECT * FROM Admin WHERE username = ?';
 
-    db.query(sql, [admin_id, admin_pw], (err, results) => {
-      if (err) {
-        console.error("로그인 중 에러 발생:", err);
-        res.status(500).json({ error: "로그인 중 에러가 발생했습니다." });
-      } else {
-        if (results.length > 0) {
-          // 로그인 성공
-          res.json({ message: "로그인 성공!" });
-          req.session.user = {
-            id: results[0].id,
-            name: results[0].admin_name,
-            role: 'admin'
-          };
-          
-        } else {
-          // 로그인 실패
-          res
-            .status(401)
-            .json({ error: "아이디 또는 비밀번호가 일치하지 않습니다." });
-        }
-      }
-    });
-  })
-);
+  db.query(query, [username], async (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/login";</script>');
+    }
+    
+    if (results.length === 0) {
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/login";</script>');
+    }
+
+    const admin = results[0];
+    const match = await bcrypt.compare(password, admin.password);
+
+    if (!match) {
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/login";</script>');
+    }
+
+    // 세션에 관리자 정보 저장
+    req.session.admin = admin;
+
+    res.send('<script>alert("로그인 성공!"); window.location.href="/admin";</script>');
+  });
+});
+
 
 // 오늘 산책 사진 업로드를 위한 Multer 설정
 const todayWalkStorage = multer.diskStorage({

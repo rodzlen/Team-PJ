@@ -161,7 +161,6 @@ CREATE TABLE Pets (
     FOREIGN KEY (u_id) REFERENCES Users(u_id)
 );
 
--- 수업 신청 테이블
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_name VARCHAR(100) NOT NULL,
@@ -171,9 +170,8 @@ CREATE TABLE ClassRegistration (
     pickup_status BOOLEAN NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    consultation TEXT, -- 관리자용
+    consultation TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
 );
-
