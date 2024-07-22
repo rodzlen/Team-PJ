@@ -107,7 +107,10 @@ CREATE TABLE FreeBoard (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    image BLOB
+    image BLOB,
+    createBy VARCHAR(50) NOT NULL,
+    a_id INT,
+    FOREIGN KEY (a_id) REFERENCES Admin(a_id)
 );
 
 -- 질문 테이블
@@ -126,5 +129,33 @@ CREATE TABLE Answers (
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     answered_by VARCHAR(255) NOT NULL,
     FOREIGN KEY (question_id) REFERENCES Questions(id)
+);
+
+
+-- 펫 추가 테이블
+CREATE TABLE Pets (
+    pet_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_name VARCHAR(50) NOT NULL,
+    pet_gender ENUM('Male', 'Female') NOT NULL, 
+    pet_neutering VARCHAR(20),
+    peculiarity VARCHAR(100),
+    u_id INT,  
+    FOREIGN KEY (u_id) REFERENCES Users(u_id)
+);
+
+-- 수업 신청 테이블
+CREATE TABLE ClassRegistration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    owner_name VARCHAR(100) NOT NULL,
+    dog_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    consultation TEXT, -- 관리자용
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    admin_id INT,
+    FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
 );
 
