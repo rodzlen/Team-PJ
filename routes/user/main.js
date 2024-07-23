@@ -126,7 +126,6 @@ router.get("/freeboard/detail/:id", asyncHandler(async (req, res) => {
 
 // 자유게시판 글쓰기 페이지
 router.get("/freeboard/add",checkLogin, asyncHandler(async (req, res) => {
-  checkLogin
   const locals= {title : "새 게시글 작성",
     user: req.session.user
   }
