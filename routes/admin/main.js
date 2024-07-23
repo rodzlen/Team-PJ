@@ -47,7 +47,6 @@ router.get(
   })
 );
 
-
 // 공지사항 추가 페이지
 router.get(
   "/notice/add",checkAdminLogin,
@@ -541,7 +540,26 @@ router.post(
   })
 );
 
-// 관리자 로그인 처리
+/* 관리자 아이디 중복 확인
+router.post("/admin/check_duplicate", async (req, res) => {
+  const { admin_id } = req.body;
+  const query = "SELECT * FROM Admin WHERE admin_id = ?";
+
+  db.query(query, [admin_id], (err, results) => {
+    if (err) {
+      console.error("데이터베이스 오류:", err);
+      return res.status(500).json({ error: "내부 서버 오류가 발생했습니다." });
+    }
+
+    if (results.length > 0) {
+      res.status(409).json({ error: "이미 사용 중인 아이디입니다." });
+    } else {
+      res.status(200).json({ message: "사용할 수 있는 아이디입니다." });
+    }
+  });
+}); */
+
+// 로그인 처리
 router.post("/admin_login", async (req, res) => {
   const { admin_id, admin_pw } = req.body;
 
