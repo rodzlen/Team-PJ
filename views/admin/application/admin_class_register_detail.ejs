@@ -7,7 +7,7 @@
 
 <div ><!-- 받아온 신청자 정보를 토대로 클래스 정보 테이블에 저장할 것임-->
   <h3><%= locals.title></h3>
-  <form action="/apply" method="POST">
+  <form action="/admin/classreg/apply" method="POST">
     <label for="owner_name"><b>신청자</b></label>
     <input type="text" placeholder="<%=data.owner_name>" name="owner_name" readonly>
    
@@ -15,9 +15,9 @@
     <input type="text" placeholder="<%=data.pet_name>" name="pet_name" readonly>
 
     <label for="startday"><b>희망 시작일</b></label>
-    <input type="date"  name="startday" >
+    <input type="date"  name="startday" placeholder="<%= data.startday%>">
     <label for="endday"><b>희망 종료일</b></label>
-    <input type="date"  name="endday" >
+    <input type="date"  name="endday"   placeholder="<%= data.endday%>">
 
     <label for="feed"><b>급식 신청여부</b></label>
     <div class="radio-group">
@@ -61,8 +61,10 @@
         <label for="radio4" class="radio-label">일일</label>
       </div>
     </div>
-
+    <label for="consultation"><b>특이사항</b></label>
+    <textarea placeholder="특이사항" name="consultation" readonly><%=data.consultation%></textarea>
     <input type="submit" value="등록">
   </form>
+  <button onclick="location.href='/admin/application/delete/<%=data.id%>'">삭제</button>
 </div>
 

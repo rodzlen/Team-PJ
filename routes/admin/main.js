@@ -14,6 +14,13 @@ const checkAdminLogin = (req, res, next) => {
   } 
   next();
 };
+const adminRegAuth = (req,res,next)=>{
+  const authNo= req.body;
+  if (authNo!=1234){
+    return res.status(401).send('<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin_login";</script>');
+  }
+  next();
+}
 
 // 공지사항 메인
 // /admin/notice
@@ -270,9 +277,39 @@ router.get('/classregistration/:id/edit', checkAdminLogin, asyncHandler(async (r
     res.render('admin_class_registration_edit', { locals, layout: mainLayout });
   });
 }));
+// 수업 신청 목록
+router.get('/class-reg', asyncHandler(async (req, res) => {
+  const { search = '', type = 'no||createBy' } = req.query;
+
+  let query = 'SELECT * FROM ClassRegistration';
+  let queryParams = [];
+
+  if (search) {
+      if (type === 'no') {
+          query += ' WHERE id LIKE ?';
+          queryParams.push(`%${search}%`);
+      } else if (type === 'createBy') {
+          query += ' WHERE createBy LIKE ?';
+          queryParams.push(`%${search}%`);
+      } else if (type === 'no||createBy') {
+          query += ' WHERE id LIKE ? OR createBy LIKE ?';
+          queryParams.push(`%${search}%`, `%${search}%`);
+      }
+  }
+
+  db.query(query, queryParams, (err, results) => {
+      if (err) {
+          console.error('Database error:', err);
+          return res.status(500).send('Internal Server Error');
+      }
+
+      const locals = { title: '수업 신청 목록', classReg: results };
+      res.render('class_registration_list', { locals });
+  });
+}));
 
 // 수업 신청 수정 처리
-router.post('/admin/classregistration/:id/edit', checkAdminLogin, asyncHandler(async (req, res) => {
+router.post('/admin/classregistration/edit/:id', checkAdminLogin, asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { class_name, feed_status, pickup_status, start_date, end_date, consultation } = req.body;
 
@@ -334,6 +371,7 @@ router.get(
 // 회원가입 처리
 router.post(
   "/signup",
+  adminRegAuth,
   asyncHandler(async (req, res) => {
     const { admin_id, admin_pw, admin_name, admin_phone } = req.body;
 
