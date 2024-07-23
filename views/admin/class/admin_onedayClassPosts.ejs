@@ -24,14 +24,7 @@
         <% data.forEach(post => { %>
           <li>
             <div class="post-title">
-              <a href="/user/userdashboard/<%= post.dog_id %>"><%= post.pet_name %></a>
-            </div><br>
-            <div class="admin-post-controls">
-              <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>" class="btn">편집</a>
-              <form action="/admin/dashboard/admin/delete/<%= post.dog_id %>?_method=DELETE"
-              method="POST">
-                <input type="submit" value="삭제" class="btn-delete btn" />
-              </form>
+              <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>"><%= post.pet_name %></a>
             </div><br>
           </li>
         <% }) %>
