@@ -471,7 +471,7 @@ router.post("/admin_login", async (req, res) => {
       req.session.admin = admin;
 
       res.send(
-        '<script>alert("로그인 성공!"); window.location.href="/admin_main";</script>'
+        '<script>alert("로그인 성공!"); window.location.href="/admin/admin_main";</script>'
       );
     } catch (compareError) {
       console.error("비밀번호 비교 오류:", compareError);
