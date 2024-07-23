@@ -1,80 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/application_style.css"> <!-- CSS 파일 임포트 -->
+    <link rel="stylesheet" href="/css/user_class_register_style.css" />
+    <title>수업 신청</title>
 </head>
+
 <body>
-    <div>
-        <!-- 받아온 신청자 정보를 토대로 클래스 정보 테이블에 저장할 것임 -->
-        <h3><%= locals.title %></h3>
-        <form action="/admin/classreg/apply/<%= locals.registration.id %>" method="POST">
-            <label for="owner_name"><b>신청자</b></label>
-            <input type="text" id="owner_name" name="owner_name" value="<%= locals.registration.owner_name %>" readonly><br>
-
-            <label for="pet_name"><b>강아지 이름</b></label>
-            <input type="text" id="pet_name" name="pet_name" value="<%= locals.registration.pet_name %>" readonly><br>
-
-            <label for="startday"><b>희망 시작일</b></label>
-            <input type="date" id="startday" name="start_date" value="<%= locals.registration.start_date %>" required><br>
-
-            <label for="endday"><b>희망 종료일</b></label>
-            <input type="date" id="endday" name="end_date" value="<%= locals.registration.end_date %>" required><br>
-
-            <label><b>급식 신청여부</b></label>
-            <div class="radio-group">
-                <div class="radio-container">
-                    <input type="radio" id="feed_yes" name="feed" value="feed" <% if (locals.registration.feed_status === 'feed') { %> checked <% } %>>
-                    <label for="feed_yes" class="radio-label">신청</label>
+    <div id="register">
+        <h1>수업 신청</h1>
+        <div id="cover">
+            <form action="/classregister" method="post">
+                <input type="text" name="owner_name" value="<%= locals.user.user_name %>" readonly><br>
+                <input type="text" name="pet_name" value="<%= locals.user.pet_name %>" readonly><br>
+                <label for="class_name">수업 종류</label>
+                <select name="class_name" id="class_name" required>
+                    <option value="오전">오전</option>
+                    <option value="오후">오후</option>
+                    <option value="종일">종일</option>
+                </select><br>
+                <label for="feed_status">급식 여부</label>
+                <input type="checkbox" name="feed_status" id="feed_status"><br>
+                <label for="pickup_status">픽업 여부</label>
+                <input type="checkbox" name="pickup_status" id="pickup_status"><br>
+                <label for="start_date">시작 날짜</label>
+                <input type="date" name="start_date" id="start_date" required><br>
+                <label for="end_date">종료 날짜</label>
+                <input type="date" name="end_date" id="end_date" required><br>
+                <div id="btnBox">
+                    <button id="addBtn" type="submit">신청</button>
+                    <button id="backBtn" type="button" onclick="location.href='/'">뒤로가기</button>
                 </div>
-                <div class="radio-container">
-                    <input type="radio" id="feed_no" name="feed" value="" <% if (locals.registration.feed_status === '') { %> checked <% } %>>
-                    <label for="feed_no" class="radio-label">미신청</label>
-                </div>
-            </div>
-
-            <label><b>픽업 신청</b></label>
-            <div class="radio-group">
-                <div class="radio-container">
-                    <input type="radio" id="pickup_yes" name="pickup" value="pickup" <% if (locals.registration.pickup_status === 'pickup') { %> checked <% } %>>
-                    <label for="pickup_yes" class="radio-label">신청</label>
-                </div>
-                <div class="radio-container">
-                    <input type="radio" id="pickup_no" name="pickup" value="" <% if (locals.registration.pickup_status === '') { %> checked <% } %>>
-                    <label for="pickup_no" class="radio-label">미신청</label>
-                </div>
-            </div>
-
-            <label><b>클래스 신청</b></label>
-            <div class="radio-group">
-                <div class="radio-container">
-                    <input type="radio" id="class_morning" name="class" value="morning" <% if (locals.registration.class_name === 'morning') { %> checked <% } %> required>
-                    <label for="class_morning" class="radio-label">오전</label>
-                </div>
-                <div class="radio-container">
-                    <input type="radio" id="class_daytime" name="class" value="daytime" <% if (locals.registration.class_name === 'daytime') { %> checked <% } %> required>
-                    <label for="class_daytime" class="radio-label">오후</label>
-                </div>
-                <div class="radio-container">
-                    <input type="radio" id="class_allday" name="class" value="allday" <% if (locals.registration.class_name === 'allday') { %> checked <% } %> required>
-                    <label for="class_allday" class="radio-label">종일</label>
-                </div>
-                <div class="radio-container">
-                    <input type="radio" id="class_oneday" name="class" value="oneday" <% if (locals.registration.class_name === 'oneday') { %> checked <% } %> required>
-                    <label for="class_oneday" class="radio-label">일일</label>
-                </div>
-            </div>
-
-            <label for="consultation"><b>특이사항</b></label>
-            <textarea id="consultation" name="consultation" placeholder="특이사항"><%= locals.registration.consultation %></textarea><br>
-
-            <input type="submit" value="등록">
-        </form>
-        <!-- 뒤로가기 버튼 추가 -->
-        <button onclick="location.href='/admin/classRegList'">뒤로가기</button>
-        <button onclick="location.href='/admin/application/delete/<%= locals.registration.id %>'">삭제</button>
+            </form>
+        </div>
     </div>
 </body>
+
 </html>

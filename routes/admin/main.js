@@ -47,6 +47,33 @@ router.get(
   })
 );
 
+// 자유게시판 세부 내용 페이지 라우터
+router.get(
+  "/notice/detail/:id",
+  asyncHandler(async (req, res) => {
+    const locals = { title: req.params.title, admin: req.session.admin };
+    const id = req.params.id;
+
+    const query = "SELECT * FROM noticeboard WHERE id = ?";
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (results.length > 0) {
+          res.render("admin/notice/admin_notice_detail", {
+            locals,
+            data: results[0],
+            layout: adminLayout,
+          });
+        } else {
+          res.status(404).send("게시글을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
+
 // 공지사항 추가 페이지
 router.get(
   "/notice/add",checkAdminLogin,
@@ -146,11 +173,11 @@ router.post(
       const { title, content } = req.body;
       const image = req.file ? req.file.filename : null;
       const id = req.params.id;
-      const date = new Date();
+      const post_date = new Date();
 
       // 기존 이미지가 있는 경우 삭제하지 않는다면 업데이트하지 않음
-      let query = 'UPDATE NoticeBoard SET title = ?, content = ?, date = ?';
-      let queryParams = [title, content, date];
+      let query = 'UPDATE NoticeBoard SET title = ?, content = ?, post_date = ?';
+      let queryParams = [title, content, post_date];
 
       if (image) {
         query += ', image = ?';
@@ -162,7 +189,12 @@ router.post(
 
       await db.query(query, queryParams);
 
-      res.redirect(`/admin/notice/edit/${id}`);
+      res.send(`
+        <script>
+          alert('수정되었습니다');
+          window.location.href = '/admin/notice/detail/${id}';
+        </script>
+      `);
     } catch (error) {
       console.error(error);
       res.status(500).send(
