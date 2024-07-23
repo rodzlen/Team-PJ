@@ -20,7 +20,6 @@ const checkAdminLogin = (req, res, next) => {
   next();
 };
 
-
 // 공지사항 메인
 router.get(
   "/notice",checkAdminLogin,
@@ -525,7 +524,7 @@ router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
     res.send(`
       <script>
         alert("강아지 사진을 업로드 해주세요.");
-        window.location.href = "/admin/admin_dashboard";
+        window.location.href = "/admin/admindashboard";
       </script>
     `);
   } else {

@@ -233,9 +233,13 @@ CREATE TABLE ClassRegistration (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
+<<<<<<< HEAD
+);
+=======
 );
 
 --수강목록 테이블 
 =======
 commit;
 >>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
+>>>>>>> fe90f50597d7b1072b4b1b995403af6ba73c57ab
