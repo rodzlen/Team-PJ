@@ -110,7 +110,10 @@
       <div>
         <h2>관리자 회원가입</h2>
         <form class="wrapBox"action="/admin/signup" role="form" method="post">
-          <input type="text" name="admin_id" class="form-control" placeholder="아이디" required>
+          <label>
+            <input id="exclude" type="text" name="admin_id" class="form-control" placeholder="아이디" required>
+            &nbsp;<button id="duplicate">중복확인</button>
+          </label>
           <input type="password" name="admin_pw" class="form-control" placeholder="비밀번호" required>
           <input type="password" name="admin_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>
           <input type="text" name="admin_name" class="form-control" placeholder="직원이름" required>
