@@ -2,21 +2,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= locals.title %></title>
-  <link rel="stylesheet" href="/css/qna_styles.css">
+  <link rel="stylesheet" href="/css/freeboardAdd_style.css">
 </head>
 <body>
-  <h1><%= locals.title %></h1>
-  <form action="/qna/ask" method="POST">
+  <div id="add">
+  <h3><%= locals.title %></h3>
+  <div id="cover">
+      <form action="/qna/ask" method="POST">
     <!-- <input type="hidden" name="user_id" value="">  session 구현시 추가 -->
       <div>
-          <label for="title">제목</label>
-          <input type="text" id="title" name="title" required>
+          <input type="text" id="title" name="title" placeholder="제목" required>
       </div>
       <div>
-          <label for="content">내용</label>
-          <textarea id="content" name="content" required></textarea>
+          <textarea id="content" name="content" placeholder="내용" required></textarea>
       </div>
-      <button type="submit">제출</button>
-      <button onclick= 'location.href="/qna"'>뒤로가기</button>
+      <div id="btnBox">
+      <button id="addBtn" type="submit">제출</button>
+      <button id="backBtn" onclick= 'location.href="/qna"'>뒤로가기</button>
+    </div>
   </form>
+</div>
+</div>
 </body>

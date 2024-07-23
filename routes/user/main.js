@@ -541,26 +541,48 @@ router.post(
 );
 
 // 수업 신청 페이지
-router.get('/classregister', checkLogin, (req, res) => {
+router.get("/classregister", checkLogin, (req, res) => {
   const locals = { user: req.session.user };
-  res.render('user/application/user_class_register', { locals, layout: mainLayout });
+  res.render("user/application/user_class_register", {
+    locals,
+    layout: mainLayout,
+  });
 });
 
 // 수업 신청 처리
-router.post('/classregister', checkLogin, (req, res) => {
-  const { class_name, feed_status, pickup_status, start_date, end_date } = req.body;
+router.post("/classregister", checkLogin, (req, res) => {
+  const { class_name, feed_status, pickup_status, start_date, end_date } =
+    req.body;
   const { user_name: owner_name, pet_name } = req.session.user;
 
   const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
                   VALUES (?, ?, ?,  ?, ?, ?, ?)`;
 
-  db.query(query, [owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date, ], (err, result) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/classregister";</script>');
+  db.query(
+    query,
+    [
+      owner_name,
+      pet_name,
+      class_name,
+      feed_status,
+      pickup_status,
+      start_date,
+      end_date,
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res
+          .status(500)
+          .send(
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/classregister";</script>'
+          );
+      }
+      res.send(
+        '<script>alert("수업 신청이 성공적으로 완료되었습니다!"); window.location.href="/";</script>'
+      );
     }
-    res.send('<script>alert("수업 신청이 성공적으로 완료되었습니다!"); window.location.href="/";</script>');
-  });
+  );
 });
 
 // 홈 페이지
