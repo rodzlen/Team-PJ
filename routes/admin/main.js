@@ -57,6 +57,8 @@ router.get(
   })
 );
 
+
+
 // 공지사항 추가 처리
 router.post(
   "/notice/add",
@@ -67,6 +69,7 @@ router.post(
       const { title, content, admin_id } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
+      const createBy = req.session.admin.admin_id;
 
       // MySQL 쿼리
       const query = `
@@ -135,46 +138,57 @@ router.get(
 );
 // 공지사항 수정 처리
 router.post(
-  "/notice/edit/:id",
+  '/notice/edit/:id',
   checkAdminLogin,
-  upload.single("image"),
+  upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
       const { title, content } = req.body;
-      const Image = req.file ? req.file.filename : null;
-      await NoticeBoard.findByIdAndUpdate(req.params.id, {
-        title,
-        content,
-        Image,
-        date,
-      });
-      res.redirect("/admin/notice/edit/:id");
+      const image = req.file ? req.file.filename : null;
+      const id = req.params.id;
+      const date = new Date();
+
+      // 기존 이미지가 있는 경우 삭제하지 않는다면 업데이트하지 않음
+      let query = 'UPDATE NoticeBoard SET title = ?, content = ?, date = ?';
+      let queryParams = [title, content, date];
+
+      if (image) {
+        query += ', image = ?';
+        queryParams.push(image);
+      }
+
+      query += ' WHERE id = ?';
+      queryParams.push(id);
+
+      await db.query(query, queryParams);
+
+      res.redirect(`/admin/notice/edit/${id}`);
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send(
-          '<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
-        );
+      res.status(500).send(
+        '<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+      );
     }
   })
 );
 
 // 공지사항 삭제
 router.post(
-  "/notice/delete/:id",
+  '/notice/delete/:id',
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     try {
-      await NoticeBoard.findByIdAndDelete(req.params.id);
-      res.redirect("/admin/notice");
+      const id = req.params.id;
+
+      const query = 'DELETE FROM NoticeBoard WHERE id = ?';
+      await db.query(query, [id]);
+
+      res.redirect('/admin/notice');
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send(
-          '<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
-        );
+      res.status(500).send(
+        '<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+      );
     }
   })
 );
@@ -183,7 +197,8 @@ router.post(
 router.get(
   "/freeboard",
   asyncHandler(async (req, res) => {
-    const locals = { title: "자유게시판", user: req.session.user };
+    
+    const locals = { title: "자유게시판", admin: req.session.admin };
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
@@ -196,7 +211,7 @@ router.get(
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("user/freeboard/user_freeboard_main", {
+        res.render("admin/freeboard/admin_freeboard_main", {
           locals,
           data: results,
           layout: adminLayout,
@@ -210,7 +225,7 @@ router.get(
 router.get(
   "/freeboard/detail/:id",
   asyncHandler(async (req, res) => {
-    const locals = { title: req.params.title, user: req.session.user };
+    const locals = { title: req.params.title, admin: req.session.admin };
     const id = req.params.id;
 
     const query = "SELECT * FROM freeBoard WHERE id = ?";
@@ -220,7 +235,7 @@ router.get(
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
         if (results.length > 0) {
-          res.render("user/freeboard/user_freeboard_detail", {
+          res.render("admin/freeboard/admin_freeboard_detail", {
             locals,
             data: results[0],
             layout: adminLayout,
@@ -238,8 +253,8 @@ router.get(
   "/freeboard/add",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const locals = { title: "새 게시글 작성", user: req.session.user };
-    res.render("user/freeboard/user_freeboard_add", {
+    const locals = { title: "새 게시글 작성", admin: req.session.admin };
+    res.render("admin/freeboard/admin_freeboard_add", {
       locals,
       layout: adminLayout,
     });
@@ -256,7 +271,7 @@ router.post(
       const { title, content } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
-      const createBy = req.session.user.user_id;
+      const createBy = req.session.admin.admin_id;
 
       // MySQL 쿼리
       const query = `
@@ -271,10 +286,10 @@ router.post(
           res
             .status(500)
             .send(
-              '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/freeboard/add";</script>'
+              '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/add";</script>'
             );
         } else {
-          res.redirect("/freeboard");
+          res.redirect("/admin/freeboard");
         }
       });
     } catch (error) {
@@ -282,7 +297,7 @@ router.post(
       res
         .status(500)
         .send(
-          '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>'
+          '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/add";</script>'
         );
     }
   })
@@ -293,7 +308,7 @@ router.get(
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const userId = req.session.user.user_id;
+    const userId = req.session.admin.admin_id;
 
     // 게시글 정보 조회 쿼리
     const query = "SELECT * FROM freeboard WHERE id = ?";
@@ -309,19 +324,9 @@ router.get(
       }
 
       const post = results[0];
-
-      // 작성자 확인
-      if (post.createBy !== userId) {
-        return res
-          .status(403)
-          .send(
-            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
       // 게시글 수정 페이지 렌더링
-      const locals = { title: "게시글 수정", user: req.session.user };
-      res.render("user/freeboard/user_freeboard_edit", {
+      const locals = { title: "게시글 수정", admin: req.session.admin };
+      res.render("admin/freeboard/admin_freeboard_edit", {
         locals,
         data: post,
         layout: adminLayout,
@@ -335,7 +340,7 @@ router.post(
   checkAdminLogin,
   upload.single("image"),
   asyncHandler(async (req, res) => {
-    const locals = { title: "수정", user: req.session.user };
+    const locals = { title: "수정", admin: req.session.admin };
     const id = req.params.id;
     const { title, content } = req.body;
     const image = req.file ? req.file.filename : null;
@@ -357,12 +362,12 @@ router.post(
         res
           .status(500)
           .send(
-            '<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/freeboard/edit/' +
+            '<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/edit/' +
               id +
               '";</script>'
           );
       } else {
-        res.redirect("/freeboard/detail/" + id);
+        res.redirect("/admin/freeboard/detail/" + id);
       }
     });
   })
@@ -373,56 +378,21 @@ router.post(
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const userId = req.session.user.user_id;
+    const deleteQuery = "DELETE FROM freeboard WHERE id = ?";
 
-    // 먼저 게시글 작성자 확인
-    const checkQuery = "SELECT createBy FROM freeboard WHERE id = ?";
-
-    db.query(checkQuery, [id], (err, results) => {
+    db.query(deleteQuery, [id], (err, result) => {
       if (err) {
         console.error(err);
         return res
           .status(500)
           .send(
-            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
+            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/admin/freeboard";</script>'
           );
+      } else {
+        return res.send(
+          '<script>alert("게시글이 삭제되었습니다."); window.location.href="/admin/freeboard";</script>'
+        );
       }
-
-      if (results.length === 0) {
-        return res
-          .status(404)
-          .send(
-            '<script>alert("게시글을 찾을 수 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
-      const post = results[0];
-
-      if (post.createBy !== userId) {
-        return res
-          .status(403)
-          .send(
-            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
-      // 작성자와 로그인한 사용자가 일치하면 삭제 진행
-      const deleteQuery = "DELETE FROM freeboard WHERE id = ?";
-
-      db.query(deleteQuery, [id], (err, result) => {
-        if (err) {
-          console.error(err);
-          return res
-            .status(500)
-            .send(
-              '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
-            );
-        } else {
-          return res.send(
-            '<script>alert("게시글이 삭제되었습니다."); window.location.href="/freeboard";</script>'
-          );
-        }
-      });
     });
   })
 );

@@ -28,7 +28,7 @@
     <h3><%= locals.title %></h3>
     <div class="main-content">
         <!-- 검색 폼 -->
-        <form action="/freeboard" method="GET">
+        <form action="/admin/freeboard" method="GET">
             <input type="text" name="search" placeholder="검색">
             <select name="type">
                 <option value="title">제목</option>
@@ -51,7 +51,7 @@
                 <% data.forEach((FreeBoard, index) => { %>
                     <tr>
                         <td><%= index + 1 %></td>
-                        <td><a href="/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
+                        <td><a href="/admin/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
                         <td><%= FreeBoard.post_date %></td>
                     </tr>
                 <% }); %>
@@ -60,7 +60,7 @@
 
         <!-- 글쓰기 버튼 -->
         <div class="write-button">
-            <button onclick="location.href='/freeboard/add'">글쓰기</button>
+            <button onclick="location.href='/admin/freeboard/add'">글쓰기</button>
         </div>
     </div>
 </div>
