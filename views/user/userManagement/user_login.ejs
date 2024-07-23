@@ -113,7 +113,11 @@
     <!-- 로그인 폼 -->
     <div class="login-content login-content-signin">
       <div>
-        <h2>로그인</h2>
+        <div id="top">
+          <h2>로그인</h2>
+            <a href="/">Home</a>
+        </div>
+          
         <form class="wrapBox" action="users/login" role="form" method="post">
           <input type="text" name="user_id" placeholder="아이디를 입력하세요." required>
           <input type="password" name="user_pw" placeholder="비밀번호를 입력하세요." required>
@@ -125,11 +129,14 @@
     <!-- 회원가입 폼 -->
     <div class="login-content login-content-signup" style="display: none;">
       <div>
-        <h2>회원가입</h2>
+        <div id="top">
+          <h2>회원가입</h2>
+            <a href="/">Home</a>
+        </div>
         <form class="wrapBox" action="/users/signup" role="form" method="post">
           <label>
           <input id="exclude" type="text" name="user_id" class="form-control" placeholder="아이디" required>
-          &nbsp;<button id="duplicate">중복확인</button>
+          &nbsp;&nbsp;<button id="duplicate">중복확인</button>
           </label>
           <input type="password" name="user_pw" class="form-control" placeholder="비밀번호" required>
           <input type="password" name="user_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>

@@ -95,7 +95,10 @@
     <!-- 로그인 폼 -->
     <div class="login-content login-content-signin">
       <div>
-        <h2>관리자 로그인</h2>
+        <div id="top">
+          <h2>관리자 로그인</h2>
+            <a href="/">Home</a>
+        </div>
         <!-- submit시 event 실행 -->
         <form class="wrapBox" action="/admin/admin_login" role="form" method="post">
           <input type="text" name="admin_id" class="form-control" placeholder="아이디" required>
@@ -108,11 +111,14 @@
     <!-- 회원가입 폼 -->
     <div class="login-content login-content-signup" style="display: none;">
       <div>
-        <h2>관리자 회원가입</h2>
+        <div id="top">
+          <h2>관리자 회원가입</h2>
+            <a href="/">Home</a>
+        </div>
         <form class="wrapBox"action="/admin/signup" role="form" method="post">
           <label>
             <input id="exclude" type="text" name="admin_id" class="form-control" placeholder="아이디" required>
-            &nbsp;<button id="duplicate">중복확인</button>
+            &nbsp;&nbsp;<button id="duplicate">중복확인</button>
           </label>
           <input type="password" name="admin_pw" class="form-control" placeholder="비밀번호" required>
           <input type="password" name="admin_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>

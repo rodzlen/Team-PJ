@@ -13,6 +13,20 @@
     /*가로축 스크롤 제거*/
   }
 
+  #top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #top a {
+    text-decoration: none;
+    padding: 2px 4px;
+    color: #99964d;
+    font-weight: 700;
+    border-bottom: 1px solid var(--yellow);
+    font-size: 14px;
+  }
+
 /* 로그인 및 회원가입 페이지 */
 textarea {
     width: 410px;
