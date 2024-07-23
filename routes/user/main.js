@@ -550,14 +550,23 @@ router.get("/classregister", checkLogin, (req, res) => {
   });
 });
 
-// 수업 신청 처리
 router.post("/classregister", checkLogin, (req, res) => {
-  const { class_name, feed_status, pickup_status, start_date, end_date } =
-    req.body;
+  const {
+    class_name,
+    feed_status,
+    pickup_status,
+    start_date,
+    end_date
+  } = req.body;
+
   const { user_name: owner_name, pet_name } = req.session.user;
 
+  // 체크박스의 상태를 확인하여 boolean 값으로 변환
+  const feedStatus = feed_status === 'on';
+  const pickupStatus = pickup_status === 'on';
+
   const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
-                  VALUES (?, ?, ?,  ?, ?, ?, ?)`;
+                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
   db.query(
     query,
@@ -565,10 +574,10 @@ router.post("/classregister", checkLogin, (req, res) => {
       owner_name,
       pet_name,
       class_name,
-      feed_status,
-      pickup_status,
+      feedStatus,
+      pickupStatus,
       start_date,
-      end_date,
+      end_date
     ],
     (err, result) => {
       if (err) {
@@ -586,6 +595,8 @@ router.post("/classregister", checkLogin, (req, res) => {
   );
 });
 
+module.exports = router;
+
 // 홈 페이지
 router.get(
   "/",
@@ -599,7 +610,8 @@ router.get(
 router.get(
   "/user_main",
   asyncHandler(async (req, res) => {
-    res.render("user/user_home", { layout: mainLayout });
+    const locals = { user: req.session.user };
+    res.render("user/user_home", { locals, layout: mainLayout });
   })
 );
 

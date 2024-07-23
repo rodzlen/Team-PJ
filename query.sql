@@ -182,7 +182,7 @@ CREATE TABLE Pets (
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_name VARCHAR(100) NOT NULL,
-    dog_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
     class_name VARCHAR(100) NOT NULL,
     feed_status BOOLEAN NOT NULL,
     pickup_status BOOLEAN NOT NULL,
@@ -195,7 +195,18 @@ CREATE TABLE ClassRegistration (
 
 );
 
-
-
 --수강목록 테이블 
->>>>>>> fe90f50597d7b1072b4b1b995403af6ba73c57ab
+CREATE TABLE ClassAttendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    registration_id INT,
+    owner_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    consultation TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
+);

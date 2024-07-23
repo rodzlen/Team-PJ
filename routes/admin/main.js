@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt");
 
 //세션에 로그인 정보 담겨있는지 확인
 const checkAdminLogin = (req, res, next) => {
-  if (!req.session.user || !req.session.user.user_id) {
+  if (!req.session.admin || !req.session.admin.admin_id) {
     return res
       .status(401)
       .send(
@@ -239,17 +239,10 @@ router.post("qna/delete/:id", checkAdminLogin, async (req, res) => {
   }
 });
 
-// 홈 페이지
-router.get(
-  ["/"],
-  asyncHandler(async (req, res) => {
-    res.render("user/home", { layout: mainLayout }); // home에 layout 입히기, layout : false => layout 없이 렌더링
-  })
-);
 
 // 수업 신청 수정 페이지
 router.get(
-  "/classregistration/:id/edit",
+  "/classRegList/detail/:id",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -261,27 +254,103 @@ router.get(
         return res
           .status(500)
           .send(
-            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin";</script>'
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classRegList";</script>'
           );
       }
       if (results.length === 0) {
         return res
           .status(404)
           .send(
-            '<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin";</script>'
+            '<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin/classRegList";</script>'
           );
       }
       const locals = { registration: results[0] };
-      res.render("admin_class_registration_edit", {
+      res.render("admin/application/admin_class_register_detail.ejs", {
         locals,
-        layout: mainLayout,
+        layout: adminLayout,
       });
     });
   })
 );
-// 수업 신청 목록
+// 신청서 승인 및 수강 정보 등록
+router.post('/classreg/apply/:id', checkAdminLogin, (req, res) => {
+  const { id } = req.params;
+
+  // 신청서 승인
+  const updateQuery = 'UPDATE ClassRegistration SET status = "approved", admin_id = ? WHERE id = ?';
+  db.query(updateQuery, [req.session.admin.id, id], (err) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(
+        '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreglist";</script>'
+      );
+    }
+
+    // 승인된 신청서를 수강 정보로 추가
+    const selectQuery = 'SELECT * FROM ClassRegistration WHERE id = ?';
+    db.query(selectQuery, [id], (err, results) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).send(
+          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreglist";</script>'
+        );
+      }
+
+      const registration = results[0];
+      const insertQuery = `
+        INSERT INTO ClassAttendance (registration_id, owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date, consultation)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(insertQuery, [
+        registration.id,
+        registration.owner_name,
+        registration.pet_name,
+        registration.class_name,
+        registration.feed_status,
+        registration.pickup_status,
+        registration.start_date,
+        registration.end_date,
+        registration.consultation
+      ], (err) => {
+        if (err) {
+          console.error('Database error:', err);
+          return res.status(500).send(
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreg/list";</script>'
+          );
+        }
+
+        res.send(
+          '<script>alert("신청이 승인되고 수강 정보가 등록되었습니다!"); window.location.href="/admin/classreg/list";</script>'
+        );
+      });
+    });
+  });
+});
+
+// 신청서 삭제 처리
+router.post('/admin/application/delete/:id', checkAdminLogin, (req, res) => {
+  const { id } = req.params;
+
+  const query = 'DELETE FROM ClassRegistration WHERE id = ?';
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send(
+        '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classRegList";</script>'
+      );
+    }
+
+    res.send(
+      '<script>alert("신청서가 성공적으로 삭제되었습니다!"); window.location.href="/admin/classRegList";</script>'
+    );
+  });
+});
+// 수업 신청 목록 조회
 router.get(
-  "/class-reg",
+  "/classRegList",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const { search = "", type = "no||createBy" } = req.query;
 
@@ -293,10 +362,10 @@ router.get(
         query += " WHERE id LIKE ?";
         queryParams.push(`%${search}%`);
       } else if (type === "createBy") {
-        query += " WHERE createBy LIKE ?";
+        query += " WHERE owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`);
       } else if (type === "no||createBy") {
-        query += " WHERE id LIKE ? OR createBy LIKE ?";
+        query += " WHERE id LIKE ? OR owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`, `%${search}%`);
       }
     }
@@ -308,14 +377,15 @@ router.get(
       }
 
       const locals = { title: "수업 신청 목록", classReg: results };
-      res.render("class_registration_list", { locals });
+      res.render("admin/application/admin_class_register_list", { locals, layout: adminLayout });
     });
   })
 );
 
+
 // 수업 신청 수정 처리
 router.post(
-  "/admin/classregistration/edit/:id",
+  "/classregistration/edit/:id",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const { id } = req.params;
@@ -364,9 +434,10 @@ router.post(
 
 // 홈 페이지(관리자용)
 router.get(
-  ["/admin_main"],
+  ["/admin_main"],checkAdminLogin,
   asyncHandler(async (req, res) => {
-    res.render("admin/admin_home", { layout: adminLayout });
+    const locals = {admin: req.session.admin}
+    res.render("admin/admin_home", { locals, layout: adminLayout });
   })
 );
 
