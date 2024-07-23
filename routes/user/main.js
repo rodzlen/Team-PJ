@@ -123,7 +123,6 @@ router.get("/freeboard/detail/:id", asyncHandler(async (req, res) => {
 
 // 자유게시판 글쓰기 페이지
 router.get("/freeboard/add",checkLogin, asyncHandler(async (req, res) => {
-  checkLogin
   const locals= {title : "새 게시글 작성",
     user: req.session.user
   }
@@ -166,24 +165,34 @@ router.post(
 // 자유게시판 수정 페이지
 router.get(
   "/freeboard/edit/:id",
+  checkLogin,
   asyncHandler(async (req, res) => {
-    checkLogin;
-    const locals = { title: "게시글 수정" ,
-      user: req.session.user
-    };
     const id = req.params.id;
+    const userId = req.session.user.user_id;
+
+    // 게시글 정보 조회 쿼리
     const query = 'SELECT * FROM freeboard WHERE id = ?';
+    
     db.query(query, [id], (err, results) => {
       if (err) {
         console.error(err);
-        res.status(500).send('서버 오류가 발생했습니다.');
-      } else {
-        if (results.length > 0) {
-          res.render('user/freeboard/user_freeboard_edit', { locals, data: results[0] , layout:mainLayout});
-        } else {
-          res.status(404).send('게시글을 찾을 수 없습니다.');
-        }
+        return res.status(500).send('서버 오류가 발생했습니다.');
       }
+
+      if (results.length === 0) {
+        return res.status(404).send('게시글을 찾을 수 없습니다.');
+      }
+
+      const post = results[0];
+
+      // 작성자 확인
+      if (post.createBy !== userId) {
+        return res.status(403).send('<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>');
+      }
+
+      // 게시글 수정 페이지 렌더링
+      const locals = { title: "게시글 수정", user: req.session.user };
+      res.render('user/freeboard/user_freeboard_edit', { locals, data: post, layout: mainLayout });
     });
   })
 );
@@ -224,23 +233,44 @@ router.post(
 // 자유게시판 삭제
 router.post(
   "/freeboard/delete/:id",
-  async (req, res) => {
-    checkLogin;
+  checkLogin,
+  asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const query = 'DELETE FROM freeboard WHERE id = ?';
-
-    db.query(query, [id], (err, result) => {
+    const userId = req.session.user.user_id;
+    
+    // 먼저 게시글 작성자 확인
+    const checkQuery = 'SELECT createBy FROM freeboard WHERE id = ?';
+    
+    db.query(checkQuery, [id], (err, results) => {
       if (err) {
         console.error(err);
-        res.status(500).send('<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>');
-      } else {
-        res.redirect("/freeboard");
+        return res.status(500).send('<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>');
       }
+      
+      if (results.length === 0) {
+        return res.status(404).send('<script>alert("게시글을 찾을 수 없습니다."); window.location.href="/freeboard";</script>');
+      }
+
+      const post = results[0];
+
+      if (post.createBy !== userId) {
+        return res.status(403).send('<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>');
+      }
+
+      // 작성자와 로그인한 사용자가 일치하면 삭제 진행
+      const deleteQuery = 'DELETE FROM freeboard WHERE id = ?';
+
+      db.query(deleteQuery, [id], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>');
+        } else {
+          return res.send('<script>alert("게시글이 삭제되었습니다."); window.location.href="/freeboard";</script>');
+        }
+      });
     });
-  }
+  })
 );
-
-
 //qna 목록 
 router.get("/qna", asyncHandler(async (req, res) => {
   const locals ={title:"QnA 게시판", user: req.session.user}
@@ -432,7 +462,7 @@ router.get(
 
 // 마이페이지(유저용)
 router.get(
-  "/user_mypage",
+  "/user_mypage",checkLogin,
   asyncHandler(async (req, res) => {
     const locals = { user: req.session.user}
     console.log(locals.user)
@@ -523,31 +553,31 @@ router.get(
 );
 
 // 정보 수정 처리
-router.post("/users/mypage/update", asyncHandler(async (req, res) => {
+router.post("/users/mypage/update", checkLogin, asyncHandler(async (req, res) => {
   const { current_password, confirm_password, user_phone, pet_name, sex, neutering, peculiarity } = req.body;
-  const userId = req.session.user_id; // 세션에서 사용자 아이디 가져오기
-  
-  // 기존 비밀번호 확인 로직 (예시)
-  if (current_password !== confirm_password) {
-    return res.status(400).json({ error: '기존 비밀번호와 비밀번호 확인이 일치하지 않습니다.' });
-  }
+  const userId = req.session.user.user_id; // 세션에서 사용자 ID 가져오기
 
+  // 비밀번호 확인 로직
+  if (current_password !== confirm_password) {
+    return res.send('<script>alert("기존 비밀번호와 비밀번호 확인이 일치하지 않습니다."); window.location.href="/users/mypage/info";</script>');
+  }
   const sql = `
     UPDATE Users 
     SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?
     WHERE user_id = ?
   `;
-  
+
   db.query(sql, [user_phone, pet_name, sex, neutering, peculiarity, userId], (err, results) => {
     if (err) {
       console.error('정보 수정 중 에러 발생:', err);
-      res.status(500).json({ error: '정보 수정 중 오류가 발생했습니다.' });
+      return res.send('<script>alert("정보 수정 중 오류가 발생했습니다."); window.location.href="/";</script>');
     } else {
-      res.json({ message: '정보가 성공적으로 수정되었습니다.' });
+      // 성공 시 사용자 정보를 업데이트 후 사용자 정보 페이지로 리디렉션
+      req.session.user = { ...req.session.user, user_phone, pet_name, pet_gender: sex, pet_neutering: neutering, peculiarity };
+      return res.send('<script>alert("정보가 성공적으로 수정되었습니다."); window.location.href="/";</script>');
     }
   });
 }));
-
 // 유저 대시보드 라우트: GET /dashboard/user/userdashboard
 router.get("/userdashboard", (req, res) => {
   const query = "select * from dogs where dog_id=4";
