@@ -30,7 +30,7 @@ CREATE TABLE Users (
 CREATE TABLE Facilities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility_name VARCHAR(50) NOT NULL,
-    main_facilities	 TEXT NOT NULL,
+    main_facilities TEXT NOT NULL,
     facility_photo BLOB
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
-    contact_info varchar(40),
+    contact_info VARCHAR(40),
     staff_photo BLOB
 );
 

@@ -16,7 +16,7 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
+                                <img src="/img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
                                 <ul class="employee-info">
                                     <li>이름: <%= employee.name %></li>
                                     <li>직급: <%= employee.role %></li>
@@ -46,7 +46,11 @@
             <tr>
                 <% facilities.forEach((facility, index) => { %>
                     <td>
+<<<<<<< HEAD
                         <div class="facility-card">
+=======
+                        <div class="facility-card">     
+>>>>>>> 00c65a3e4e4970e44065fd6b7d8f3f6f7719e87c
                             <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
                             <ul class="facility-info">
                                 <li>시설 이름: <%= facility.facility_name %></li>

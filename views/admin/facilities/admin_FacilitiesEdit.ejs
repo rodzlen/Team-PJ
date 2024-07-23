@@ -27,17 +27,13 @@
       <label for="facility_photo">Upload Image:</label>
       <input name="facility_photo" class="form-control-file" type="file" />
     </div>
-    <input type="hidden" name="existingPhoto" value="<%= Data.photo %>">
+    <input type="hidden" name="existingPhoto" value="<%= Data.facility_photo %>">
     <div class="text-center mt-3">
       <button type="submit" class="btn btn-primary">수정하기</button>
       <button type="submit" form="delete" class="btn btn-danger ml-3">삭제</button>
     </div>
   </form>
-<<<<<<< HEAD
-
-=======
   
->>>>>>> a08e8415b9d23bf103f1f790477ab608a568921c
   <form id="delete" action="/admin/delete" method="post">
     <input type="hidden" name="id" value="<%= Data.id %>">
   </form>
