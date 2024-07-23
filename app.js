@@ -1,5 +1,5 @@
 const express = require("express");
-const port = 8500;
+const port = 8200;
 const expressLayouts = require("express-ejs-layouts");
 const userRoutes = require("./routes/user/main");
 
@@ -8,8 +8,8 @@ const path = require("path");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const app = express();
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt')
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 
 // 세션 설정
 app.use(
@@ -37,7 +37,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.set("layout", "./layouts/main");
 app.set("layout extractScripts", true);
-
 
 app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
