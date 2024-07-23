@@ -7,6 +7,7 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
+const bcrypt = require('bcrypt')
 
 //게시글 검색 기능
 let queryParams = [];
@@ -675,35 +676,54 @@ router.post(
   })
 );
 
-//로그인처리
+// 로그인 처리
 router.post(
   "/users/login",
   asyncHandler(async (req, res) => {
     const { user_id, user_pw } = req.body;
 
-    // 데이터베이스에서 아이디와 비밀번호 확인
-    const sql = `SELECT * FROM Users WHERE user_id = ? AND user_pw = ?`;
+    // 데이터베이스에서 아이디로 사용자 조회
+    const sql = `SELECT * FROM Users WHERE user_id = ?`;
 
-    db.query(sql, [user_id, user_pw], (err, results) => {
+    db.query(sql, [user_id], async (err, results) => {
       if (err) {
         console.error("로그인 중 에러 발생:", err);
         return res
           .status(500)
-          .json({ error: "로그인 중 에러가 발생했습니다." });
+          .send(
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/login";</script>'
+          );
       }
 
       if (results.length > 0) {
         const user = results[0];
-        req.session.user = user; // 세션에 사용자 정보 저장
-        console.log(req.session.user.user_id);
+        
+        // 비밀번호 비교
+        const match = await bcrypt.compare(user_pw, user.user_pw);
+        
+        if (match) {
+          req.session.user = user; // 세션에 사용자 정보 저장
+          console.log(req.session.user.user_id);
 
-        // 홈 페이지로 리디렉션
-        res.redirect("/");
+          // 홈 페이지로 리디렉션
+          res.send(
+            '<script>alert("로그인 성공!"); window.location.href="/";</script>'
+          );
+        } else {
+          // 비밀번호가 일치하지 않음
+          res
+            .status(401)
+            .send(
+              '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/login";</script>'
+            );
+        }
       } else {
-        // 로그인 실패
+        // 사용자가 존재하지 않음
         res
           .status(401)
-          .json({ error: "아이디 또는 비밀번호가 일치하지 않습니다." });
+          .send(
+            '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/login";</script>'
+          );
       }
     });
   })
