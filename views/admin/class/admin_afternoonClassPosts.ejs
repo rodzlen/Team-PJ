@@ -25,7 +25,7 @@
         <% data.forEach(post => { %>
           <li>
             <div class="post-title">
-              <a href="/user/userdashboard/<%= post.dog_id %>"><%= post.pet_name %></a>
+              <a href="/user/userdashboard?dog_id=<%= post.dog_id %>"><%= post.pet_name %></a>
             </div><br>
             <div class="admin-post-controls">
               <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>" class="btn">편집</a>

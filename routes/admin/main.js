@@ -368,6 +368,24 @@ router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
   }
 });
 
+// 강아지 정보 유저 대시보드 라우트: GET /user/user_dashboard
+router.get("/user/user_dashboard", async (req, res) => {
+  const dogId = req.query.dog_id; // 클라이언트에서 dog_id를 쿼리 파라미터로 받는다고 가정
+  const query = "SELECT * FROM dogs WHERE dog_id = ?";
+
+  try {
+    const [rows] = await db.query(query, [dogId]);
+    if (rows.length > 0) {
+      res.render("user/dashboard/user_dashboard", { data: rows[0] });
+    } else {
+      res.status(404).send("해당 정보를 찾을 수 없습니다.");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류가 발생했습니다.");
+  }
+});
+
 // 강아지 정보 저장 라우트: POST /dashboard/admin/saveinfo
 router.post(
   "/saveinfo",
