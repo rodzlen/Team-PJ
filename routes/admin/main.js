@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const mainLayout = "../views/layouts/main.ejs";
+const adminLayout = "../views/layouts/admin.ejs";
 const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
 const mysql = require("mysql2/promise");
@@ -19,17 +19,17 @@ const checkAdminLogin = (req, res, next) => {
   }
   next();
 };
-const adminRegAuth = (req, res, next) => {
-  const authNo = req.body;
-  if (authNo != 1234) {
+function adminRegAuth(req, res, next,authRegNo) {
+  
+  if (authRegNo != '1234') {
     return res
       .status(401)
       .send(
-        '<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin_login";</script>'
+        '<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin/admin_login";</script>'
       );
   }
   next();
-};
+}
 
 // 공지사항 메인
 router.get(
@@ -400,9 +400,15 @@ router.get(
 // 회원가입 처리
 router.post(
   "/signup",
-  adminRegAuth,
   asyncHandler(async (req, res) => {
-    const { admin_id, admin_pw, admin_name, admin_phone } = req.body;
+    const { admin_id, admin_pw, admin_name, admin_phone , authRegNo } = req.body;
+    if (authRegNo != '1234') {
+      return res
+        .status(401)
+        .send(
+          '<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin/admin_login";</script>'
+        );
+    }
 
     // 데이터베이스에 삽입할 SQL 쿼리
     const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
@@ -418,7 +424,9 @@ router.post(
           res.status(500).json({ error: "회원가입 중 에러가 발생했습니다." });
         } else {
           console.log("회원가입 성공:", results);
-          res.json({ message: "회원가입이 성공적으로 완료되었습니다." });
+          res.send(
+            '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_main";</script>'
+          );
         }
       }
     );
@@ -426,18 +434,18 @@ router.post(
 );
 
 // 로그인 처리
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+router.post("/admin_login", async (req, res) => {
+  const { admin_id, admin_pw } = req.body;
 
-  const query = "SELECT * FROM Admin WHERE username = ?";
+  const query = "SELECT * FROM Admin WHERE admin_id = ?";
 
-  db.query(query, [username], async (err, results) => {
+  db.query(query, [admin_id], async (err, results) => {
     if (err) {
       console.error("Database error:", err);
       return res
         .status(500)
         .send(
-          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/login";</script>'
+          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/admin_login";</script>'
         );
     }
 
@@ -448,7 +456,7 @@ router.post("/login", async (req, res) => {
     }
 
     const admin = results[0];
-    const match = await bcrypt.compare(password, admin.password);
+    const match = await bcrypt.compare(admin_pw, admin.admin_pw);
 
     if (!match) {
       return res.send(
@@ -516,6 +524,24 @@ router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
         window.location.href = "/admin/admin_dashboard";
       </script>
     `);
+  }
+});
+
+// 강아지 정보 유저 대시보드 라우트: GET /user/user_dashboard
+router.get("/user/user_dashboard", async (req, res) => {
+  const dogId = req.query.dog_id; // 클라이언트에서 dog_id를 쿼리 파라미터로 받는다고 가정
+  const query = "SELECT * FROM dogs WHERE dog_id = ?";
+
+  try {
+    const [rows] = await db.query(query, [dogId]);
+    if (rows.length > 0) {
+      res.render("user/dashboard/user_dashboard", { data: rows[0] });
+    } else {
+      res.status(404).send("해당 정보를 찾을 수 없습니다.");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류가 발생했습니다.");
   }
 });
 

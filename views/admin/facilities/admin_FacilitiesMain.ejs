@@ -16,8 +16,9 @@
                 <tr>
                     <% staff.forEach((employee, index)=> { %>
                         <td>
+                            
                             <div class="employee-card">
-                                <img src="/img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
+                                <img src="/img/<%=employee.staff_photo %>" alt="직원 사진" class="facility-image">
                                 <ul class="employee-info">
                                     <li>이름: <%= employee.name %>
                                     </li>
@@ -98,14 +99,18 @@
                         <div class="facility-card">
 =======
                         <div class="facility-card">     
+<<<<<<< HEAD
 >>>>>>> 00c65a3e4e4970e44065fd6b7d8f3f6f7719e87c
                             <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
+=======
+                            <img src="/img/<%=facility.facility_photo %>" alt="시설 사진" class="facility-image">
+>>>>>>> 8bce7b2cc468be3cca01e0c7682aef4dead39847
                             <ul class="facility-info">
-                                <li>시설 이름: <%= facility.facility_name %></li>
-                                <li>주요 시설: <%= facility.main_facilities %></li>
+                                <li>시설 이름: <%=facility.facility_name %></li>
+                                <li>주요 시설: <%=facility.main_facilities %></li>
                             </ul>
                             
-                            <button onclick="location.href='/admin/adminfacilitiesedit/<%= facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                            <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
                                 수정/삭제하기
                             </button>
                         </div>
