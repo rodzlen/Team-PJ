@@ -603,59 +603,10 @@ router.post("/users/mypage/update", checkLogin, asyncHandler(async (req, res) =>
       return res.send('<script>alert("정보가 성공적으로 수정되었습니다."); window.location.href="/";</script>');
     }
   });
+
+
+  
 }));
-// 유저 대시보드 라우트: GET /dashboard/user/userdashboard
-router.get("/userdashboard", (req, res) => {
-  const query = "select * from dogs where dog_id=4";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("서버 오류가 발생했습니다.");
-    } else {
-      if (results.length > 0) {
-        res.render("dashboard/user/userdashboard", { data: results[0] });
-      } else {
-        res.status(404).send("해당 정보를 찾을 수 없습니다.");
-      }
-    }
-  });
-});
-
-// 게시물 리스트 라우트: GET /dashboard/user/userpostlist
-router.get("/userpostlist", (req, res) => {
-  res.render("dashboard/user/userpostlist", { data: posts });
-});
-
-// 게시물 검색 라우트: GET /dashboard/user/search
-router.get("/search", (req, res) => {
-  const keyword = req.query.keyword;
-  const filteredPosts = posts.filter((post) => post.title.includes(keyword));
-  res.render("dashboard/user/userpostlist", { data: filteredPosts });
-});
-
-router.get("/class/u_morningClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_morningClassPosts", { data: posts });
-});
-
-router.get("/class/u_afternoonClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_afternoonClassPosts", { data: posts });
-});
-
-router.get("/class/u_alldayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_alldayClassPosts", { data: posts });
-});
-
-router.get("/class/u_onedayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_onedayClassPosts", { data: posts });
-});
-
-router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/userCalendar");
-});
-
-router.get("/mainpage", (req, res) => {
-  res.render("mainpage");
-});
 
 // 유저 대시보드 라우트: GET /dashboard/user/userdashboard
 router.get("/userdashboard", (req, res) => {
