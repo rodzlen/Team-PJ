@@ -20,29 +20,31 @@ const checkAdminLogin = (req, res, next) => {
   next();
 };
 
-// 공지사항 메인
+// 공지사항 목록 페이지 라우터
 router.get(
   "/notice",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
+    const locals = { user: req.session.user };
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM noticeBoard";
     let queryParams = [];
+    search(query, searchQuery, typeQuery);
 
-    if (searchQuery) {
-      if (typeQuery === "title") {
-        query += " WHERE title LIKE ?";
-        queryParams.push(`%${searchQuery}%`);
-      } else if (typeQuery === "createBy") {
-        query += " WHERE createBy LIKE ?";
-        queryParams.push(`%${searchQuery}%`);
-      } else if (typeQuery === "title||createBy") {
-        query += " WHERE title LIKE ? OR createBy LIKE ?";
-        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/notice/admin_notice_main", {
+          locals,
+          data: results,
+          layout: adminLayout,
+        });
       }
-    }
+    });
   })
 );
 
@@ -178,13 +180,44 @@ router.post(
   })
 );
 
-// QnA 목록 페이지
 router.get("/qna", checkAdminLogin, async (req, res) => {
+  const searchQuery = req.query.search || "";
+  const typeQuery = req.query.type || "";
+
+  let query = "SELECT * FROM Questions";
+  let queryParams = [];
+
+  if (searchQuery) {
+    if (typeQuery === "title") {
+      query += " WHERE title LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "question_by") {
+      query += " WHERE question_by LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "title||question_by") {
+      query += " WHERE title LIKE ? OR question_by LIKE ?";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+    }
+  }
+
+  console.log('Search Query:', searchQuery);
+  console.log('Type Query:', typeQuery);
+  console.log('Query:', query);
+  console.log('Query Params:', queryParams);
+
   try {
-    const [questions] = await db.query("SELECT * FROM Questions");
-    res.render("admin/qna/qna", { questions });
+    const [questions] = await db.query(query, queryParams);
+    console.log('Questions:', questions);
+
+    res.render("admin/qna/admin_qna_main", { 
+      questions: Array.isArray(questions) ? questions : [], 
+      searchQuery,
+      typeQuery,
+      title: "QnA 목록",
+      layout: adminLayout
+    });
   } catch (err) {
-    console.error(err);
+    console.error('Database query error:', err);
     res.status(500).send("서버 오류");
   }
 });
