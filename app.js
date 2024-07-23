@@ -30,6 +30,7 @@ app.set("view engine", "ejs");
 app.set("layout", "./layouts/main");
 app.set("layout extractScripts", true);
 
+
 app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
 });

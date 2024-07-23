@@ -15,15 +15,16 @@
                 <tr>
                     <% staff.forEach((employee, index) => { %>
                         <td>
+                            
                             <div class="employee-card">
-                                <img src="/img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
+                                <img src="/img/<%=employee.staff_photo %>" alt="직원 사진" class="facility-image">
                                 <ul class="employee-info">
-                                    <li>이름: <%= employee.name %></li>
-                                    <li>직급: <%= employee.role %></li>
-                                    <li>경력: <%= employee.contact_info %></li>
+                                    <li>이름: <%=employee.name %></li>
+                                    <li>직급: <%=employee.role %></li>
+                                    <li>경력: <%=employee.contact_info %></li>
                                 </ul>
                                 
-                                <button onclick="location.href='/admin/adminstaffedit/<%= employee.staff_id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                                <button onclick="location.href='/admin/adminstaffedit/<%=employee.staff_id %>'" class="w-50 mb-5 mt-2 btn btn-success">
                                     수정/삭제하기
                                 </button>
                             </div>
@@ -47,13 +48,13 @@
                 <% facilities.forEach((facility, index) => { %>
                     <td>
                         <div class="facility-card">     
-                            <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
+                            <img src="/img/<%=facility.facility_photo %>" alt="시설 사진" class="facility-image">
                             <ul class="facility-info">
-                                <li>시설 이름: <%= facility.facility_name %></li>
-                                <li>주요 시설: <%= facility.main_facilities %></li>
+                                <li>시설 이름: <%=facility.facility_name %></li>
+                                <li>주요 시설: <%=facility.main_facilities %></li>
                             </ul>
                             
-                            <button onclick="location.href='/admin/adminfacilitiesedit/<%= facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                            <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
                                 수정/삭제하기
                             </button>
                         </div>
