@@ -7,7 +7,7 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 
 //게시글 검색 기능
 let queryParams = [];
@@ -341,6 +341,7 @@ router.post(
     });
   })
 );
+
 //qna 목록
 router.get(
   "/qna",
@@ -551,19 +552,14 @@ router.get("/classregister", checkLogin, (req, res) => {
 });
 
 router.post("/classregister", checkLogin, (req, res) => {
-  const {
-    class_name,
-    feed_status,
-    pickup_status,
-    start_date,
-    end_date
-  } = req.body;
+  const { class_name, feed_status, pickup_status, start_date, end_date } =
+    req.body;
 
   const { user_name: owner_name, pet_name } = req.session.user;
 
   // 체크박스의 상태를 확인하여 boolean 값으로 변환
-  const feedStatus = feed_status === 'on';
-  const pickupStatus = pickup_status === 'on';
+  const feedStatus = feed_status === "on";
+  const pickupStatus = pickup_status === "on";
 
   const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -577,7 +573,7 @@ router.post("/classregister", checkLogin, (req, res) => {
       feedStatus,
       pickupStatus,
       start_date,
-      end_date
+      end_date,
     ],
     (err, result) => {
       if (err) {
@@ -713,10 +709,10 @@ router.post(
 
       if (results.length > 0) {
         const user = results[0];
-        
+
         // 비밀번호 비교
         const match = await bcrypt.compare(user_pw, user.user_pw);
-        
+
         if (match) {
           req.session.user = user; // 세션에 사용자 정보 저장
           console.log(req.session.user.user_id);
