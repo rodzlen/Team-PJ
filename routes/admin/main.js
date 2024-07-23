@@ -787,7 +787,7 @@ router.post("/adminfacilitiesedit/:id", upload.single('facility_photo'), (req, r
   const id = req.body.id;
   const name = req.body.facility_name || 'default_name';
   const features = req.body.main_facilities || 'default_features';
-  const facility_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.existingPhoto;
+  const facility_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.facility_photo;
 
   const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
 
@@ -869,7 +869,7 @@ router.post("/adminstaffedit/:id", upload.single('staff_photo'), (req, res) => {
   const name = req.body.name ? req.body.name.trim() : 'default_name'; // name이 NULL이면 기본값 설정
   const role = req.body.role ? req.body.role.trim() : 'default_role'; // role이 NULL이면 기본값 설정
   const contact_info = req.body.contact_info ? req.body.contact_info.trim() : 'default_contact_info';
-  const staff_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.photo;
+  const staff_photo = req.file ? req.file.path.replace(/\\/g, '/') : req.body.staff_photo;
 
   // 필수 필드가 존재하지 않으면 오류 처리
   if (!name) {
