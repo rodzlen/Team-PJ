@@ -22,7 +22,8 @@ const checkAdminLogin = (req, res, next) => {
 
 // 공지사항 메인
 router.get(
-  "/notice",checkAdminLogin,
+  "/notice",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
@@ -42,6 +43,16 @@ router.get(
         queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
       }
     }
+
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).send("Internal Server Error");
+      }
+
+      const locals = { title: "공지사항", notices: results };
+      res.render("admin/notice/notice_main", { locals, layout: adminLayout });
+    });
   })
 );
 
