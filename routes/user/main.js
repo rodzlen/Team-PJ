@@ -7,7 +7,7 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
-const bcrypt = require('bcrypt')
+const bcrypt = require("bcrypt");
 
 //게시글 검색 기능
 let queryParams = [];
@@ -548,61 +548,17 @@ router.get("/classregister", checkLogin, (req, res) => {
     locals,
     layout: mainLayout,
   });
-<<<<<<< HEAD
 });
 
-// 수업 신청 처리
 router.post("/classregister", checkLogin, (req, res) => {
   const { class_name, feed_status, pickup_status, start_date, end_date } =
     req.body;
-  const { user_name: owner_name, pet_name } = req.session.user;
-
-  const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
-                  VALUES (?, ?, ?,  ?, ?, ?, ?)`;
-
-  db.query(
-    query,
-    [
-      owner_name,
-      pet_name,
-      class_name,
-      feed_status,
-      pickup_status,
-      start_date,
-      end_date,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res
-          .status(500)
-          .send(
-            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/classregister";</script>'
-          );
-      }
-      res.send(
-        '<script>alert("수업 신청이 성공적으로 완료되었습니다!"); window.location.href="/";</script>'
-      );
-    }
-  );
-=======
->>>>>>> ad44df25b151aa8b89c81cbca487abd95121122f
-});
-
-router.post("/classregister", checkLogin, (req, res) => {
-  const {
-    class_name,
-    feed_status,
-    pickup_status,
-    start_date,
-    end_date
-  } = req.body;
 
   const { user_name: owner_name, pet_name } = req.session.user;
 
   // 체크박스의 상태를 확인하여 boolean 값으로 변환
-  const feedStatus = feed_status === 'on';
-  const pickupStatus = pickup_status === 'on';
+  const feedStatus = feed_status === "on";
+  const pickupStatus = pickup_status === "on";
 
   const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -616,7 +572,7 @@ router.post("/classregister", checkLogin, (req, res) => {
       feedStatus,
       pickupStatus,
       start_date,
-      end_date
+      end_date,
     ],
     (err, result) => {
       if (err) {
@@ -752,10 +708,10 @@ router.post(
 
       if (results.length > 0) {
         const user = results[0];
-        
+
         // 비밀번호 비교
         const match = await bcrypt.compare(user_pw, user.user_pw);
-        
+
         if (match) {
           req.session.user = user; // 세션에 사용자 정보 저장
           console.log(req.session.user.user_id);
@@ -883,22 +839,17 @@ router.post(
   })
 );
 
-// 강아지 정보 유저 대시보드 라우트: GET /user/dashboard/user_dashboard
-router.get("/user_dashboard", async (req, res) => {
-  const dogId = req.query.dog_id; // 클라이언트에서 dog_id를 쿼리 파라미터로 받는다.
-  console.log(`Received dogId: ${dogId}`); // 콘솔에서 dogId가 제대로 출력되는지 확인
-
+// 강아지 정보 유저 대시보드 라우트
+router.get("/dashboard/user_dashboard/:id", async (req, res) => {
+  const dog_id = req.params.id;
   const query = "SELECT * FROM dogs WHERE dog_id = ?";
 
   try {
-    const [rows] = await db.query(query, [dogId]);
+    const [rows] = await db.query(query, [dog_id]);
     console.log("Query result:", rows); // 콘솔에서 쿼리 결과 확인
 
     if (rows.length > 0) {
       const dogData = rows[0];
-      if (dogData.dog_photo) {
-        dogData.dog_photo = `/img/dog_${dogId}.jpg`; // 클라이언트에 전달할 파일 경로
-      }
       res.render("user/dashboard/user_dashboard", { data: dogData });
     } else {
       res.status(404).send("해당 정보를 찾을 수 없습니다.");
@@ -909,9 +860,15 @@ router.get("/user_dashboard", async (req, res) => {
   }
 });
 
-// 게시물 리스트 라우트: GET /dashboard/user/user_postlist
-router.get("/user_postlist", (req, res) => {
-  res.render("user/dashboard/user_postlist", { data: posts });
+// 게시물 리스트 라우트: GET /admin/class/admin_postlist
+router.get("/class/user_postlist", (req, res) => {
+  db.query("SELECT * FROM Dogs", (err, posts) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("서버 오류");
+    }
+    res.render("user/dashboard/user_postlist", { data: posts });
+  });
 });
 
 // 게시물 검색 라우트: GET /dashboard/user/search
@@ -921,20 +878,49 @@ router.get("/search", (req, res) => {
   res.render("dashboard/user/userpostlist", { data: filteredPosts });
 });
 
-router.get("/class/u_morningClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_morningClassPosts", { data: posts });
+// 게시물 클래스별 라우트
+router.get("/class/user_morningClassPosts", (req, res) => {
+  db.query("SELECT * FROM Dogs WHERE class_info = '오전'", (err, posts) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("서버 오류");
+    }
+    res.render("user/class/user_morningClassPosts", { data: posts });
+  });
 });
 
-router.get("/class/u_afternoonClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_afternoonClassPosts", { data: posts });
+router.get("/class/user_afternoonClassPosts", (req, res) => {
+  db.query("SELECT * FROM dogs WHERE class_info = '오후'", (err, posts) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("서버 오류");
+    }
+    res.render("user/class/user_afternoonClassPosts", {
+      data: posts,
+    });
+  });
 });
 
-router.get("/class/u_alldayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_alldayClassPosts", { data: posts });
+router.get("/class/user_alldayClassPosts", (req, res) => {
+  db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("서버 오류");
+    }
+    res.render("user/class/user_alldayClassPosts", {
+      data: posts,
+    });
+  });
 });
 
-router.get("/class/u_onedayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_onedayClassPosts", { data: posts });
+router.get("/class/user_onedayClassPosts", (req, res) => {
+  db.query("SELECT * FROM Dogs WHERE class_info = '일일'", (err, posts) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("서버 오류");
+    }
+    res.render("user/class/user_onedayClassPosts", { data: posts });
+  });
 });
 
 router.get("/userCalendar", (req, res) => {
@@ -984,3 +970,5 @@ router.get("/userfacilitiesMain", (req, res) => {
 });
 
 module.exports = router;
+
+// routes/user/main.js

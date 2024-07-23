@@ -8,12 +8,8 @@ const path = require("path");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const app = express();
-<<<<<<< HEAD
-const methodOverride = require("method-override");
-=======
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt')
->>>>>>> ad44df25b151aa8b89c81cbca487abd95121122f
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 
 // 세션 설정
 app.use(
@@ -26,7 +22,7 @@ app.use(
 );
 
 // Method-Override 설정
-app.use(methodOverride("_method"));
+//app.use(methodOverride("_method"));
 
 connectDB();
 app.use(express.urlencoded({ extended: false }));
@@ -45,7 +41,6 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.set("layout", "./layouts/main");
 app.set("layout extractScripts", true);
-
 
 app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
