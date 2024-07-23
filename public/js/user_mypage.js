@@ -33,5 +33,3 @@ document.addEventListener("DOMContentLoaded", function () {
   // 이벤트 리스너 추가
   document.getElementById("addBtn").addEventListener("click", addDogInfo);
 });
-
-// public/js/user_mypage.js

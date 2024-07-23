@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+/* :root {
+  --brown: #dd8e55;
+  --yellow: #fbd663;
+}
+
+body {
+  padding: 0px;
+  margin: 0px;
+  width: 100vw;
+  overflow-x: hidden;
+  /*가로축 스크롤 제거
+} */
+
+=======
+>>>>>>> chae
 /* 검색창 및 버튼 가운데 정렬 */
 .search-form {
   display: flex;

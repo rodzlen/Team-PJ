@@ -652,28 +652,31 @@ router.get(
 
     const connection = await mysql.createConnection({
       host: "localhost",
-      port: db.config.port, // 포트 정보
-      user: db.config.user, // 사용자 정보
-      password: db.config.password, // 비밀번호 정보
-      database: db.config.database, // 데이터베이스 정보
+      port: db.config.port,
+      user: db.config.user,
+      password: db.config.password,
+      database: db.config.database,
     });
 
-    const [rows] = await connection.execute(
-      "SELECT * FROM dogs WHERE dog_id = ?",
-      [postId]
-    );
-    await connection.end();
+    try {
+      const [rows] = await connection.execute(
+        "SELECT * FROM dogs WHERE dog_id = ?",
+        [postId]
+      );
 
-    const post = rows[0];
+      const post = rows[0];
 
-    if (!post) {
-      return res.status(404).send("강아지 정보를 찾을 수 없습니다.");
+      if (!post) {
+        return res.status(404).send("강아지 정보를 찾을 수 없습니다.");
+      }
+
+      res.render("admin/dashboard/admin_edit", {
+        title: "강아지 정보 수정",
+        post: post,
+      });
+    } finally {
+      await connection.end();
     }
-
-    res.render("admin/dashboard/admin_edit", {
-      title: "강아지 정보 수정",
-      post: post,
-    });
   })
 );
 
@@ -682,35 +685,37 @@ router.post(
   "/dashboard/admin_edit/:id",
   upload.single("walk_photo"),
   asyncHandler(async (req, res) => {
+    const postId = req.params.id;
     try {
-      const postId = req.params.id;
       const { walk_date, walk_time, teacher, note_info, class_info, feed } =
         req.body;
       const walk_photo = req.file ? req.file.filename : null;
 
       const connection = await mysql.createConnection({
         host: "localhost",
-        port: db.config.port, // 포트 정보
-        user: db.config.user, // 사용자 정보
-        password: db.config.password, // 비밀번호 정보
-        database: db.config.database, // 데이터베이스 정보
+        port: db.config.port,
+        user: db.config.user,
+        password: db.config.password,
+        database: db.config.database,
       });
 
-      // 비동기 쿼리 실행
-      await connection.execute(
-        "UPDATE dogs SET walk_date = ?, walk_time = ?, walk_photo = ?, teacher = ?, note_info = ?, class_info = ?, feed = ? WHERE dog_id = ?",
-        [
-          walk_date,
-          walk_time,
-          walk_photo,
-          teacher,
-          note_info,
-          class_info,
-          feed,
-          postId,
-        ]
-      );
-      await connection.end(); // 연결 종료
+      try {
+        await connection.execute(
+          "UPDATE dogs SET walk_date = ?, walk_time = ?, walk_photo = ?, teacher = ?, note_info = ?, class_info = ?, feed = ? WHERE dog_id = ?",
+          [
+            walk_date,
+            walk_time,
+            walk_photo,
+            teacher,
+            note_info,
+            class_info,
+            feed,
+            postId,
+          ]
+        );
+      } finally {
+        await connection.end();
+      }
 
       res.redirect(`/admin/dashboard/admin_edit/${postId}`);
     } catch (error) {

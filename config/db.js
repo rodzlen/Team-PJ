@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const util = require('util');
 
 const db_info = {
   port: "3306",
@@ -18,8 +19,7 @@ const connectDB = () => {
     }
   });
 };
+db.query = util.promisify(db.query);
 
 module.exports = connectDB;
 module.exports.db = db;
-
-// config/db.js

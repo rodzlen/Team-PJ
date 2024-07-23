@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/notice_style.css"> <!-- CSS 파일 임포트 -->
+</head>
+<div>
+  <h1 ><%= locals.title%></h1>
+  <form action="/admin/notice/edit/<%= data.id %>" method="POST">
+      <input type="text" name="title" placeholder="<%= data.title %>">
+      <input type="textarea" name="content" placeholder="<%= data._content %>" >
+      <input type="file" name="Image" placeholder="<%= data.image %>">
+      <button type="submit" >수정</button>
+      <form action="/admin/notice/delete/:<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <button type="submit">삭제</button>
+      </form>
+    <a href="/admin/notice">뒤로가기</a>   
+
+  </form>
+</div>

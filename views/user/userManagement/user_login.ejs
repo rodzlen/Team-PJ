@@ -1,271 +1,186 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>사용자 로그인</title>
-    <link rel="stylesheet" href="/css/loginstyle.css" />
-    <script>
-      // 회원가입 폼 submit 이벤트 핸들러
-      function handleSignup(event) {
-        event.preventDefault(); // 폼 기본 동작 방지
 
-        const userId = event.target.querySelector(
-          'input[name="user_id"]'
-        ).value;
-        const userPw = event.target.querySelector(
-          'input[name="user_pw"]'
-        ).value;
-        const userPwConfirm = event.target.querySelector(
-          'input[name="user_pw_confirm"]'
-        ).value;
-        const userName = event.target.querySelector(
-          'input[name="user_name"]'
-        ).value;
-        const userPhone = event.target.querySelector(
-          'input[name="user_phone"]'
-        ).value;
-        const petName = event.target.querySelector(
-          'input[name="pet_name"]'
-        ).value;
-        const petGender = event.target.querySelector(
-          'input[name="sex"]:checked'
-        ).value;
-        const petNeutering = event.target.querySelector(
-          'input[name="neutering"]:checked'
-        ).value;
-        const peculiarity = event.target.querySelector(
-          'textarea[name="peculiarity"]'
-        ).value;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사용자 로그인</title>
+  <link rel="stylesheet" href="/css/loginstyle.css">
+  <script>
+    // 회원가입 폼 submit 이벤트 핸들러
+    function handleSignup(event) {
+      event.preventDefault(); // 폼 기본 동작 방지
 
-        // 비밀번호와 비밀번호 확인 일치 여부 확인
-        if (userPw !== userPwConfirm) {
-          alert("비밀번호를 다시 확인해주세요.");
-          return;
-        }
+      const userId = event.target.querySelector('input[name="user_id"]').value;
+      const userPw = event.target.querySelector('input[name="user_pw"]').value;
+      const userPwConfirm = event.target.querySelector('input[name="user_pw_confirm"]').value;
+      const userName = event.target.querySelector('input[name="user_name"]').value;
+      const userPhone = event.target.querySelector('input[name="user_phone"]').value;
+      const petName = event.target.querySelector('input[name="pet_name"]').value;
+      const petGender = event.target.querySelector('input[name="sex"]:checked').value;
+      const petNeutering = event.target.querySelector('input[name="neutering"]:checked').value;
+      const peculiarity = event.target.querySelector('textarea[name="peculiarity"]').value;
 
-        // 서버로 전송할 데이터 준비
-        const formData = {
-          user_id: userId,
-          user_pw: userPw,
-          user_name: userName,
-          user_phone: userPhone,
-          pet_name: petName,
-          pet_gender: petGender,
-          pet_neutering: petNeutering,
-          peculiarity: peculiarity,
-        };
-
-        // 서버로 데이터 전송
-        fetch("/users/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.error) {
-              alert(data.error); // 회원가입 실패 메시지 표시
-            } else {
-              alert(data.message); // 회원가입 성공 메시지 표시
-              // 로그인 폼으로 전환
-              document.querySelector(".login-content-signin").style.display =
-                "block";
-              document.querySelector(".login-content-signup").style.display =
-                "none";
-            }
-          })
-          .catch((error) => {
-            console.error("회원가입 요청 실패:", error);
-            alert("회원가입 요청 중 오류가 발생했습니다.");
-          });
+      // 비밀번호와 비밀번호 확인 일치 여부 확인
+      if (userPw !== userPwConfirm) {
+        alert("비밀번호를 다시 확인해주세요.");
+        return;
       }
 
-      // 로그인 폼 submit 이벤트 핸들러
-      function handleLogin(event) {
-        event.preventDefault(); // 폼 기본 동작 방지
+      // 서버로 전송할 데이터 준비
+      const formData = {
+        user_id: userId,
+        user_pw: userPw,
+        user_name: userName,
+        user_phone: userPhone,
+        pet_name: petName,
+        pet_gender: petGender,
+        pet_neutering: petNeutering,
+        peculiarity: peculiarity
+      };
 
-        const userId = event.target.querySelector(
-          'input[name="user_id"]'
-        ).value;
-        const userPw = event.target.querySelector(
-          'input[name="user_pw"]'
-        ).value;
-
-        // 서버로 전송할 데이터 준비
-        const formData = {
-          user_id: userId,
-          user_pw: userPw,
-        };
-
-        // 서버로 데이터 전송
-        fetch("/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+      // 서버로 데이터 전송
+      fetch('/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error); // 회원가입 실패 메시지 표시
+          } else {
+            alert(data.message); // 회원가입 성공 메시지 표시
+            // 로그인 폼으로 전환
+            document.querySelector('.login-content-signin').style.display = 'block';
+            document.querySelector('.login-content-signup').style.display = 'none';
+          }
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("로그인 요청 실패");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data.error) {
-              alert(data.error); // 로그인 실패 메시지 표시
-            } else {
-              alert(data.message); // 로그인 성공 메시지 표시
-              window.location.href = "/user_main"; // 로그인 성공 시 이동할 페이지
-            }
-          })
-          .catch((error) => {
-            console.error("로그인 요청 실패:", error);
-            alert("로그인 요청 중 오류가 발생했습니다.");
-          });
-      }
-    </script>
-  </head>
+        .catch(error => {
+          console.error('회원가입 요청 실패:', error);
+          alert('회원가입 요청 중 오류가 발생했습니다.');
+        });
+    }
 
-  <body>
-    <!-- 로그인/회원가입 -->
-    <div id="login">
-      <!-- 로그인 폼 -->
-      <div class="login-content login-content-signin">
-        <div>
-          <h2>로그인</h2>
-          <form class="wrapBox" onsubmit="handleLogin(event)" role="form">
-            <input
-              type="text"
-              name="user_id"
-              placeholder="아이디를 입력하세요."
-              required
-            />
-            <input
-              type="password"
-              name="user_pw"
-              placeholder="비밀번호를 입력하세요."
-              required
-            />
-            <button type="submit">로그인</button>
-          </form>
-        </div>
-      </div>
+    // 로그인 폼 submit 이벤트 핸들러
+    function handleLogin(event) {
+      event.preventDefault(); // 폼 기본 동작 방지
 
-      <!-- 회원가입 폼 -->
-      <div class="login-content login-content-signup" style="display: none">
-        <div>
-          <h2>회원가입</h2>
-          <form class="wrapBox" onsubmit="handleSignup(event)" role="form">
-            <input
-              type="text"
-              name="user_id"
-              class="form-control"
-              placeholder="아이디"
-              required
-            />
-            <input
-              type="password"
-              name="user_pw"
-              class="form-control"
-              placeholder="비밀번호"
-              required
-            />
-            <input
-              type="password"
-              name="user_pw_confirm"
-              class="form-control"
-              placeholder="비밀번호 확인"
-              required
-            />
-            <input
-              type="text"
-              name="user_name"
-              class="form-control"
-              placeholder="견주이름"
-              required
-            />
-            <input
-              type="tel"
-              name="user_phone"
-              class="form-control"
-              placeholder="견주연락처"
-              required
-            />
-            <input
-              type="text"
-              name="pet_name"
-              class="form-control"
-              placeholder="강아지이름"
-              required
-            />
+      const userId = event.target.querySelector('input[name="user_id"]').value;
+      const userPw = event.target.querySelector('input[name="user_pw"]').value;
 
-            <div>
-              강아지 성별
-              <label>
-                <input type="radio" name="sex" value="Male" required />
-                남
-              </label>
-              <label>
-                <input type="radio" name="sex" value="Female" required />
-                여
-              </label>
-            </div>
+      // 서버로 전송할 데이터 준비
+      const formData = {
+        user_id: userId,
+        user_pw: userPw
+      };
 
-            <div>
-              중성화 여부
-              <label>
-                <input type="radio" name="neutering" value="yes" required />
-                예
-              </label>
-              <label>
-                <input type="radio" name="neutering" value="no" required />
-                아니오
-              </label>
-            </div>
+      // 서버로 데이터 전송
+      fetch('/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('로그인 요청 실패');
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.error) {
+            alert(data.error); // 로그인 실패 메시지 표시
+          } else {
+            alert(data.message); // 로그인 성공 메시지 표시
+            window.location.href = '/user_main'; // 로그인 성공 시 이동할 페이지
+          }
+        })
+        .catch(error => {
+          console.error('로그인 요청 실패:', error);
+          alert('로그인 요청 중 오류가 발생했습니다.');
+        });
+    }
+  </script>
+</head>
 
-            <br />
-
-            <div>
-              <textarea
-                name="peculiarity"
-                class="form-control form-control-notes"
-                placeholder="특이사항"
-              ></textarea>
-            </div>
-            <button type="submit" class="btn btn-submit btn-default pull-right">
-              회원가입
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <!-- 스위처 -->
-      <div class="switcher">
-        <div class="switcher-signin">
-          <h3>계정이 있으신가요?</h3>
-          <button
-            onclick="document.querySelector('.login-content-signin').style.display = 'block'; 
-            document.querySelector('.login-content-signup').style.display = 'none';"
-          >
-            로그인
-          </button>
-        </div>
-        <div class="switcher-signup">
-          <h3>회원가입을 안하셨나요?</h3>
-          <button
-            onclick="document.querySelector('.login-content-signin').style.display = 'none'; 
-            document.querySelector('.login-content-signup').style.display = 'block';"
-          >
-            회원가입
-          </button>
-        </div>
+<body>
+  <!-- 로그인/회원가입 -->
+  <div id="login">
+    <!-- 로그인 폼 -->
+    <div class="login-content login-content-signin">
+      <div>
+        <h2>로그인</h2>
+        <form class="wrapBox" action="users/login" role="form" method="post">
+          <input type="text" name="user_id" placeholder="아이디를 입력하세요." required>
+          <input type="password" name="user_pw" placeholder="비밀번호를 입력하세요." required>
+          <button type="submit">로그인</button>
+        </form>
       </div>
     </div>
-  </body>
-</html>
 
-<!-- views/user/userManagement/user_login.ejs -->
+    <!-- 회원가입 폼 -->
+    <div class="login-content login-content-signup" style="display: none;">
+      <div>
+        <h2>회원가입</h2>
+        <form class="wrapBox" action="/users/signup" role="form" method="post">
+          <input type="text" name="user_id" class="form-control" placeholder="아이디" required>
+          <input type="password" name="user_pw" class="form-control" placeholder="비밀번호" required>
+          <input type="password" name="user_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>
+          <input type="text" name="user_name" class="form-control" placeholder="견주이름" required>
+          <input type="tel" name="user_phone" class="form-control" placeholder="견주연락처" required>
+          <input type="text" name="pet_name" class="form-control" placeholder="강아지이름" required>
+          <div>
+            강아지 성별
+            <label>
+              <input type="radio" name="pet_gender" value="Male" required>
+              남
+            </label>
+            <label>
+              <input type="radio" name="pet_gender" value="Female" required>
+              여
+            </label>
+          </div>
+
+          <div>
+            중성화 여부
+            <label>
+              <input type="radio" name="pet_neutering" value="yes" required>
+              예
+            </label>
+            <label>
+              <input type="radio" name="pet_neutering" value="no" required>
+              아니오
+            </label>
+          </div>
+
+          <br>
+
+          <div>
+            <textarea name="peculiarity" class="form-control form-control-notes" placeholder="특이사항"></textarea>
+          </div>
+          <button type="submit" class="btn btn-submit btn-default pull-right">회원가입</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- 스위처 -->
+    <div class="switcher">
+      <div class="switcher-signin">
+        <h3>계정이 있으신가요?</h3>
+        <button onclick="document.querySelector('.login-content-signin').style.display = 'block'; 
+            document.querySelector('.login-content-signup').style.display = 'none';">로그인</button>
+      </div>
+      <div class="switcher-signup">
+        <h3>회원가입을 안하셨나요?</h3>
+        <button onclick="document.querySelector('.login-content-signin').style.display = 'none'; 
+            document.querySelector('.login-content-signup').style.display = 'block';">회원가입</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

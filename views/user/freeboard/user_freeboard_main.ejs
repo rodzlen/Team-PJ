@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= locals.title %></title>
+    <link rel="stylesheet" href="/css/freeboardMain_style.css"> 
+</head>
+<body>
+    <div id = "freeboard">
+    <aside class="category-menu">
+        <h3>카테고리</h3>
+        <ul>
+            <li><a href="/notice">공지사항</a></li>
+            <li><a href="/qna">QnA</a></li>
+            <li><a href="/freeboard">자유게시판</a></li>
+        </ul>
+    </aside>
+
+    <div id="cover">
+    <h3><%= locals.title %></h3>
+    <div class="main-content">
+        <!-- 검색 폼 -->
+        <form action="/freeboard" method="GET">
+            <input type="text" name="search" placeholder="검색">
+            <select name="type">
+                <option value="title">제목</option>
+                <option value="createBy">작성자</option>
+                <option value="title||createBy" selected>제목+작성자</option>
+            </select>
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 게시글 목록 테이블 -->
+        <table id="freeTable">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% data.forEach((FreeBoard, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><a href="/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
+                        <td><%= FreeBoard.post_date %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="write-button">
+            <button onclick="location.href='/freeboard/add'">글쓰기</button>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
