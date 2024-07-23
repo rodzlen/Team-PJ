@@ -86,6 +86,34 @@
           alert('로그인 요청 중 오류가 발생했습니다.');
         });
     }
+
+
+    /* 중복확인 버튼 클릭 시 처리 => 이거 누르면 왜 회원가입 되지
+    document.getElementById('duplicate').addEventListener('click', function(event) {
+      event.preventDefault();
+
+      const adminId = document.querySelector('input[name="admin_id"]').value;
+
+      fetch('/admin/check_duplicate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ admin_id: adminId }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error); // 이미 사용 중인 아이디인 경우
+          } else {
+            alert(data.message); // 사용할 수 있는 아이디인 경우
+          }
+        })
+        .catch(error => {
+          console.error('중복 확인 요청 실패:', error);
+          alert('중복 확인 요청 중 오류가 발생했습니다.');
+        });
+    }); */
   </script>
 </head>
 
@@ -95,7 +123,10 @@
     <!-- 로그인 폼 -->
     <div class="login-content login-content-signin">
       <div>
-        <h2>관리자 로그인</h2>
+        <div id="top">
+          <h2>관리자 로그인</h2>
+            <a href="/">Home</a>
+        </div>
         <!-- submit시 event 실행 -->
         <form class="wrapBox" action="/admin/admin_login" role="form" method="post">
           <input type="text" name="admin_id" class="form-control" placeholder="아이디" required>
@@ -108,9 +139,15 @@
     <!-- 회원가입 폼 -->
     <div class="login-content login-content-signup" style="display: none;">
       <div>
-        <h2>관리자 회원가입</h2>
+        <div id="top">
+          <h2>관리자 회원가입</h2>
+            <a href="/">Home</a>
+        </div>
         <form class="wrapBox"action="/admin/signup" role="form" method="post">
-          <input type="text" name="admin_id" class="form-control" placeholder="아이디" required>
+          <label>
+            <input id="exclude" type="text" name="admin_id" class="form-control" placeholder="아이디" required>
+            &nbsp;&nbsp;<a id="duplicate">중복확인</a>
+          </label>
           <input type="password" name="admin_pw" class="form-control" placeholder="비밀번호" required>
           <input type="password" name="admin_pw_confirm" class="form-control" placeholder="비밀번호 확인" required>
           <input type="text" name="admin_name" class="form-control" placeholder="직원이름" required>
