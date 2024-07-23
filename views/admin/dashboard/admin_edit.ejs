@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="/css/dashboardstyle.css" />
   </head>
   <body>
-    <!-- 수정 폼 -->
     <form
-      action="/dashboard/admin_edit/<%= post.id %>?_method=PUT"
+      action="/admin/dashboard/admin_edit/<%= post.dog_id %>?_method=PUT"
       method="POST"
       enctype="multipart/form-data"
     >
@@ -113,26 +112,23 @@
         />
       </div>
     </form>
-
-    <!-- 삭제 폼 -->
+    <!--delete 폼-->
     <form
-      action="/dashboard/admin_delete/<%= post.id %>?_method=DELETE"
+      action="/admin/dashboard/admin/delete/<%= post.dog_id %>?_method=DELETE"
       method="POST"
     >
-      <div>
-        <input
-          type="submit"
-          value="삭제"
-          class="btn-delete btn"
-          onclick="return confirm('정말 삭제하시겠습니까?')"
-        />
-        <input
-          type="button"
-          value="뒤로"
-          class="btn"
-          onclick="window.location.href='/admin/class/admin_postlist'"
-        />
-      </div>
+      <input
+        type="submit"
+        value="삭제"
+        class="btn-delete btn"
+        onclick="return confirm('정말 삭제하시겠습니까?')"
+      />
+      <input
+        type="button"
+        value="뒤로"
+        class="btn"
+        onclick="window.location.href='/admin/class/admin_postlist'"
+      />
     </form>
   </body>
 </html>
