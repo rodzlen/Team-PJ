@@ -16,7 +16,7 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="/<%=employee.staff_photo %>" alt="직원 사진" class="facility-image">
+                                <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait2.png';">
                                 <ul class="employee-info">
                                     <li>이름: <%=employee.name %></li>
                                     <li>직급: <%=employee.role %></li>
@@ -37,7 +37,7 @@
         </div>
         <button onclick="location.href='/admin/adminstaffcreate'" class="w-50 mb-5 mt-2 btn btn-success">
             직원추가
-          </button>
+        </button>
     </div>
 
     <h2>시설소개</h2>
@@ -47,13 +47,13 @@
                 <% facilities.forEach((facility, index) => { %>
                     <td>
                         <div class="facility-card">     
-                            <img src="/<%=facility.facility_photo %>" alt="시설 사진" class="facility-image">
+                            <img src="/img/<%=facilities.facility_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait.gif';">
                             <ul class="facility-info">
                                 <li>시설 이름: <%=facility.facility_name %></li>
                                 <li>주요 시설: <%=facility.main_facilities %></li>
                             </ul>
                             
-                            <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                            <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'">
                                 수정/삭제하기
                             </button>
                         </div>
@@ -65,11 +65,8 @@
             </tr>
         </table>
     </div>
-    <div class="btnBox">
-        <button onclick="location.href='/admin/adminfacilitiescreate'" class="w-50 mb-5 mt-2 btn btn-success">
-          시설추가
-        </button>
-
-    </div>
+    <button onclick="location.href='/admin/adminfacilitiescreate'">
+      시설추가
+    </button>
 </body>
 </html>

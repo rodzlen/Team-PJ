@@ -1,7 +1,8 @@
+
 :root {
     --brown: #dd8e55;
     --yellow: #fbd663;
-  }
+}
 
 body {
     padding: 0px;
@@ -47,8 +48,11 @@ body {
 
 /* FullCalendar */
 #calendar {
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    max-width: 100% !important;
+    margin: auto !important;
+    height: 600px; /* 명시적으로 높이 설정 */
 }
 
 /* Modal */
