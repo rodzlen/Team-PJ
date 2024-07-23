@@ -1,68 +1,87 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const mainLayout = "../views/layouts/main.ejs";
 const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
-const upload = require("../../config/upload")
+const mysql = require("mysql2/promise");
+const upload = require("../../config/upload");
 const multer = require("multer");
+const bcrypt = require("bcrypt")
+
+//세션에 로그인 정보 담겨있는지 확인
+const checkAdminLogin = (req, res, next) => {
+  if (!req.session.user ||!req.session.user.user_id) {
+    return res.status(401).send('<script>alert("로그인이 필요합니다"); window.location.href="/";</script>');
+  } 
+  next();
+};
+const adminRegAuth = (req,res,next)=>{
+  const authNo= req.body;
+  if (authNo!=1234){
+    return res.status(401).send('<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin_login";</script>');
+  }
+  next();
+}
 
 
 // 공지사항 메인
-// /admin/notice
-router.get("/notice", asyncHandler(async (req, res) => {
-  const searchQuery = req.query.search || "";
-  const typeQuery = req.query.type || "";
-  const locals = {title : "공지사항"}
+router.get(
+  "/notice",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
 
-  let query = "SELECT * FROM noticeBoard";
-  let queryParams = [];
+    let query = "SELECT * FROM noticeBoard";
+    let queryParams = [];
 
-  if (searchQuery) {
-    if (typeQuery === "title") {
-      query += " WHERE title LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "createBy") {
-      query += " WHERE createBy LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "title||createBy") {
-      query += " WHERE title LIKE ? OR createBy LIKE ?";
-      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
-    }
-  }
-
-  db.query(query, queryParams, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('서버 오류가 발생했습니다.');
-    } else {
-      res.render('admin/notice/admin_notice_main', {locals, data: results });
-    }
-  });
-}));
-
-// 공지사항 세부 내용 페이지 라우터
-router.get("/notice/detail/:id", asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  
-  const query = "SELECT * FROM noticeBoard WHERE id = ?";
-  db.query(query, [id], (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('서버 오류가 발생했습니다.');
-    } else {
-      if (results.length > 0) {
-        res.render('admin/notice/admin_notice_detail', { data: results[0] });
-      } else {
-        res.status(404).send('공지사항을 찾을 수 없습니다.');
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
       }
     }
-  });
-}));
 
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/notice/notice", { data: results });
+      }
+    });
+  })
+);
 
+// 공지사항 세부 내용 페이지 라우터
+router.get(
+  "/notice/detail/:id",
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const query = "SELECT * FROM noticeBoard WHERE id = ?";
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (results.length > 0) {
+          res.render("admin/notice/notice-detail", { data: results[0] });
+        } else {
+          res.status(404).send("공지사항을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
 
 // 공지사항 추가 페이지
-router.get("/notice/add", asyncHandler(async (req, res) => {
+router.get("/notice/add",checkAdminLogin, asyncHandler(async (req, res) => {
   const locals= {title : "공지사항 추가"}
   res.render("admin/notice/admin_notice_add", { locals });
 }));
@@ -70,13 +89,13 @@ router.get("/notice/add", asyncHandler(async (req, res) => {
 // 공지사항 추가 처리
 router.post(
   "/notice/add",
+  checkAdminLogin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
       const { title, content, admin_id } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
-      const createBy = "작성자 테스트" // 임시데이터 session에서 받아와야댐 
 
       // MySQL 쿼리
       const query = `
@@ -88,21 +107,30 @@ router.post(
       db.query(query, values, (err, result) => {
         if (err) {
           console.error(err);
-          res.status(500).send('<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/admin/notice/add";</script>');
+          res
+            .status(500)
+            .send(
+              '<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/admin/notice/add";</script>'
+            );
         } else {
           res.redirect("/admin/notice");
         }
       });
     } catch (error) {
       console.error(error);
-      res.status(500).send('<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/admin/notice/add";</script>');
+      res
+        .status(500)
+        .send(
+          '<script>alert("공지사항 추가 중 오류가 발생했습니다."); window.location.href="/admin/notice/add";</script>'
+        );
     }
   })
 );
 
-//공지 수정 페이지
+// 공지사항 수정 페이지
 router.get(
   "/notice/edit/:id",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const locals = { title: "공지사항 수정" };
     const id = req.params.id;
@@ -131,38 +159,29 @@ router.get(
     }
   })
 );
- // 공지사항 수정 처리
+// 공지사항 수정 처리
 router.post(
   "/notice/edit/:id",
+  checkAdminLogin,
   upload.single('image'),
   asyncHandler(async (req, res) => {
-    const id = req.params.id;
-    const { title, content } = req.body;
-    const image = req.file ? req.file.filename : null;
-
-    // 현재 날짜와 시간을 가져옴
-    const post_date = new Date();
-
     try {
-      // MySQL 쿼리
-      const query = `
-        UPDATE NoticeBoard
-        SET title = ?, content = ?, image = ?, post_date = ?
-        WHERE id = ?
-      `;
-      const values = [title, content, image, post_date, id];
-
-      db.query(query, values, (err, result) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
-        } else {
-          res.redirect(`/admin/notice`);
-        }
+      const { title, content } = req.body;
+      const Image = req.file ? req.file.filename : null;
+      await NoticeBoard.findByIdAndUpdate(req.params.id, {
+        title,
+        content,
+        Image,
+        date,
       });
+      res.redirect("/admin/notice/edit/:id");
     } catch (error) {
       console.error(error);
-      res.status(500).send('<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
+      res
+        .status(500)
+        .send(
+          '<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+        );
     }
   })
 );
@@ -170,90 +189,173 @@ router.post(
 // 공지사항 삭제
 router.post(
   "/notice/delete/:id",
+  checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const noticeId = req.params.id;
-
     try {
-      // MySQL 쿼리로 공지사항 삭제
-      const query = 'DELETE FROM NoticeBoard WHERE id = ?';
-      await db.query(query, [noticeId]);
-
-      // 성공적으로 삭제 후 리디렉션
-      res.redirect('/admin/notice');
+      await NoticeBoard.findByIdAndDelete(req.params.id);
+      res.redirect("/admin/notice");
     } catch (error) {
       console.error(error);
-      // 오류 발생 시 사용자에게 알림
-      res.status(500).send('<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>');
+      res
+        .status(500)
+        .send(
+          '<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+        );
     }
   })
 );
 
-
 // QnA 목록 페이지
-router.get('/qna', async (req, res) => {
+router.get("/qna", async (req, res) => {
   try {
-      const [questions] = await db.query('SELECT * FROM Questions');
-      res.render('admin/qna/admin_qna', { questions });
+    const [questions] = await db.query("SELECT * FROM Questions");
+    res.render("admin/qna/qna", { questions });
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send("서버 오류");
   }
 });
-
 // QnA 상세 페이지
-router.get('/qna/detail/:id', async (req, res) => {
+router.get("/qna/detail/:id", async (req, res) => {
   const questionId = req.params.id;
   try {
-      const [questions] = await db.query('SELECT * FROM Questions WHERE id = ?', [questionId]);
-      const [answers] = await db.query('SELECT * FROM Answers WHERE question_id = ?', [questionId]);
-      if (questions.length === 0) {
-          return res.status(404).send('질문을 찾을 수 없습니다.');
-      }
-      res.render('admin/qna/admin_qna_detail', { question: questions[0], answers, isAdmin: req.user.isAdmin });
+    const [questions] = await db.query("SELECT * FROM Questions WHERE id = ?", [
+      questionId,
+    ]);
+    const [answers] = await db.query(
+      "SELECT * FROM Answers WHERE question_id = ?",
+      [questionId]
+    );
+    if (questions.length === 0) {
+      return res.status(404).send("질문을 찾을 수 없습니다.");
+    }
+    res.render("admin/qna/qna-detail", {
+      question: questions[0],
+      answers,
+      isAdmin: req.user.isAdmin,
+    });
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send("서버 오류");
   }
 });
 
-router.post('/answer/:id', async (req, res) => {
+router.post('/answer/:id',checkAdminLogin, async (req, res) => {
   const questionId = req.params.id;
   const { admin_id, content } = req.body;
   try {
-      await db.query('INSERT INTO Answers (question_id, admin_id, content) VALUES (?, ?, ?)', [questionId, admin_id, content]);
-      res.redirect('/qna/detail/' + questionId);
+    await db.query(
+      "INSERT INTO Answers (question_id, admin_id, content) VALUES (?, ?, ?)",
+      [questionId, admin_id, content]
+    );
+    res.redirect("/qna/detail/" + questionId);
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send("서버 오류");
   }
 });
 // 답변 삭제
-router.post('qna/delete/:id', async (req, res) => {
+router.post('qna/delete/:id',checkAdminLogin, async (req, res) => {
   const answerId = req.params.id;
   const { questionId } = req.body;
   try {
-      await db.query('DELETE FROM Answers WHERE id = ?', [answerId]);
-      res.redirect('admin/qna/detail/' + questionId);
+    await db.query("DELETE FROM Answers WHERE id = ?", [answerId]);
+    res.redirect("admin/qna/detail/" + questionId);
   } catch (err) {
-      console.error(err);
-      res.status(500).send('서버 오류');
+    console.error(err);
+    res.status(500).send("서버 오류");
   }
 });
 
+// 홈 페이지
+router.get(
+  ["/"],
+  asyncHandler(async (req, res) => {
+    res.render("user/home", { layout: mainLayout }); // home에 layout 입히기, layout : false => layout 없이 렌더링
+  })
+);
+
+// 수업 신청 수정 페이지
+router.get('/classregistration/:id/edit', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const query = `SELECT * FROM ClassRegistration WHERE id = ?`;
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin";</script>');
+    }
+    if (results.length === 0) {
+      return res.status(404).send('<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin";</script>');
+    }
+    const locals = { registration: results[0] };
+    res.render('admin_class_registration_edit', { locals, layout: mainLayout });
+  });
+}));
+// 수업 신청 목록
+router.get('/class-reg', asyncHandler(async (req, res) => {
+  const { search = '', type = 'no||createBy' } = req.query;
+
+  let query = 'SELECT * FROM ClassRegistration';
+  let queryParams = [];
+
+  if (search) {
+      if (type === 'no') {
+          query += ' WHERE id LIKE ?';
+          queryParams.push(`%${search}%`);
+      } else if (type === 'createBy') {
+          query += ' WHERE createBy LIKE ?';
+          queryParams.push(`%${search}%`);
+      } else if (type === 'no||createBy') {
+          query += ' WHERE id LIKE ? OR createBy LIKE ?';
+          queryParams.push(`%${search}%`, `%${search}%`);
+      }
+  }
+
+  db.query(query, queryParams, (err, results) => {
+      if (err) {
+          console.error('Database error:', err);
+          return res.status(500).send('Internal Server Error');
+      }
+
+      const locals = { title: '수업 신청 목록', classReg: results };
+      res.render('class_registration_list', { locals });
+  });
+}));
+
+// 수업 신청 수정 처리
+router.post('/admin/classregistration/edit/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { class_name, feed_status, pickup_status, start_date, end_date, consultation } = req.body;
+
+  const query = `
+    UPDATE ClassRegistration 
+    SET class_name = ?, feed_status = ?, pickup_status = ?, start_date = ?, end_date = ?, consultation = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [
+    class_name, 
+    feed_status === 'on', 
+    pickup_status === 'on', 
+    start_date, 
+    end_date, 
+    consultation, 
+    id
+  ], (err, result) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classregistration";</script>');
+    }
+    res.send('<script>alert("수업 신청 정보가 성공적으로 수정되었습니다!"); window.location.href="/admin/classregistration";</script>');
+  });
+}));
 
 // 홈 페이지(관리자용)
 router.get(
   ["/admin_main"],
   asyncHandler(async (req, res) => {
     res.render("admin/admin_home", { layout: adminLayout });
-  })
-);
-
-// 홈 페이지(관리자용)
-router.get(
-  ["/application"],
-  asyncHandler(async (req, res) => {
-    res.render("admin/_application/admin_application", { layout: adminLayout });
   })
 );
 
@@ -267,7 +369,7 @@ router.get(
 
 // 마이페이지(관리자용)
 router.get(
-  "/admin/admin_mypage",
+  "/admin_mypage",
   asyncHandler(async (req, res) => {
     res.render("admin/adminManagement/admin_mypage", { layout: adminLayout });
   })
@@ -275,13 +377,14 @@ router.get(
 
 // 회원가입 처리
 router.post(
-  "/admin/signup",
+  "/signup",
+  adminRegAuth,
   asyncHandler(async (req, res) => {
     const { admin_id, admin_pw, admin_name, admin_phone } = req.body;
 
     // 데이터베이스에 삽입할 SQL 쿼리
     const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
-                VALUES (?, ?, ?, ?)`;
+                  VALUES (?, ?, ?, ?)`;
 
     // 쿼리 실행
     db.query(
@@ -301,38 +404,35 @@ router.post(
 );
 
 // 로그인 처리
-router.post(
-  "/admin/login",
-  asyncHandler(async (req, res) => {
-    const { admin_id, admin_pw } = req.body;
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
-    // 데이터베이스에서 아이디와 비밀번호 확인
-    const sql = `SELECT * FROM Admin WHERE admin_id = ? AND admin_pw = ?`;
+  const query = 'SELECT * FROM Admin WHERE username = ?';
 
-    db.query(sql, [admin_id, admin_pw], (err, results) => {
-      if (err) {
-        console.error("로그인 중 에러 발생:", err);
-        res.status(500).json({ error: "로그인 중 에러가 발생했습니다." });
-      } else {
-        if (results.length > 0) {
-          // 로그인 성공
-          res.json({ message: "로그인 성공!" });
-          req.session.user = {
-            id: results[0].id,
-            name: results[0].admin_name,
-            role: 'admin'
-          };
-          
-        } else {
-          // 로그인 실패
-          res
-            .status(401)
-            .json({ error: "아이디 또는 비밀번호가 일치하지 않습니다." });
-        }
-      }
-    });
-  })
-);
+  db.query(query, [username], async (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/login";</script>');
+    }
+    
+    if (results.length === 0) {
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>');
+    }
+
+    const admin = results[0];
+    const match = await bcrypt.compare(password, admin.password);
+
+    if (!match) {
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>');
+    }
+
+    // 세션에 관리자 정보 저장
+    req.session.admin = admin;
+
+    res.send('<script>alert("로그인 성공!"); window.location.href="/admin_main";</script>');
+  });
+});
+
 
 // 오늘 산책 사진 업로드를 위한 Multer 설정
 const todayWalkStorage = multer.diskStorage({
@@ -374,11 +474,7 @@ router.post("/uploadphoto", upload.single("dog_photo"), (req, res) => {
     res.send(`
       <script>
         alert("강아지 사진을 업로드 해주세요.");
-<<<<<<< HEAD
-        window.location.href = "/admin/admindashboard";
-=======
         window.location.href = "/admin/admin_dashboard";
->>>>>>> chae
       </script>
     `);
   } else {
@@ -455,7 +551,7 @@ router.post(
           res.send(`
             <script>
               alert("정보가 성공적으로 저장되었습니다.");
-              window.location.href = "/admin/admin_postlist";
+              window.location.href = "/admin/class/admin_postlist";
             </script>
           `);
         }
@@ -470,6 +566,146 @@ router.post(
       `);
     }
   }
+);
+
+// 강아지 정보 검색
+function search(query, searchQuery, typeQuery) {
+  let queryParams = [];
+  if (searchQuery) {
+    if (typeQuery === "pet_name") {
+      query += " WHERE pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+  }
+  return { query, queryParams };
+}
+
+router.get(
+  "/admin_postlist",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM dogs";
+    const { query: finalQuery, queryParams } = search(
+      query,
+      searchQuery,
+      typeQuery
+    );
+
+    // 로그를 추가하여 쿼리와 파라미터를 확인
+    console.log("Final Query:", finalQuery);
+    console.log("Query Parameters:", queryParams);
+
+    db.query(finalQuery, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_postlist", { data: results });
+      }
+    });
+  })
+);
+
+// admin_afternoonClassPosts
+router.get(
+  "/admin_afternoonClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM dogs WHERE class_info = '오후'";
+    const { query: finalQuery, queryParams } = search(
+      query,
+      searchQuery,
+      typeQuery
+    );
+
+    db.query(finalQuery, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_afternoonClassPosts", { data: results });
+      }
+    });
+  })
+);
+
+// admin_morningClassPosts
+router.get(
+  "/admin_morningClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM dogs WHERE class_info = '오전'";
+    const { query: finalQuery, queryParams } = search(
+      query,
+      searchQuery,
+      typeQuery
+    );
+
+    db.query(finalQuery, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_morningClassPosts", { data: results });
+      }
+    });
+  })
+);
+
+// admin_alldayClassPosts
+router.get(
+  "/admin_alldayClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM dogs WHERE class_info = '종일'";
+    const { query: finalQuery, queryParams } = search(
+      query,
+      searchQuery,
+      typeQuery
+    );
+
+    db.query(finalQuery, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_alldayClassPosts", { data: results });
+      }
+    });
+  })
+);
+
+// admin_onedayClassPosts
+router.get(
+  "/admin_onedayClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM dogs WHERE class_info = '일일'";
+    const { query: finalQuery, queryParams } = search(
+      query,
+      searchQuery,
+      typeQuery
+    );
+
+    db.query(finalQuery, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_onedayClassPosts", { data: results });
+      }
+    });
+  })
 );
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
@@ -507,7 +743,7 @@ router.get("/class/admin_afternoonClassPosts", (req, res) => {
 });
 
 router.get("/class/admin_alldayClassPosts", (req, res) => {
-  db.query("SELECT * FROM Dogs WHERE class_info = '종일", (err, posts) => {
+  db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
@@ -528,28 +764,25 @@ router.get("/class/admin_onedayClassPosts", (req, res) => {
   });
 });
 
-// 관리자 강아지 정보 수정 페이지 라우트: GET /admin/dashboard/admin_edit/:id
+// 강아지 정보 수정 페이지: GET /admin/dashboard/admin_edit/:id
 router.get(
   "/dashboard/admin_edit/:id",
   asyncHandler(async (req, res) => {
+    const postId = req.params.id;
+
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      port: db.config.port,
+      user: db.config.user,
+      password: db.config.password,
+      database: db.config.database,
+    });
+
     try {
-      const postId = req.params.id;
-
-      // 비동기 연결을 사용하여 데이터베이스 연결
-      const connection = await mysql.createConnection({
-        host: "localhost",
-        port: db.config.port, // 포트 정보
-        user: db.config.user, // 사용자 정보
-        password: db.config.password, // 비밀번호 정보
-        database: db.config.database, // 데이터베이스 정보
-      });
-
-      // 비동기 쿼리 실행
       const [rows] = await connection.execute(
         "SELECT * FROM dogs WHERE dog_id = ?",
         [postId]
       );
-      await connection.end(); // 연결 종료
 
       const post = rows[0];
 
@@ -557,55 +790,53 @@ router.get(
         return res.status(404).send("강아지 정보를 찾을 수 없습니다.");
       }
 
-      // 데이터와 함께 EJS 템플릿을 렌더링
       res.render("admin/dashboard/admin_edit", {
         title: "강아지 정보 수정",
         post: post,
       });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("서버 오류가 발생했습니다.");
+    } finally {
+      await connection.end();
     }
   })
 );
 
-// 관리자 강아지 정보 수정 처리: POST /admin/dashboard/admin_edit/:id
+// 강아지 정보 수정 처리: POST /admin/dashboard/admin_edit/:id
 router.post(
   "/dashboard/admin_edit/:id",
   upload.single("walk_photo"),
   asyncHandler(async (req, res) => {
+    const postId = req.params.id;
     try {
-      const postId = req.params.id;
       const { walk_date, walk_time, teacher, note_info, class_info, feed } =
         req.body;
       const walk_photo = req.file ? req.file.filename : null;
 
-      // 비동기 연결을 사용하여 데이터베이스 연결
       const connection = await mysql.createConnection({
         host: "localhost",
-        port: db.port, // 포트 정보
-        user: db.user, // 사용자 정보
-        password: db.password, // 비밀번호 정보
-        database: db.database, // 데이터베이스 정보
+        port: db.config.port,
+        user: db.config.user,
+        password: db.config.password,
+        database: db.config.database,
       });
 
-      // 비동기 쿼리 실행
-      await connection.execute(
-        "UPDATE dogs SET walk_date = ?, walk_time = ?, walk_photo = ?, teacher = ?, note_info = ?, class_info = ?, feed = ? WHERE dog_id = ?",
-        [
-          walk_date,
-          walk_time,
-          walk_photo,
-          teacher,
-          note_info,
-          class_info,
-          feed,
-          postId,
-        ]
-      );
-      await connection.end(); // 연결 종료
+      try {
+        await connection.execute(
+          "UPDATE dogs SET walk_date = ?, walk_time = ?, walk_photo = ?, teacher = ?, note_info = ?, class_info = ?, feed = ? WHERE dog_id = ?",
+          [
+            walk_date,
+            walk_time,
+            walk_photo,
+            teacher,
+            note_info,
+            class_info,
+            feed,
+            postId,
+          ]
+        );
+      } finally {
+        await connection.end();
+      }
 
-      // 수정 완료 후 리디렉션
       res.redirect(`/admin/dashboard/admin_edit/${postId}`);
     } catch (error) {
       console.error(error);
@@ -620,84 +851,31 @@ router.post(
   })
 );
 
-// // 강아지 정보 수정 페이지 라우트: GET /dashboard/admin/edit/:id
-// router.get("/admin/admin_edit/:id", async (req, res) => {
-//   const id = req.params.id;
+// 강아지 정보 삭제 라우트: DELETE /admin/delete/:id
+router.delete(
+  "/dashboard/admin/delete/:id",
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
 
-//   try {
-//     // 데이터베이스에서 해당 id의 강아지 정보 가져오기
-//     const [result] = await db.query("SELECT * FROM dogs WHERE dog_id = ?;", [
-//       id,
-//     ]);
-//     const post = result[0];
+    try {
+      const connection = await mysql.createConnection({
+        host: "localhost",
+        port: db.config.port,
+        user: db.config.user,
+        password: db.config.password,
+        database: db.config.database,
+      });
 
-//     if (!post) {
-//       return res.status(404).send("해당 강아지 정보를 찾을 수 없습니다.");
-//     }
+      await connection.execute("DELETE FROM dogs WHERE dog_id = ?", [id]);
+      await connection.end();
 
-//     res.render("dashboard/admin/admin_edit", {
-//       title: "강아지 정보 수정",
-//       post,
-//     });
-//   } catch (error) {
-//     res.status(500).send("정보를 불러오는 중 오류가 발생했습니다.");
-//   }
-// });
-
-// // 강아지 정보 수정 라우트: PUT /dashboard/admin/edit/:id
-// router.put(
-//   "/admin/admin_edit/:id",
-//   upload.fields([
-//     { name: "photo", maxCount: 1 },
-//     { name: "walk_photo", maxCount: 1 },
-//   ]),
-//   async (req, res) => {
-//     const id = req.params.id;
-//     const photo = req.files["photo"] ? req.files["photo"][0] : null;
-//     const walk_photo = req.files["walk_photo"]
-//       ? req.files["walk_photo"][0]
-//       : null;
-
-//     const { walk_time, teacher, note_info, class_info, feed } = req.body;
-
-//     try {
-//       // 데이터베이스 업데이트 쿼리 작성
-//       const query =
-//         "UPDATE dogs SET walk_time = ?, teacher = ?, note_info = ?, class_info = ?, feed = ?, dog_photo = ?, walk_photo = ? WHERE id = ?";
-//       const values = [
-//         walk_time,
-//         teacher,
-//         note_info,
-//         class_info,
-//         feed === "1",
-//         photo ? photo.filename : undefined,
-//         walk_photo ? walk_photo.filename : undefined,
-//         id,
-//       ];
-
-//       await db.query(
-//         query,
-//         values.filter((value) => value !== undefined)
-//       );
-
-//       res.redirect("/admin/admin_dashboard");
-//     } catch (error) {
-//       res.status(500).send("정보 수정 중 오류가 발생했습니다.");
-//     }
-//   }
-// );
-
-// 강아지 정보 삭제 라우트: DELETE /dashboard/admin/delete/:id
-router.delete("/admin/delete/:id", async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    await db.query("DELETE FROM dogs WHERE id = ?", [id]);
-    res.redirect("/admin/admin_dashboard");
-  } catch (error) {
-    res.status(500).send("정보 삭제 중 오류가 발생했습니다.");
-  }
-});
+      res.redirect("/admin/class/admin_postlist");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("정보 삭제 중 오류가 발생했습니다.");
+    }
+  })
+);
 
 // 직원소개 및 시설소개 모든 데이터
 
@@ -767,7 +945,7 @@ router.post('/adminfacilitiescreate', upload.single('facility_photo'), (req, res
 });
 
 // 시설 수정 페이지
-router.get("/adminfacilitiesedit/:id", (req, res) => {
+router.get("/facilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
   db.query(query, [ID], (err, result) => {
@@ -776,7 +954,7 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
     } else if (result.length === 0) {
       res.send("찾으시는 페이지가 존재하지 않습니다.");
     } else {
-      res.render("admin/facilities/admin_FacilitiesEdit", { Data: result[0] });
+      res.render("facilitiesEdit", { Data: result[0] }); // 데이터 변수명을 "Data"로 맞추기
     }
   });
 });
@@ -809,11 +987,10 @@ router.get("/adminfacilitiescreate", (req, res) => {
 router.post('/delete', (req, res) => {
   const id = req.body.id;
   const query = "DELETE FROM Facilities WHERE id = ?";
-  
   db.query(query, [id], (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send(err);
+      res.send(err);
     } else {
       res.redirect("/admin/adminFacilitiesMain");
     }
@@ -912,11 +1089,14 @@ router.get("/adminmainpage", (req, res) => {
   res.render("mainpage");
 });
 
-
-// 어드민 캘린더 페이지 
-router.get('/adminCalendar', (req, res) => {
-  res.render('admin/calendar/admin_Calendar');
+router.get("/calendar", (req, res) => {
+  res.render("calendar");
 });
 
+router.get("/Calendar", (req, res) => {
+  res.render("admin/calendar/adminCalendar");
+});
 
 module.exports = router;
+
+// routes/admin/main.js
