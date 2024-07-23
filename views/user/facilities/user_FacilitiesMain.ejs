@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>직원 및 시설 소개</title>
-    <link rel="stylesheet" href="/public/css/facilitiesMain_style.css">
+    <link rel="stylesheet" href="/css/facilitiesMain_style.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="/img/<%= employee.photo %>" alt="Profile Image" class="facility-image">
+                                <img src="/img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
                                 <ul class="employee-info">
                                     <li>이름: <%= employee.name %></li>
                                     <li>직급: <%= employee.role %></li>
@@ -40,7 +40,7 @@
                 <% facilities.forEach((facility, index) => { %>
                     <td>
                         <div class="facility-card">
-                            <img src="/img/<%= facility.photo %>" alt="Uploaded Image">       
+                            <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image">       
                             <ul class="facility-info">
                                 <li>시설 이름: <%= facility.facility_name %></li>
                                 <li>주요 시설: <%= facility.main_facilities %></li>

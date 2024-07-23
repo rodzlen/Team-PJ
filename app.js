@@ -7,6 +7,7 @@ const path = require('path');
 const connectDB = require("./config/db");
 const session = require('express-session');
 const app = express();
+
 // 세션 설정
 app.use(session({
   secret: '12345', // 반드시 강력한 비밀 키를 사용하세요.

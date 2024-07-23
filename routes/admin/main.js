@@ -801,7 +801,6 @@ router.post("/adminfacilitiesedit/:id", upload.single('facility_photo'), (req, r
 });
 
 // 시설 생성 페이지
-// http://localhost:8500/admin/adminfacilitiescreate
 router.get("/adminfacilitiescreate", (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
 });
