@@ -1,134 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>직원 및 시설 소개</title>
-    <link rel="stylesheet" href="/css/admin_facilitiesMain_style.css">
+    <title>Document</title>
 </head>
-
 <body>
-    <div id="introduction">
         <h2>직원소개</h2>
-        <div class="cover">
-            <table class="employee-table">
-                <tr>
-                    <% staff.forEach((employee, index)=> { %>
-                        <td>
-                            
-                            <div class="employee-card">
-                                <img src="/img/<%=employee.staff_photo %>" alt="직원 사진" class="facility-image">
-                                <ul class="employee-info">
-                                    <li>이름: <%= employee.name %>
-                                    </li>
-                                    <li>직급: <%= employee.role %>
-                                    </li>
-                                    <li>경력: <%= employee.contact_info %>
-                                    </li>
-                                </ul>
-
-                                <button class="editBtn"
-                                    onclick="location.href='/admin/adminstaffedit/<%= employee.staff_id %>'"
-                                    class="w-50 mb-5 mt-2 btn btn-success">
-                                    수정/삭제
-                                </button>
-                            </div>
-                        </td>
-                        <% if ((index + 1) % 5===0) { %>
-                </tr>
-                <tr>
-                    <% } %>
+        <div class="container">
+            <div class="employee-container">
+                <table class="employee-table">
+                    <tr>
+                        <% staff.forEach((employee, index) => { %>
+                            <td>
+                                <div class="employee-card">
+                                    <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait2.png';">
+                                    <ul class="employee-info">
+                                        <li>이름: <%=employee.name %></li>
+                                        <li>직급: <%=employee.role %></li>
+                                        <li>경력: <%=employee.contact_info %></li>
+                                    </ul>
+                                    
+                                    <button onclick="location.href='/admin/adminstaffedit/<%=employee.staff_id %>'">
+                                        수정/삭제하기
+                                    </button>
+                                </div>
+                            </td>
+                            <% if ((index + 1) % 5 === 0) { %>
+                                </tr><tr>
+                            <% } %>
                         <% }); %>
-                </tr>
-            </table>
-            <button class="addBtn" onclick="location.href='/admin/adminstaffcreate'"
-                class="w-50 mb-5 mt-2 btn btn-success">
+                    </tr>
+                </table>
+            </div>
+            <button onclick="location.href='/admin/adminstaffcreate'">
                 직원추가
             </button>
         </div>
-
+        
+    
         <h2>시설소개</h2>
-        <div class="cover">
+        <div class="container facility-container">
             <table class="facility-table">
                 <tr>
-                    <% facilities.forEach((facility, index)=> { %>
+                    <% facilities.forEach((facility, index) => { %>
                         <td>
-                            <div class="facility-card">
-                                <img src="/img/<%= facility.photo %>" alt="Uploaded Image" class="facility-image">
+                            <div class="facility-card">     
+                                <img src="/img/<%=facilities.facility_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait.gif';">
                                 <ul class="facility-info">
-                                    <li>시설 이름: <%= facility.facility_name %>
-                                    </li>
-                                    <li>주요 시설: <%= facility.main_facilities %>
-                                    </li>
+                                    <li>시설 이름: <%=facility.facility_name %></li>
+                                    <li>주요 시설: <%=facility.main_facilities %></li>
                                 </ul>
-
-                                <button class="editBtn"
-                                    onclick="location.href='/admin/adminfacilitiesedit/<%= facility.id %>'"
-                                    class="w-50 mb-5 mt-2 btn btn-success">
-                                    수정/삭제
+                                
+                                <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'">
+                                    수정/삭제하기
                                 </button>
                             </div>
                         </td>
-                        <% if ((index + 1) % 3===0) { %>
-                </tr>
-                <tr>
-                    <% } %>
-                        <% }); %>
+                        <% if ((index + 1) % 3 === 0) { %>
+                            </tr><tr>
+                        <% } %>
+                    <% }); %>
                 </tr>
             </table>
-            <button class="addBtn" onclick="location.href='/admin/adminfacilitiescreate'"
-                class="w-50 mb-5 mt-2 btn btn-success">
-                시설추가
-            </button>
         </div>
-        <button onclick="location.href='/admin/adminstaffcreate'" class="w-50 mb-5 mt-2 btn btn-success">
-            직원추가
-          </button>
-    </div>
-<<<<<<< HEAD
-=======
-
-    <h2>시설소개</h2>
-    <div class="container facility-container">
-        <table class="facility-table">
-            <tr>
-                <% facilities.forEach((facility, index) => { %>
-                    <td>
-<<<<<<< HEAD
-                        <div class="facility-card">
-=======
-                        <div class="facility-card">     
-<<<<<<< HEAD
->>>>>>> 00c65a3e4e4970e44065fd6b7d8f3f6f7719e87c
-                            <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
-=======
-                            <img src="/img/<%=facility.facility_photo %>" alt="시설 사진" class="facility-image">
->>>>>>> 8bce7b2cc468be3cca01e0c7682aef4dead39847
-                            <ul class="facility-info">
-                                <li>시설 이름: <%=facility.facility_name %></li>
-                                <li>주요 시설: <%=facility.main_facilities %></li>
-                            </ul>
-                            
-                            <button onclick="location.href='/admin/adminfacilitiesedit/<%=facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
-                                수정/삭제하기
-                            </button>
-                        </div>
-                    </td>
-                    <% if ((index + 1) % 3 === 0) { %>
-                        </tr><tr>
-                    <% } %>
-                <% }); %>
-            </tr>
-        </table>
-    </div>
-    <div class="btnBox">
-        <button onclick="location.href='/admin/adminfacilitiescreate'" class="w-50 mb-5 mt-2 btn btn-success">
+        <button onclick="location.href='/admin/adminfacilitiescreate'">
           시설추가
         </button>
-
-    </div>
->>>>>>> 8c3b4badaf6d8437037aa2a174d8bc19276371d3
-</body>
-
-</html>
+    </body>
+    </html>

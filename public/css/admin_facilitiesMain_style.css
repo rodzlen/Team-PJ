@@ -1,66 +1,56 @@
-:root {
-    --brown: #dd8e55;
-    --yellow: #fbd663;
-  }
+/* admin_facilitiesMain_style.css */
 
 body {
-    padding: 0px;
-    margin: 0px;
-    width: 100vw;
-    overflow-x: hidden;
-    /*가로축 스크롤 제거*/
+  font-family: Arial, sans-serif;
 }
 
-#introduction {
+.container {
+  margin: 20px;
+}
+
+.employee-container, .facility-container {
+  margin-bottom: 40px;
+}
+
+.employee-table, .facility-table {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 0px;
-}
-
-.cover {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin: 30px 0px;
-}
-
-table {
-  margin: 30px 0px;
-}
-
-.addBtn {
-  width: 100px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 3px;
-  background-color: #28a745;
-  color: #fff;
-  cursor: pointer;
+  border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.addBtn:hover {
-  background-color: #218838;
+.employee-table td, .facility-table td {
+  border: 1px solid #ddd;
+  padding: 15px;
+  vertical-align: top;
+  text-align: center;
+  width: 20%; /* 이 설정으로 각 셀이 테이블 너비의 20%를 차지합니다 */
 }
 
-.editBtn {
-  width: 100px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 3px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-  margin: 10px 0px;
-  margin-bottom: 20px;
+.employee-card, .facility-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.editBtn:hover {
-  background-color: #0056b3;
+.employee-card img, .facility-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.employee-info, .facility-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.employee-info li, .facility-info li {
+  margin-bottom: 5px;
+}
+
+.employee-card img {
+  max-width: 100px; /* 원하는 크기로 수정 */
+  max-height:100px; /* 원하는 크기로 수정 */
 }

@@ -877,7 +877,7 @@ router.get("/class/u_onedayClassPosts", (req, res) => {
 });
 
 router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/userCalendar");
+  res.render("user/calendar/user_Calendar");
 });
 
 router.get("/mainpage", (req, res) => {

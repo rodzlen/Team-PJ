@@ -1378,15 +1378,9 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
-// 시설 생성 페이지
-router.get("/adminfacilitiescreate", (req, res) => {
-  res.render("admin/facilities/admin_FacilitiesCreate");
-});
 
 // 시설 생성
-router.post(
-  "/adminfacilitiescreate",
-  upload.single("facility_photo"),
+router.post("/adminfacilitiescreate", upload.single("facility_photo"),
   (req, res) => {
     try {
       const { facility_name, main_facilities = "" } = req.body;
@@ -1413,7 +1407,8 @@ router.post(
 );
 
 // 시설 수정 페이지
-router.get("/facilitiesedit/:id", (req, res) => {
+
+router.get("/adminfacilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
   db.query(query, [ID], (err, result) => {
@@ -1422,22 +1417,19 @@ router.get("/facilitiesedit/:id", (req, res) => {
     } else if (result.length === 0) {
       res.send("찾으시는 페이지가 존재하지 않습니다.");
     } else {
-      res.render("facilitiesEdit", { Data: result[0] }); // 데이터 변수명을 "Data"로 맞추기
+      res.render("admin/facilities/admin_FacilitiesEdit", { Data: result[0] }); // 데이터 변수명을 "Data"로 맞추기
     }
   });
 });
 
+
 // 시설 정보 수정 처리
-router.post(
-  "/adminfacilitiesedit/:id",
-  upload.single("facility_photo"),
+router.post("/adminfacilitiesedit/:id",upload.single("facility_photo"),
   (req, res) => {
     const id = req.body.id;
     const name = req.body.facility_name || "default_name";
     const features = req.body.main_facilities || "default_features";
-    const facility_photo = req.file
-      ? req.file.path.replace(/\\/g, "/")
-      : req.body.facility_photo;
+    const facility_photo = req.file ? req.file.path.replace(/\\/g, "/") : req.body.facility_photo;
 
     const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
 
@@ -1453,8 +1445,8 @@ router.post(
 );
 
 // 시설 생성 페이지
-router.get("/facilitiescreate", (req, res) => {
-  res.render("facilitiesCreate");
+router.get("/adminfacilitiescreate", (req, res) => {
+  res.render("admin/facilities/admin_FacilitiesCreate");
 });
 
 // 시설 정보 삭제 처리
@@ -1565,12 +1557,10 @@ router.get("/adminmainpage", (req, res) => {
   res.render("mainpage");
 });
 
-router.get("/calendar", (req, res) => {
-  res.render("calendar");
-});
 
-router.get("/Calendar", (req, res) => {
-  res.render("admin/calendar/adminCalendar");
+
+router.get("/adminCalendar", (req, res) => {
+  res.render("admin/calendar/admin_Calendar");
 });
 
 module.exports = router;
