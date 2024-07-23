@@ -1,51 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
     <link rel="stylesheet" href="/css/qna_style.css"> <!-- CSS 파일 임포트 -->
 </head>
-<aside>
-    <h3>카테고리</h3>
-    <ul>
-        <li><a href="/admin/notice">공지사항</a></li>
-        <li><a href="/admin/qna">QnA</a></li>
-        <li><a href="/admin/freeboard">자유게시판</a></li>
-    </ul>
-</aside>
+<body>
+    <aside>
+        <h3>카테고리</h3>
+        <ul>
+            <li><a href="/admin/notice">공지사항</a></li>
+            <li><a href="/admin/qna">QnA</a></li>
+            <li><a href="/admin/freeboard">자유게시판</a></li>
+        </ul>
+    </aside>
 
+    <div>
+        <h1>QnA 목록</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                    <th>작성자</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (questions.length > 0) { %>
+                    <% questions.forEach(function(question, index) { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><a href="/admin/qna/detail/<%= question.question_id %>"><%= question.title %></a></td>
+                            <td><%= question.question_date %></td>
+                            <td><%= question.question_by %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="4">등록된 QnA가 없습니다.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
 
-<div>
-<h1>QnA 목록</h1>
-<table>
-    <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>작성자</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% questions.forEach(function(question, index) { %>
-            <tr>
-                <td><%= index + 1 %></td>
-                <td><a href="admin/qna/detail/<%= question.id %>"><%= question.title %></a></td>
-                <td><%= question.created_at %></td>
-                <td><%= question.user_id %></td>
-            </tr>
-        <% }) %>
-    </tbody>
-</table>
-
-
-            <form action="/admin/qna" method="GET">
-                <input type="text" name="search" placeholder="검색">
-                <select name="type">
-                  <option value="title">제목</option>
-                  <option value="writer">작성자</option>
-                  <option value="title||writer" default="default">제목+작성자</option>
-                </select>
-                <button type="submit">검색</button>
-              </form>
-
-</div>
+        <form action="/admin/qna" method="GET">
+            <input type="text" name="search" placeholder="검색" value="<%= locals.searchQuery %>">
+            <select name="type">
+                <option value="title" <% if (locals.typeQuery === 'title') { %> selected <% } %>>제목</option>
+                <option value="question_by" <% if (locals.typeQuery === 'question_by') { %> selected <% } %>>작성자</option>
+                <option value="title||question_by" <% if (locals.typeQuery === 'title||question_by') { %> selected <% } %>>제목+작성자</option>
+            </select>
+            <button type="submit">검색</button>
+        </form>
+    </div>
+</body>
+</html>
