@@ -417,20 +417,20 @@ router.post('/login', async (req, res) => {
     }
     
     if (results.length === 0) {
-      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/login";</script>');
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>');
     }
 
     const admin = results[0];
     const match = await bcrypt.compare(password, admin.password);
 
     if (!match) {
-      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/login";</script>');
+      return res.send('<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>');
     }
 
     // 세션에 관리자 정보 저장
     req.session.admin = admin;
 
-    res.send('<script>alert("로그인 성공!"); window.location.href="/admin";</script>');
+    res.send('<script>alert("로그인 성공!"); window.location.href="/admin_main";</script>');
   });
 });
 
