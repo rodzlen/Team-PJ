@@ -200,24 +200,24 @@ router.get("/qna", checkAdminLogin, async (req, res) => {
     }
   }
 
-  console.log('Search Query:', searchQuery);
-  console.log('Type Query:', typeQuery);
-  console.log('Query:', query);
-  console.log('Query Params:', queryParams);
+  console.log("Search Query:", searchQuery);
+  console.log("Type Query:", typeQuery);
+  console.log("Query:", query);
+  console.log("Query Params:", queryParams);
 
   try {
     const [questions] = await db.query(query, queryParams);
-    console.log('Questions:', questions);
+    console.log("Questions:", questions);
 
-    res.render("admin/qna/admin_qna_main", { 
-      questions: Array.isArray(questions) ? questions : [], 
+    res.render("admin/qna/admin_qna_main", {
+      questions: Array.isArray(questions) ? questions : [],
       searchQuery,
       typeQuery,
       title: "QnA 목록",
-      layout: adminLayout
+      layout: adminLayout,
     });
   } catch (err) {
-    console.error('Database query error:', err);
+    console.error("Database query error:", err);
     res.status(500).send("서버 오류");
   }
 });
