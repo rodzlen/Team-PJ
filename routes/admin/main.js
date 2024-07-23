@@ -1356,15 +1356,9 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
-// 시설 생성 페이지
-router.get("/adminfacilitiescreate", (req, res) => {
-  res.render("admin/facilities/admin_FacilitiesCreate");
-});
 
 // 시설 생성
-router.post(
-  "/adminfacilitiescreate",
-  upload.single("facility_photo"),
+router.post("/adminfacilitiescreate", upload.single("facility_photo"),
   (req, res) => {
     try {
       const { facility_name, main_facilities = "" } = req.body;
@@ -1408,16 +1402,12 @@ router.get("/adminfacilitiesedit/:id", (req, res) => {
 
 
 // 시설 정보 수정 처리
-router.post(
-  "/adminfacilitiesedit/:id",
-  upload.single("facility_photo"),
+router.post("/adminfacilitiesedit/:id",upload.single("facility_photo"),
   (req, res) => {
     const id = req.body.id;
     const name = req.body.facility_name || "default_name";
     const features = req.body.main_facilities || "default_features";
-    const facility_photo = req.file
-      ? req.file.path.replace(/\\/g, "/")
-      : req.body.facility_photo;
+    const facility_photo = req.file ? req.file.path.replace(/\\/g, "/") : req.body.facility_photo;
 
     const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
 
