@@ -351,20 +351,6 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let queryParams = [];
-    const search = (query, searchQuery, typeQuery) => {
-      if (searchQuery) {
-        if (typeQuery === "title") {
-          query += " WHERE q.title LIKE ?";
-          queryParams.push(`%${searchQuery}%`);
-        } else if (typeQuery === "question_by") {
-          query += " WHERE q.question_by LIKE ?";
-          queryParams.push(`%${searchQuery}%`);
-        } else if (typeQuery === "title||question_by") {
-          query += " WHERE q.title LIKE ? OR q.question_by LIKE ?";
-          queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
-        }
-      }
-    };
     search(query, searchQuery, typeQuery);
     db.query(query, queryParams, (err, results) => {
       if (err) {

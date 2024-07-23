@@ -5,33 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/user_class_register_style.css" />
-    <title>수업 신청</title>
+    <title>수업 신청 확인</title>
 </head>
 
 <body>
     <div id="register">
-        <h1>수업 신청</h1>
+        <h1>수업 신청 확인</h1>
         <div id="cover">
             <form action="/classregister" method="post">
-                <input type="text" name="owner_name" value="<%= locals.user.user_name %>" readonly><br>
-                <input type="text" name="pet_name" value="<%= locals.user.pet_name %>" readonly><br>
+                <input type="text" name="owner_name" value="<%= formData.owner_name %>" readonly><br>
+                <input type="text" name="pet_name" value="<%= formData.pet_name %>" readonly><br>
                 <label for="class_name">수업 종류</label>
-                <select name="class_name" id="class_name" required>
-                    <option value="오전">오전</option>
-                    <option value="오후">오후</option>
-                    <option value="종일">종일</option>
-                </select><br>
+                <input type="text" name="class_name" value="<%= formData.class_name %>" readonly><br>
                 <label for="feed_status">급식 여부</label>
-                <input type="checkbox" name="feed_status" id="feed_status"><br>
+                <input type="checkbox" name="feed_status" id="feed_status" <%= formData.feed_status ? 'checked' : '' %> disabled><br>
                 <label for="pickup_status">픽업 여부</label>
-                <input type="checkbox" name="pickup_status" id="pickup_status"><br>
+                <input type="checkbox" name="pickup_status" id="pickup_status" <%= formData.pickup_status ? 'checked' : '' %> disabled><br>
                 <label for="start_date">시작 날짜</label>
-                <input type="date" name="start_date" id="start_date" required><br>
+                <input type="date" name="start_date" value="<%= formData.start_date %>" readonly><br>
                 <label for="end_date">종료 날짜</label>
-                <input type="date" name="end_date" id="end_date" required><br>
+                <input type="date" name="end_date" value="<%= formData.end_date %>" readonly><br>
                 <div id="btnBox">
                     <button id="addBtn" type="submit">신청</button>
-                    <button id="backBtn" type="button" onclick="location.href='/'">뒤로가기</button>
+                    <button id="backBtn" type="button" onclick="location.href='/submitApplication'">뒤로가기</button>
                 </div>
             </form>
         </div>

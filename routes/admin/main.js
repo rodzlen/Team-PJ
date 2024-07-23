@@ -19,6 +19,24 @@ const checkAdminLogin = (req, res, next) => {
   }
   next();
 };
+//게시글 검색기능
+// let queryParams = []; 같이사용
+function search(query, searchQuery, typeQuery) {
+  if (searchQuery) {
+    if (typeQuery === "title") {
+      query += " WHERE title LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "createBy") {
+      query += " WHERE createBy LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "title||createBy") {
+      query += " WHERE title LIKE ? OR createBy LIKE ?";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+    }
+  }
+
+  return { query, queryParams };
+}
 
 // 공지사항 목록 페이지 라우터
 router.get(
@@ -430,82 +448,82 @@ router.post(
 );
 
 
-//qna 목록
-router.get("/qna", checkAdminLogin, async (req, res) => {
-  const searchQuery = req.query.search || "";
-  const typeQuery = req.query.type || "";
-
-  let query = "SELECT * FROM Questions";
-  let queryParams = [];
-
-  if (searchQuery) {
-    if (typeQuery === "title") {
-      query += " WHERE title LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "question_by") {
-      query += " WHERE question_by LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "title||question_by") {
-      query += " WHERE title LIKE ? OR question_by LIKE ?";
-      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
-    }
-  }
-
-  console.log('Search Query:', searchQuery);
-  console.log('Type Query:', typeQuery);
-  console.log('Query:', query);
-  console.log('Query Params:', queryParams);
-
-  try {
-    const [questions] = await db.query(query, queryParams);
-    console.log('Questions:', questions);
-
-    res.render("admin/qna/admin_qna_main", { 
-      questions: Array.isArray(questions) ? questions : [], 
-      searchQuery,
-      typeQuery,
-      title: "QnA 목록",
-      layout: adminLayout
+router.get(
+  "/qna",
+  asyncHandler(async (req, res) => {
+    const locals = { title: "QnA 게시판", user: req.session.user };
+    let query =
+      "SELECT * from Questions";
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+    let queryParams = [];
+    search(query, searchQuery, typeQuery);
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/qna/admin_qna_main", {
+          locals,
+          data: results,
+          layout: adminLayout,
+        });
+      }
     });
-  } catch (err) {
-    console.error('Database query error:', err);
-    res.status(500).send("서버 오류");
-  }
-});
-// QnA 상세 페이지
-router.get("/qna/detail/:id",checkAdminLogin, async (req, res) => {
-  const questionId = req.params.id;
-  try {
-    const [questions] = await db.query("SELECT * FROM Questions WHERE id = ?", [
-      questionId,
-    ]);
-    const [answers] = await db.query(
-      "SELECT * FROM Answers WHERE question_id = ?",
-      [questionId]
-    );
-    if (questions.length === 0) {
-      return res.status(404).send("질문을 찾을 수 없습니다.");
-    }
-    res.render("admin/qna/qna-detail", {
-      question: questions[0],
-      answers,
-      isAdmin: req.user.isAdmin,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("서버 오류");
-  }
-});
+  })
+);
 
-router.post("/answer/:id", checkAdminLogin, async (req, res) => {
+//qna 세부
+router.get(
+  "/qna/detail/:id",
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const questionQuery = "SELECT * FROM Questions WHERE question_id = ?";
+    const answerQuery = "SELECT * FROM Answers WHERE question_id = ?";
+    const locals = { title: "QnA 상세", admin: req.session.admin };
+
+    db.query(questionQuery, [id], (err, questionResults) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (questionResults.length > 0) {
+          db.query(answerQuery, [id], (err, answerResults) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send("서버 오류가 발생했습니다.");
+            } else {
+              res.render("admin/qna/admin_qna_detail", {
+                locals,
+                question: questionResults[0],
+                answers: answerResults,
+                layout: adminLayout,
+                 adminId: req.session.admin || null   // 관리자 ID
+              });
+            }
+          });
+        } else {
+          res.status(404).send("질문을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
+//답변 작성
+router.post("/qna/answer/:id", checkAdminLogin, async (req, res) => {
   const questionId = req.params.id;
-  const { admin_id, content } = req.body;
+  const { answer_Id, answer } = req.body;
+  const answer_date = new Date();
+  const answered_by = req.session.admin.admin_id
+  
+  
   try {
     await db.query(
-      "INSERT INTO Answers (question_id, admin_id, content) VALUES (?, ?, ?)",
-      [questionId, admin_id, content]
+      "INSERT INTO Answers (question_id, answer_Id, answer,answer_date,answered_by) VALUES (?, ?, ?,?,?)",
+      [questionId, answer_Id, answer,answer_date, answered_by]
     );
-    res.redirect("/qna/detail/" + questionId);
+    res.redirect("/admin/qna/detail/" + questionId);
   } catch (err) {
     console.error(err);
     res.status(500).send("서버 오류");
@@ -523,6 +541,8 @@ router.post("qna/delete/:id", checkAdminLogin, async (req, res) => {
     res.status(500).send("서버 오류");
   }
 });
+
+
 
 
 // 수업 신청 수정 페이지

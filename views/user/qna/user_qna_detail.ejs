@@ -27,15 +27,6 @@
   <% } %>
     <button onclick="location.href='/qna/edit/<%= question.question_id %>'">수정하기</button>
 
-<!-- admin페이지에서만 보일거임 아직 세션처리가 안돼서 여기에 남김 -->
-      <h3>답변 작성</h3>
-      <form action="/admin/qna/answer/<%= question.question_id %>" method="POST">
-          <textarea name="answer" required></textarea>
-        
-          <button type="submit">답변하기</button>
-      </form>
-
-
   <h3>관리</h3>
   <form action="/qna/delete/<%= question.question_id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
       <button type="submit">질문 삭제</button>
