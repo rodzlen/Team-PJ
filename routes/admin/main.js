@@ -180,6 +180,256 @@ router.post(
   })
 );
 
+// 자유게시판 목록
+router.get(
+  "/freeboard",
+  asyncHandler(async (req, res) => {
+    const locals = { title: "자유게시판", user: req.session.user };
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+
+    let query = "SELECT * FROM freeboard";
+    let queryParams = [];
+    search(query, searchQuery, typeQuery);
+
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("user/freeboard/user_freeboard_main", {
+          locals,
+          data: results,
+          layout: adminLayout,
+        });
+      }
+    });
+  })
+);
+
+// 자유게시판 세부 내용 페이지 라우터
+router.get(
+  "/freeboard/detail/:id",
+  asyncHandler(async (req, res) => {
+    const locals = { title: req.params.title, user: req.session.user };
+    const id = req.params.id;
+
+    const query = "SELECT * FROM freeBoard WHERE id = ?";
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (results.length > 0) {
+          res.render("user/freeboard/user_freeboard_detail", {
+            locals,
+            data: results[0],
+            layout: adminLayout,
+          });
+        } else {
+          res.status(404).send("게시글을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
+
+// 자유게시판 글쓰기 페이지
+router.get(
+  "/freeboard/add",
+  checkAdminLogin,
+  asyncHandler(async (req, res) => {
+    const locals = { title: "새 게시글 작성", user: req.session.user };
+    res.render("user/freeboard/user_freeboard_add", {
+      locals,
+      layout: adminLayout,
+    });
+  })
+);
+
+//자유게시판 글쓰기 처리
+router.post(
+  "/freeboard/add",
+  checkAdminLogin,
+  upload.single("image"),
+  asyncHandler(async (req, res) => {
+    try {
+      const { title, content } = req.body;
+      const image = req.file ? req.file.filename : null;
+      const post_date = new Date();
+      const createBy = req.session.user.user_id;
+
+      // MySQL 쿼리
+      const query = `
+        INSERT INTO freeboard (title, content, image, post_date, createBy)
+        VALUES (?, ?, ?, ?,?)
+      `;
+      const values = [title, content, image, post_date, createBy];
+
+      db.query(query, values, (err, result) => {
+        if (err) {
+          console.error(err);
+          res
+            .status(500)
+            .send(
+              '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/freeboard/add";</script>'
+            );
+        } else {
+          res.redirect("/freeboard");
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .send(
+          '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>'
+        );
+    }
+  })
+);
+// 자유게시판 수정 페이지
+router.get(
+  "/freeboard/edit/:id",
+  checkAdminLogin,
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const userId = req.session.user.user_id;
+
+    // 게시글 정보 조회 쿼리
+    const query = "SELECT * FROM freeboard WHERE id = ?";
+
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("서버 오류가 발생했습니다.");
+      }
+
+      if (results.length === 0) {
+        return res.status(404).send("게시글을 찾을 수 없습니다.");
+      }
+
+      const post = results[0];
+
+      // 작성자 확인
+      if (post.createBy !== userId) {
+        return res
+          .status(403)
+          .send(
+            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
+          );
+      }
+
+      // 게시글 수정 페이지 렌더링
+      const locals = { title: "게시글 수정", user: req.session.user };
+      res.render("user/freeboard/user_freeboard_edit", {
+        locals,
+        data: post,
+        layout: adminLayout,
+      });
+    });
+  })
+);
+// 자유게시판 수정 처리
+router.post(
+  "/freeboard/edit/:id",
+  checkAdminLogin,
+  upload.single("image"),
+  asyncHandler(async (req, res) => {
+    const locals = { title: "수정", user: req.session.user };
+    const id = req.params.id;
+    const { title, content } = req.body;
+    const image = req.file ? req.file.filename : null;
+
+    let query = "UPDATE freeboard SET title = ?, content = ?";
+    const values = [title, content];
+
+    if (image) {
+      query += ", image = ?";
+      values.push(image);
+    }
+
+    query += " WHERE id = ?";
+    values.push(id);
+
+    db.query(query, values, (err, result) => {
+      if (err) {
+        console.error(err);
+        res
+          .status(500)
+          .send(
+            '<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/freeboard/edit/' +
+              id +
+              '";</script>'
+          );
+      } else {
+        res.redirect("/freeboard/detail/" + id);
+      }
+    });
+  })
+);
+// 자유게시판 삭제
+router.post(
+  "/freeboard/delete/:id",
+  checkAdminLogin,
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const userId = req.session.user.user_id;
+
+    // 먼저 게시글 작성자 확인
+    const checkQuery = "SELECT createBy FROM freeboard WHERE id = ?";
+
+    db.query(checkQuery, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .send(
+            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
+          );
+      }
+
+      if (results.length === 0) {
+        return res
+          .status(404)
+          .send(
+            '<script>alert("게시글을 찾을 수 없습니다."); window.location.href="/freeboard";</script>'
+          );
+      }
+
+      const post = results[0];
+
+      if (post.createBy !== userId) {
+        return res
+          .status(403)
+          .send(
+            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
+          );
+      }
+
+      // 작성자와 로그인한 사용자가 일치하면 삭제 진행
+      const deleteQuery = "DELETE FROM freeboard WHERE id = ?";
+
+      db.query(deleteQuery, [id], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .send(
+              '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
+            );
+        } else {
+          return res.send(
+            '<script>alert("게시글이 삭제되었습니다."); window.location.href="/freeboard";</script>'
+          );
+        }
+      });
+    });
+  })
+);
+
+
+//qna 목록
 router.get("/qna", checkAdminLogin, async (req, res) => {
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
