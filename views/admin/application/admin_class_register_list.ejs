@@ -13,8 +13,8 @@
             <input type="text" name="search" placeholder="검색">
             <select name="type">
                 <option value="no">no</option>
-                <option value="createBy">신청자</option>
-                <option value="no||createBy">no+신청자</option>
+                <option value="owner_name">신청자</option>
+                <option value="no||owner_name">no+신청자</option>
             </select>
             <button type="submit">검색</button>
         </form>
@@ -24,6 +24,7 @@
                     <th>no</th>
                     <th>신청자</th>
                     <th>작성일</th>
+                    <th>상태</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,7 @@
                     <td><%= reg.id %></td>
                     <td><a href="/admin/classRegList/detail/<%= reg.id %>"><%= reg.owner_name %></a></td>
                     <td><%= reg.created_at %></td>
+                    <td><%= reg.status %></td> <!-- 상태 표시 -->
                 </tr>
                 <% }) %>
             </tbody>
