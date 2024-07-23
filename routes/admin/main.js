@@ -421,7 +421,7 @@ router.post(
           } else {
             console.log("회원가입 성공:", results);
             res.send(
-              '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_main";</script>'
+              '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_login";</script>'
             );
           }
         }
