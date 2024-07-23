@@ -9,6 +9,7 @@ const connectDB = require("./config/db");
 const session = require("express-session");
 const app = express();
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt')
 
 // 세션 설정
 app.use(

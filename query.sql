@@ -8,10 +8,13 @@ use kindergarten;
 CREATE TABLE Admin (
     a_id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id VARCHAR(50) NOT NULL,
-    admin_pw VARCHAR(50) NOT NULL,
+    admin_pw VARCHAR(255) NOT NULL,
     admin_name VARCHAR(50) NOT NULL,
     admin_phone VARCHAR(20) NOT NULL
 );
+
+ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
+
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
