@@ -14,9 +14,8 @@
       <!-- 강아지 사진 -->
       <div class="photo-section">
         <h2>강아지 사진</h2>
-        <img src="/public/img/" alt="강아지 사진" />
+        <img src="/public/img/<%= data.dog_photo %>" alt="강아지 사진" />
       </div>
-
       <hr />
 
       <!-- 날짜 선택 및 정보 표시 -->
@@ -33,7 +32,7 @@
           <p>강아지 이름: <%= data.pet_name %></p>
           <p>산책 시간: <%= data.walk_time %></p>
           <img
-            src="/img/todaywalkphotos/<%= data.walk_photo %>"
+            src="/public/img/<%= data.walk_photo %>"
             alt="오늘의 산책 사진"
           />
           <p>수업 시간: <%= data.class_info %></p>
@@ -54,4 +53,4 @@
   </body>
 </html>
 
-<!-- views/dashboard/user/userdashboard -->
+<!-- views/user/dashboard/user_dashboard -->
