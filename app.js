@@ -7,6 +7,8 @@ const path = require("path");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const app = express();
+const methodOverride = require("method-override");
+
 // 세션 설정
 app.use(
   session({
@@ -17,21 +19,19 @@ app.use(
   })
 );
 
+// Method-Override 설정
+app.use(methodOverride("_method"));
+
 connectDB();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 app.use(expressLayouts);
 
-<<<<<<< HEAD
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
-=======
-
-app.use('/', userRoutes);
-app.use('/admin', adminRoutes);
->>>>>>> 8c3b4badaf6d8437037aa2a174d8bc19276371d3
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -40,6 +40,12 @@ app.set("layout extractScripts", true);
 
 app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
+});
+
+// url 확인용 코드(지워도 됨)
+app.use((req, res, next) => {
+  console.log(`Request URL: ${req.url}`);
+  next();
 });
 
 // app.js
