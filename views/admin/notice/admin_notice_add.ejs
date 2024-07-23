@@ -1,22 +1,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= locals.title %></title>
+  <title>
+    <%= locals.title %>
+  </title>
   <link rel="stylesheet" href="/css/admin_notice_add_style.css"> <!-- CSS 파일 임포트 -->
 </head>
-<div id="add">
-<h1 ><%=locals.title %></h1>
-<div id="cover">
-<form action="/admin/notice/add" method="POST" enctype="multipart/form-data">
-  <div id="top">
-  <input type="text" name="title" placeholder="제목" required>&nbsp;
-  <input type="file" name="image">
-  </div>
-  <textarea name="content" placeholder="내용을 입력해 주세요." required></textarea>
-  <div id="btnBox">
-    <button id="addBtn" type="submit">추가</button>
-</form>
-<button id="backBtn" onclick="location.href='/admin/notice'">뒤로가기</button>
-  </div>
-</div>
-</div>
+
+<body>
+  <div id="add">
+    <h1>
+      <%=locals.title %>
+    </h1>
+    <div id="cover">
+      <form action="/admin/notice/add" method="POST" enctype="multipart/form-data">
+        <label> <input type="text" name="title" placeholder="제목" required>&nbsp;
+          <input type="file" name="image">
+        </label>
+        <textarea name="content" placeholder="내용을 입력해 주세요." required></textarea>
+        <div id="btnBox">
+      <button id="addBtn" type="submit">추가</button>
+      </form>
+      <button id="backBtn" onclick="location.href='/admin/notice'">뒤로가기</button>
+    </div>
+  </div> <!-- cover -->
+  </div> <!-- add -->
+</body>
