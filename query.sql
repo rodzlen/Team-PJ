@@ -166,7 +166,6 @@ VALUES (1, '제가 추천하는 영어 교재는 ABC English Series입니다.', 
        (4, '급식의 단 맛을 줄이기 위해 과일을 다양하게 포함시키거나, 단맛을 감소시킬 수 있는 식자재를 추가하는 방법을 고려해 보세요.', '영양 전문가'),
        (5, '아이의 학교 불안을 해소하기 위해 아이와 소통하고 학교 환경을 긍정적으로 변화시키는 노력이 필요합니다.', '상담 전문가');
 
-<<<<<<< HEAD
 -- 펫 추가 테이블
 CREATE TABLE Pets (
     pet_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -192,13 +191,10 @@ CREATE TABLE ClassRegistration (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
-<<<<<<< HEAD
-);
-=======
+
 );
 
+
+
 --수강목록 테이블 
-=======
-commit;
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 >>>>>>> fe90f50597d7b1072b4b1b995403af6ba73c57ab
