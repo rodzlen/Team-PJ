@@ -22,7 +22,6 @@ app.use(express.static("public"));
 app.use(expressLayouts);
 
 
-
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
 

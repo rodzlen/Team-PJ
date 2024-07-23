@@ -6,6 +6,8 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload")
 const multer = require("multer");
 
+
+
 // 공지사항 메인
 // /admin/notice
 router.get("/notice", asyncHandler(async (req, res) => {
@@ -699,6 +701,7 @@ router.delete("/admin/delete/:id", async (req, res) => {
 });
 
 // 직원소개 및 시설소개 모든 데이터
+
 router.get("/adminfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
@@ -734,6 +737,7 @@ router.get("/adminfacilitiesMain", (req, res) => {
       res.send(err);
     });
 });
+
 
 
 // 시설 생성 페이지
