@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>직원 수정/삭제</title>
+</head>
+<body>
+  <form
+    id="staffedit"
+    style="height: 100vh"
+    class="container d-flex flex-column justify-content-center"
+    action="/admin/adminstaffedit/<%=Data2.staff_id %>"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <h2 class="text-center">직원 수정/삭제</h2>
+    <input type="hidden" name="staff_id" value="<%= Data2.staff_id %>">
+    <div class="d-flex justify-content-center">
+      직원 이름<input name="name" class="w-50 form-control text-center" type="text" value="<%= Data2.name %>" required />
+    </div>
+    <div class="d-flex justify-content-center">
+      직원 직급<input name="role" class="w-50 form-control text-center" type="text" value="<%= Data2.role %>" required />
+    </div>
+    <div class="d-flex justify-content-center">
+      직원 경력<input name="contact_info" class="w-50 form-control text-center" type="text" value="<%= Data2.contact_info %>" required />
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+      <label for="staff_photo">사진 업로드:</label>
+      <input name="staff_photo" class="form-control-file" type="file" />
+    </div>
+    <input type="hidden" name="staff_photo" value="<%= Data2.staff_photo %>">
+    <div class="text-center mt-3 d-flex justify-content-center">
+      <button type="submit" class="btn btn-primary mr-3">수정하기</button>
+      <button type="submit" form="delete" class="btn btn-danger">삭제</button>
+    </div>
+  </form>
+  
+  <form id="delete" action="/admin/delete2" method="post">
+    <input type="hidden" name="staff_id" value="<%= Data2.staff_id %>">
+  </form>
+</body>
+</html>

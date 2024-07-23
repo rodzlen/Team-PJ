@@ -23,9 +23,15 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(expressLayouts);
 
+<<<<<<< HEAD
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
+=======
+
+app.use('/', userRoutes);
+app.use('/admin', adminRoutes);
+>>>>>>> 8c3b4badaf6d8437037aa2a174d8bc19276371d3
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

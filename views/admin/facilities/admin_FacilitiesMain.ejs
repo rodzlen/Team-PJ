@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>직원 및 시설 소개</title>
-    <link rel="stylesheet" href="/public/css/admin_facilities_style.css">
+    <link rel="stylesheet" href="/css/admin_facilitiesMain_style.css">
 </head>
 
 <body>
@@ -16,46 +16,64 @@
                     <% staff.forEach((employee, index) => { %>
                         <td>
                             <div class="employee-card">
-                                <img src="<%= employee.photo || '/path/to/default/image.jpg' %>" alt="Profile Image" class="facility-image">
-                                <div class="employee-name"><%= employee.name %></div>
+                                <img src="/img/<%= employee.staff_photo %>" alt="Profile Image" class="facility-image">
                                 <ul class="employee-info">
+                                    <li>이름: <%= employee.name %></li>
                                     <li>직급: <%= employee.role %></li>
-                                    <li>연락처: <%= employee.contact_info %></li>
+                                    <li>경력: <%= employee.contact_info %></li>
                                 </ul>
+                                
+                                <button onclick="location.href='/admin/adminstaffedit/<%= employee.staff_id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                                    수정/삭제하기
+                                </button>
                             </div>
                         </td>
-                        <% if ((index + 1) % 3 === 0) { %>
+                        <% if ((index + 1) % 5 === 0) { %>
                             </tr><tr>
                         <% } %>
                     <% }); %>
                 </tr>
             </table>
         </div>
+        <button onclick="location.href='/admin/adminstaffcreate'" class="w-50 mb-5 mt-2 btn btn-success">
+            직원추가
+          </button>
     </div>
 
     <h2>시설소개</h2>
     <div class="container facility-container">
-        <% facilities.forEach((facility) => { %>
-            <div class="facility-card">
-                <img src="<%= facility.photo || '/path/to/default/image.jpg' %>" alt="Facility Image" class="facility-image">
-                <div class="facility-name"><%= facility.facility_name %></div>
-                <ul class="facility-info">
-                    <li>주요 시설: <%= facility.main_facilities %></li>
-                </ul>
-                <a class="btn btn-warning" href="/admin/adminfacilitiesedit/<%= facility.id %>">수정/삭제</a>
-            </div>
-        <% }); %>
+        <table class="facility-table">
+            <tr>
+                <% facilities.forEach((facility, index) => { %>
+                    <td>
+<<<<<<< HEAD
+                        <div class="facility-card">
+=======
+                        <div class="facility-card">     
+>>>>>>> 00c65a3e4e4970e44065fd6b7d8f3f6f7719e87c
+                            <img src="/img/<%= facility.facility_photo %>" alt="Uploaded Image" class="facility-image">
+                            <ul class="facility-info">
+                                <li>시설 이름: <%= facility.facility_name %></li>
+                                <li>주요 시설: <%= facility.main_facilities %></li>
+                            </ul>
+                            
+                            <button onclick="location.href='/admin/adminfacilitiesedit/<%= facility.id %>'" class="w-50 mb-5 mt-2 btn btn-success">
+                                수정/삭제하기
+                            </button>
+                        </div>
+                    </td>
+                    <% if ((index + 1) % 3 === 0) { %>
+                        </tr><tr>
+                    <% } %>
+                <% }); %>
+            </tr>
+        </table>
     </div>
     <div class="btnBox">
         <button onclick="location.href='/admin/adminfacilitiescreate'" class="w-50 mb-5 mt-2 btn btn-success">
-          글쓰기
+          시설추가
         </button>
-        <button onclick="location.href='/admin/adminfacilitiesedit'" class="w-50 mb-5 mt-2 btn btn-success">
-            수정하기
-        </button>
-        <button>
-            삭제하기
-        </button>
+
     </div>
 </body>
 </html>
