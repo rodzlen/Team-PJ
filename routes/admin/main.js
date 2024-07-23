@@ -437,7 +437,7 @@ router.post("/login", async (req, res) => {
       return res
         .status(500)
         .send(
-          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/login";</script>'
+          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/admin_login";</script>'
         );
     }
 
