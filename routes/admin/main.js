@@ -19,21 +19,11 @@ const checkAdminLogin = (req, res, next) => {
   }
   next();
 };
-function adminRegAuth(req, res, next,authRegNo) {
-  
-  if (authRegNo != '1234') {
-    return res
-      .status(401)
-      .send(
-        '<script>alert("사원 인증번호가 다릅니다"); window.location.href="/admin/admin_login";</script>'
-      );
-  }
-  next();
-}
+
 
 // 공지사항 메인
 router.get(
-  "/notice",
+  "/notice",checkAdminLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
@@ -58,7 +48,7 @@ router.get(
 
 // 공지사항 추가 페이지
 router.get(
-  "/notice/add",
+  "/notice/add",checkAdminLogin,
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const locals = { title: "공지사항 추가" };
@@ -189,7 +179,7 @@ router.post(
 );
 
 // QnA 목록 페이지
-router.get("/qna", async (req, res) => {
+router.get("/qna", checkAdminLogin,async (req, res) => {
   try {
     const [questions] = await db.query("SELECT * FROM Questions");
     res.render("admin/qna/qna", { questions });
@@ -199,7 +189,7 @@ router.get("/qna", async (req, res) => {
   }
 });
 // QnA 상세 페이지
-router.get("/qna/detail/:id", async (req, res) => {
+router.get("/qna/detail/:id",checkAdminLogin, async (req, res) => {
   const questionId = req.params.id;
   try {
     const [questions] = await db.query("SELECT * FROM Questions WHERE id = ?", [
@@ -401,7 +391,8 @@ router.get(
 router.post(
   "/signup",
   asyncHandler(async (req, res) => {
-    const { admin_id, admin_pw, admin_name, admin_phone , authRegNo } = req.body;
+    const { admin_id, admin_pw, admin_name, admin_phone, authRegNo } = req.body;
+
     if (authRegNo != '1234') {
       return res
         .status(401)
@@ -410,30 +401,43 @@ router.post(
         );
     }
 
-    // 데이터베이스에 삽입할 SQL 쿼리
-    const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
-                  VALUES (?, ?, ?, ?)`;
+    // 비밀번호 해싱
+    const saltRounds = 10;
+    try {
+      const hashedPassword = await bcrypt.hash(admin_pw, saltRounds);
 
-    // 쿼리 실행
-    db.query(
-      sql,
-      [admin_id, admin_pw, admin_name, admin_phone],
-      (err, results) => {
-        if (err) {
-          console.error("회원가입 중 에러 발생:", err);
-          res.status(500).json({ error: "회원가입 중 에러가 발생했습니다." });
-        } else {
-          console.log("회원가입 성공:", results);
-          res.send(
-            '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_main";</script>'
-          );
+      // 데이터베이스에 삽입할 SQL 쿼리
+      const sql = `INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone) 
+                    VALUES (?, ?, ?, ?)`;
+
+      // 쿼리 실행
+      db.query(
+        sql,
+        [admin_id, hashedPassword, admin_name, admin_phone],
+        (err, results) => {
+          if (err) {
+            console.error("회원가입 중 에러 발생:", err);
+            res.status(500).json({ error: "회원가입 중 에러가 발생했습니다." });
+          } else {
+            console.log("회원가입 성공:", results);
+            res.send(
+              '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_main";</script>'
+            );
+          }
         }
-      }
-    );
+      );
+    } catch (error) {
+      console.error("Error hashing password:", error);
+      return res
+        .status(500)
+        .send(
+          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/signup";</script>'
+        );
+    }
   })
 );
 
-// 로그인 처리
+// 관리자 로그인 처리
 router.post("/admin_login", async (req, res) => {
   const { admin_id, admin_pw } = req.body;
 
@@ -456,20 +460,28 @@ router.post("/admin_login", async (req, res) => {
     }
 
     const admin = results[0];
-    const match = await bcrypt.compare(admin_pw, admin.admin_pw);
+    try {
+      const match = await bcrypt.compare(admin_pw, admin.admin_pw);
+      if (!match) {
+        return res.send(
+          '<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>'
+        );
+      }
 
-    if (!match) {
-      return res.send(
-        '<script>alert("아이디 또는 비밀번호가 잘못되었습니다."); window.location.href="/admin/admin_login";</script>'
+      // 세션에 관리자 정보 저장
+      req.session.admin = admin;
+
+      res.send(
+        '<script>alert("로그인 성공!"); window.location.href="/admin_main";</script>'
       );
+    } catch (compareError) {
+      console.error("비밀번호 비교 오류:", compareError);
+      return res
+        .status(500)
+        .send(
+          '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/admin_login";</script>'
+        );
     }
-
-    // 세션에 관리자 정보 저장
-    req.session.admin = admin;
-
-    res.send(
-      '<script>alert("로그인 성공!"); window.location.href="/admin_main";</script>'
-    );
   });
 });
 
