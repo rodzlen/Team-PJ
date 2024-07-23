@@ -644,12 +644,15 @@ router.post(
       peculiarity,
     } = req.body;
 
+    // 비밀번호 해시
+    const hashedPassword = await bcrypt.hash(user_pw, 10);
+
     // 데이터베이스에 삽입할 SQL 쿼리
     const query = `INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const value = [
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [
       user_id,
-      user_pw,
+      hashedPassword,
       user_name,
       user_phone,
       pet_name,
@@ -657,14 +660,15 @@ router.post(
       pet_neutering,
       peculiarity,
     ];
+
     // 쿼리 실행
-    db.query(query, value, (err, results) => {
+    db.query(query, values, (err, results) => {
       if (err) {
         console.error("회원가입 중 에러 발생:", err);
         res
           .status(500)
           .send(
-            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/";</script>'
+            '<script>alert("회원가입 중 오류가 발생했습니다."); window.location.href="/user_login";</script>'
           );
       } else {
         console.log("회원가입 성공:", results);
@@ -691,7 +695,7 @@ router.post(
         return res
           .status(500)
           .send(
-            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/login";</script>'
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/user_login";</script>'
           );
       }
 
@@ -707,14 +711,14 @@ router.post(
 
           // 홈 페이지로 리디렉션
           res.send(
-            '<script>alert("로그인 성공!"); window.location.href="/";</script>'
+            '<script>alert("로그인 성공!"); window.location.href="/user_main";</script>'
           );
         } else {
           // 비밀번호가 일치하지 않음
           res
             .status(401)
             .send(
-              '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/login";</script>'
+              '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/user_login";</script>'
             );
         }
       } else {
@@ -722,7 +726,7 @@ router.post(
         res
           .status(401)
           .send(
-            '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/login";</script>'
+            '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/user_login";</script>'
           );
       }
     });
