@@ -341,6 +341,7 @@ router.post(
     });
   })
 );
+
 //qna 목록
 router.get(
   "/qna",
@@ -769,7 +770,7 @@ router.get(
   })
 );
 
-// 정보 수정 처리
+// 내정보(mypage) 수정 처리
 router.post(
   "/users/mypage/update",
   checkLogin,
@@ -785,12 +786,13 @@ router.post(
     } = req.body;
     const userId = req.session.user.user_id; // 세션에서 사용자 ID 가져오기
 
-    // 비밀번호 확인 로직
-    if (current_password !== confirm_password) {
+    // 비밀번호 변경 로직
+    if (current_password == confirm_password) {
       return res.send(
-        '<script>alert("기존 비밀번호와 비밀번호 확인이 일치하지 않습니다."); window.location.href="/users/mypage/info";</script>'
+        '<script>alert("변경할 비밀번호를 입력하세요."); window.location.href="/users/mypage/info";</script>'
       );
     }
+
     const sql = `
     UPDATE Users 
     SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?

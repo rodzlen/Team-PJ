@@ -97,7 +97,6 @@ router.get(
 router.get(
   "/notice/add",
   checkAdminLogin,
-  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const locals = { title: "공지사항 추가" };
     res.render("admin/notice/admin_notice_add", { locals });
@@ -532,12 +531,12 @@ router.post("/qna/answer/:id", checkAdminLogin, async (req, res) => {
   }
 });
 // 답변 삭제
-router.post("qna/delete/:id", checkAdminLogin, async (req, res) => {
+router.post("/qna/delete/:id", checkAdminLogin, async (req, res) => {
   const answerId = req.params.id;
   const { questionId } = req.body;
   try {
     await db.query("DELETE FROM Answers WHERE id = ?", [answerId]);
-    res.redirect("admin/qna/detail/" + questionId);
+    res.redirect("/admin/qna/detail/" + questionId);
   } catch (err) {
     console.error(err);
     res.status(500).send("서버 오류");
