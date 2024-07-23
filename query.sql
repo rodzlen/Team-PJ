@@ -45,43 +45,19 @@ CREATE TABLE Facilities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility_name VARCHAR(50) NOT NULL,
     main_facilities TEXT NOT NULL,
-<<<<<<< HEAD
     facility_photo BLOB
 );
-=======
-    photo BLOB
-);
-
-INSERT INTO Facilities (facility_name, main_facilities, photo)
-VALUES ('운동장', '배드민턴 코트, 농구장, 축구장', NULL),
-       ('미술실', '도자기, 수채화, 캔버스 그림', NULL),
-       ('도서실', '동화책, 교과서, 만화책', NULL),
-       ('식당', '급식장, 뷔페, 음료 자판기', NULL),
-       ('수영장', '풀장, 물놀이용 장난감, 수영복', NULL);
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 직원소개 테이블
 CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
-<<<<<<< HEAD
     contact_info VARCHAR(40),
     staff_photo BLOB
 );
 
 
-=======
-    photo BLOB
-);
-
-INSERT INTO Staff (name, role, photo)
-VALUES ('김직원', '교사', NULL),
-       ('이직원', '교사', NULL),
-       ('박직원', '교사', NULL),
-       ('최직원', '보조교사', NULL),
-       ('정직원', '행정직원', NULL);
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 강아지 테이블
 CREATE TABLE Dogs (
