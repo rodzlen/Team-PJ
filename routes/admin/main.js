@@ -19,9 +19,8 @@ const checkAdminLogin = (req, res, next) => {
   }
   next();
 };
-function adminRegAuth(req, res, next,authRegNo) {
-  
-  if (authRegNo != '1234') {
+function adminRegAuth(req, res, next, authRegNo) {
+  if (authRegNo != "1234") {
     return res
       .status(401)
       .send(
@@ -401,8 +400,8 @@ router.get(
 router.post(
   "/signup",
   asyncHandler(async (req, res) => {
-    const { admin_id, admin_pw, admin_name, admin_phone , authRegNo } = req.body;
-    if (authRegNo != '1234') {
+    const { admin_id, admin_pw, admin_name, admin_phone, authRegNo } = req.body;
+    if (authRegNo != "1234") {
       return res
         .status(401)
         .send(
@@ -425,7 +424,7 @@ router.post(
         } else {
           console.log("회원가입 성공:", results);
           res.send(
-            '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_main";</script>'
+            '<script>alert("관리자 등록이 완료되었습니다!"); window.location.href="/admin/admin_login";</script>'
           );
         }
       }
