@@ -33,19 +33,25 @@
                 </tr>
             </thead>
             <tbody>
-                <% locals.classAttendances.forEach((attendance) => { %>
-                <tr>
-                    <td><%= attendance.id %></td>
-                    <td><%= attendance.owner_name %></td>
-                    <td><%= attendance.pet_name %></td>
-                    <td><%= attendance.class_name %></td>
-                    <td><%= attendance.start_date.toISOString().split('T')[0] %></td>
-                    <td><%= attendance.end_date.toISOString().split('T')[0] %></td>
-                    <td><%= attendance.status %></td>
-                    <td><%= attendance.created_at.toISOString().split('T')[0] %></td>
-                    <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">상세 보기</a></td>
-                </tr>
-                <% }) %>
+                <% if (locals.classAttendances.length) { %>
+                    <% locals.classAttendances.forEach((attendance) => { %>
+                    <tr>
+                        <td><%= attendance.id %></td>
+                        <td><%= attendance.owner_name %></td>
+                        <td><%= attendance.pet_name %></td>
+                        <td><%= attendance.class_name %></td>
+                        <td><%= new Date(attendance.start_date).toISOString().split('T')[0] %></td>
+                        <td><%= new Date(attendance.end_date).toISOString().split('T')[0] %></td>
+                        <td><%= attendance.status %></td>
+                        <td><%= new Date(attendance.created_at).toISOString().split('T')[0] %></td>
+                        <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">상세 보기</a></td>
+                    </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="9">데이터가 없습니다.</td>
+                    </tr>
+                <% } %>
             </tbody>
         </table>
     </div>

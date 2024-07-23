@@ -581,7 +581,7 @@ router.post("/classreg/apply/:id", checkAdminLogin, (req, res) => {
 
   // 신청서 승인
   const updateQuery =
-    'UPDATE ClassRegistration SET status = "approved", admin_id = ? WHERE id = ?';
+    'UPDATE ClassRegistration SET status = "승인됨", admin_id = ? WHERE id = ?';
   db.query(updateQuery, [req.session.admin.id, id], (err) => {
     if (err) {
       console.error("Database error:", err);
@@ -751,7 +751,8 @@ router.post(
   })
 );
 
-// 수업 수강정보 목록 조회
+//수업 수강정보
+
 router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
   const { search = '', type = 'no' } = req.query;
 
@@ -773,14 +774,21 @@ router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res
 
   try {
     const [attendances] = await db.query(query, queryParams);
-    const locals = { title: '수업 수강정보 목록', classAttendances: attendances };
-    res.render('admin/class/admin_class_list', { locals, layout: adminLayout});
+    console.log('Attendances:', attendances);  // 데이터 구조 확인
+    const locals = { 
+      title: '수업 수강정보 목록', 
+      classAttendances: Array.isArray(attendances) ? attendances : []  // 배열로 보장
+    };
+    res.render('admin/class/admin_class_list', { locals, layout: adminLayout });
   } catch (err) {
     console.error('Database query error:', err);
     res.status(500).send('Internal Server Error');
   }
 }));
 
+
+
+// 수업수강정보 상세
 router.get('/classAttendance/detail/:id', checkAdminLogin, asyncHandler(async (req, res) => {
   const { id } = req.params;
 
