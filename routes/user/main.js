@@ -668,7 +668,7 @@ router.post(
       } else {
         console.log("회원가입 성공:", results);
         return res.send(
-          '<script>alert("회원가입이 성공적으로 완료되었습니다!"); window.location.href="/";</script>'
+          '<script>alert("회원가입이 성공적으로 완료되었습니다!"); window.location.href="/user_login";</script>'
         );
       }
     });
