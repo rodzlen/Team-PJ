@@ -2,11 +2,14 @@ const express = require("express");
 const port = 8500;
 const expressLayouts = require("express-ejs-layouts");
 const userRoutes = require("./routes/user/main");
+
 const adminRoutes = require("./routes/admin/main");
 const path = require("path");
 const connectDB = require("./config/db");
 const session = require("express-session");
 const app = express();
+const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt')
 
 // 세션 설정
 app.use(
@@ -23,10 +26,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 app.use(expressLayouts);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-
-app.use('/', userRoutes);
-app.use('/admin', adminRoutes);
+app.use("/", userRoutes);
+app.use("/admin", adminRoutes);
+app.use("/user", userRoutes);
 
 
 app.set("views", path.join(__dirname, "views"));

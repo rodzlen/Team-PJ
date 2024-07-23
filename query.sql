@@ -8,10 +8,13 @@ use kindergarten;
 CREATE TABLE Admin (
     a_id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id VARCHAR(50) NOT NULL,
-    admin_pw VARCHAR(50) NOT NULL,
+    admin_pw VARCHAR(255) NOT NULL,
     admin_name VARCHAR(50) NOT NULL,
     admin_phone VARCHAR(20) NOT NULL
 );
+
+ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
+
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
@@ -24,7 +27,7 @@ VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
 CREATE TABLE Users (
     u_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL,
-    user_pw VARCHAR(50) NOT NULL,
+    user_pw VARCHAR(255) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
     user_phone VARCHAR(20) NOT NULL,
     pet_name VARCHAR(50) NOT NULL,
@@ -32,6 +35,7 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
+ALTER TABLE USers change user_pw user_pw VARCHAR(255);
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),
@@ -76,16 +80,6 @@ CREATE TABLE Dogs (
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
 
-<<<<<<< HEAD
-=======
-INSERT INTO Dogs (dog_photo, pet_name, owner_id, walk_date, walk_time, walk_photo, teacher_id, class_info, note_info, feed)
-VALUES (NULL, '멍멍이', 1, '2024-07-23', '09:00:00', NULL, 1, '초보반', '오늘은 산책을 잘 함', true),
-       (NULL, '야옹이', 2, '2024-07-23', '10:30:00', NULL, 2, '중급반', '어제는 조금 신경질적이었음', true),
-       (NULL, '똥똥이', 3, '2024-07-23', '13:00:00', NULL, 3, '초보반', '오늘은 매우 잘 먹음', false),
-       (NULL, '키키', 4, '2024-07-23', '14:30:00', NULL, 4, '고급반', '오늘은 조금 물이 빠르게 마시지 않았음', true),
-       (NULL, '초코', 5, '2024-07-23', '16:00:00', NULL, 5, '초보반', '오늘은 소소한 반응이 있었음', false);
-
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 -- 수업시간표 테이블 (오전)
 CREATE TABLE MorningClassSchedule (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -141,16 +135,6 @@ CREATE TABLE FreeBoard (
     image BLOB
 );
 
-<<<<<<< HEAD
-=======
-INSERT INTO FreeBoard (title, content, image)
-VALUES ('우리 아이의 성장기', '우리 아이가 요즘 무슨 모습을 보이나요? 공유해 주세요.', NULL),
-       ('오늘의 일기', '오늘 하루 어떤 일이 있었나요? 기록해 보세요.', NULL),
-       ('가정에서의 재미있는 시간', '가정에서 함께 즐길 수 있는 활동이나 추천하고 싶은 책이나 게임이 있나요?', NULL),
-       ('휴일 계획', '다가오는 주말에 무엇을 계획하고 계십니까? 공유해 주세요.', NULL),
-       ('식당 후기', '최근에 방문한 맛집 후기를 나누어 주세요.', NULL);
-
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 -- 질문 테이블
 CREATE TABLE Questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -183,7 +167,6 @@ VALUES (1, '제가 추천하는 영어 교재는 ABC English Series입니다.', 
        (4, '급식의 단 맛을 줄이기 위해 과일을 다양하게 포함시키거나, 단맛을 감소시킬 수 있는 식자재를 추가하는 방법을 고려해 보세요.', '영양 전문가'),
        (5, '아이의 학교 불안을 해소하기 위해 아이와 소통하고 학교 환경을 긍정적으로 변화시키는 노력이 필요합니다.', '상담 전문가');
 
-<<<<<<< HEAD
 -- 펫 추가 테이블
 CREATE TABLE Pets (
     pet_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -199,7 +182,7 @@ CREATE TABLE Pets (
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     owner_name VARCHAR(100) NOT NULL,
-    dog_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
     class_name VARCHAR(100) NOT NULL,
     feed_status BOOLEAN NOT NULL,
     pickup_status BOOLEAN NOT NULL,
@@ -209,9 +192,21 @@ CREATE TABLE ClassRegistration (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
+
 );
 
 --수강목록 테이블 
-=======
-commit;
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
+CREATE TABLE ClassAttendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    registration_id INT,
+    owner_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    consultation TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
+);

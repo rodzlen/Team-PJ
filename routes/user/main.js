@@ -7,6 +7,7 @@ const db = require("../../config/db").db;
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
+const bcrypt = require('bcrypt')
 
 //게시글 검색 기능
 let queryParams = [];
@@ -541,27 +542,60 @@ router.post(
 );
 
 // 수업 신청 페이지
-router.get('/classregister', checkLogin, (req, res) => {
+router.get("/classregister", checkLogin, (req, res) => {
   const locals = { user: req.session.user };
-  res.render('user/application/user_class_register', { locals, layout: mainLayout });
-});
-
-// 수업 신청 처리
-router.post('/classregister', checkLogin, (req, res) => {
-  const { class_name, feed_status, pickup_status, start_date, end_date } = req.body;
-  const { user_name: owner_name, pet_name } = req.session.user;
-
-  const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
-                  VALUES (?, ?, ?,  ?, ?, ?, ?)`;
-
-  db.query(query, [owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date, ], (err, result) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).send('<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/classregister";</script>');
-    }
-    res.send('<script>alert("수업 신청이 성공적으로 완료되었습니다!"); window.location.href="/";</script>');
+  res.render("user/application/user_class_register", {
+    locals,
+    layout: mainLayout,
   });
 });
+
+router.post("/classregister", checkLogin, (req, res) => {
+  const {
+    class_name,
+    feed_status,
+    pickup_status,
+    start_date,
+    end_date
+  } = req.body;
+
+  const { user_name: owner_name, pet_name } = req.session.user;
+
+  // 체크박스의 상태를 확인하여 boolean 값으로 변환
+  const feedStatus = feed_status === 'on';
+  const pickupStatus = pickup_status === 'on';
+
+  const query = `INSERT INTO ClassRegistration (owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date)
+                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  db.query(
+    query,
+    [
+      owner_name,
+      pet_name,
+      class_name,
+      feedStatus,
+      pickupStatus,
+      start_date,
+      end_date
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res
+          .status(500)
+          .send(
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/classregister";</script>'
+          );
+      }
+      res.send(
+        '<script>alert("수업 신청이 성공적으로 완료되었습니다!"); window.location.href="/";</script>'
+      );
+    }
+  );
+});
+
+module.exports = router;
 
 // 홈 페이지
 router.get(
@@ -576,7 +610,8 @@ router.get(
 router.get(
   "/user_main",
   asyncHandler(async (req, res) => {
-    res.render("user/user_home", { layout: mainLayout });
+    const locals = { user: req.session.user };
+    res.render("user/user_home", { locals, layout: mainLayout });
   })
 );
 
@@ -621,12 +656,15 @@ router.post(
       peculiarity,
     } = req.body;
 
+    // 비밀번호 해시
+    const hashedPassword = await bcrypt.hash(user_pw, 10);
+
     // 데이터베이스에 삽입할 SQL 쿼리
     const query = `INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const value = [
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [
       user_id,
-      user_pw,
+      hashedPassword,
       user_name,
       user_phone,
       pet_name,
@@ -634,54 +672,74 @@ router.post(
       pet_neutering,
       peculiarity,
     ];
+
     // 쿼리 실행
-    db.query(query, value, (err, results) => {
+    db.query(query, values, (err, results) => {
       if (err) {
         console.error("회원가입 중 에러 발생:", err);
         res
           .status(500)
           .send(
-            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/";</script>'
+            '<script>alert("회원가입 중 오류가 발생했습니다."); window.location.href="/user_login";</script>'
           );
       } else {
         console.log("회원가입 성공:", results);
         return res.send(
-          '<script>alert("회원가입이 성공적으로 완료되었습니다!"); window.location.href="/";</script>'
+          '<script>alert("회원가입이 성공적으로 완료되었습니다!"); window.location.href="/user_login";</script>'
         );
       }
     });
   })
 );
 
-//로그인처리
+// 로그인 처리
 router.post(
   "/users/login",
   asyncHandler(async (req, res) => {
     const { user_id, user_pw } = req.body;
 
-    // 데이터베이스에서 아이디와 비밀번호 확인
-    const sql = `SELECT * FROM Users WHERE user_id = ? AND user_pw = ?`;
+    // 데이터베이스에서 아이디로 사용자 조회
+    const sql = `SELECT * FROM Users WHERE user_id = ?`;
 
-    db.query(sql, [user_id, user_pw], (err, results) => {
+    db.query(sql, [user_id], async (err, results) => {
       if (err) {
         console.error("로그인 중 에러 발생:", err);
         return res
           .status(500)
-          .json({ error: "로그인 중 에러가 발생했습니다." });
+          .send(
+            '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/user_login";</script>'
+          );
       }
 
       if (results.length > 0) {
         const user = results[0];
-        req.session.user = user; // 세션에 사용자 정보 저장
-        console.log(req.session.user.user_id);
+        
+        // 비밀번호 비교
+        const match = await bcrypt.compare(user_pw, user.user_pw);
+        
+        if (match) {
+          req.session.user = user; // 세션에 사용자 정보 저장
+          console.log(req.session.user.user_id);
 
-        // 홈 페이지로 리디렉션
-        res.redirect("/");
+          // 홈 페이지로 리디렉션
+          res.send(
+            '<script>alert("로그인 성공!"); window.location.href="/user_main";</script>'
+          );
+        } else {
+          // 비밀번호가 일치하지 않음
+          res
+            .status(401)
+            .send(
+              '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/user_login";</script>'
+            );
+        }
       } else {
-        // 로그인 실패
+        // 사용자가 존재하지 않음
         res
           .status(401)
-          .json({ error: "아이디 또는 비밀번호가 일치하지 않습니다." });
+          .send(
+            '<script>alert("아이디 또는 비밀번호가 일치하지 않습니다."); window.location.href="/user_login";</script>'
+          );
       }
     });
   })
@@ -785,26 +843,28 @@ router.post(
     );
   })
 );
-// 유저 대시보드 라우트: GET /user/dashboard/user_dashboard
-router.get("/user_dashboard", (req, res) => {
-  const query = "select * from dogs where dog_id=?";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("서버 오류가 발생했습니다.");
+
+// 강아지 정보 유저 대시보드 라우트: GET /user/userdashboard
+router.get("/userdashboard", async (req, res) => {
+  const dogId = req.query.dog_id; // 클라이언트에서 dog_id를 쿼리 파라미터로 받는다고 가정
+  const query = "SELECT * FROM dogs WHERE dog_id = ?";
+
+  try {
+    const [rows] = await db.query(query, [dogId]);
+    if (rows.length > 0) {
+      res.render("user/dashboard/user_dashboard", { data: rows[0] });
     } else {
-      if (results.length > 0) {
-        res.render("user/dashboard/user_dashboard", { data: results[0] });
-      } else {
-        res.status(404).send("해당 정보를 찾을 수 없습니다.");
-      }
+      res.status(404).send("해당 정보를 찾을 수 없습니다.");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("서버 오류가 발생했습니다.");
+  }
 });
 
-// 게시물 리스트 라우트: GET /dashboard/user/userpostlist
-router.get("/userpostlist", (req, res) => {
-  res.render("dashboard/user/userpostlist", { data: posts });
+// 게시물 리스트 라우트: GET /dashboard/user/user_postlist
+router.get("/user_postlist", (req, res) => {
+  res.render("user/dashboard/user_postlist", { data: posts });
 });
 
 // 게시물 검색 라우트: GET /dashboard/user/search
@@ -835,61 +895,6 @@ router.get("/userCalendar", (req, res) => {
 });
 
 router.get("/mainpage", (req, res) => {
-  res.render("mainpage");
-});
-
-// 유저 대시보드 라우트: GET /dashboard/user/userdashboard
-router.get("/userdashboard", (req, res) => {
-  const query = "select * from dogs where dog_id=4";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("서버 오류가 발생했습니다.");
-    } else {
-      if (results.length > 0) {
-        res.render("dashboard/user/userdashboard", { data: results[0] });
-      } else {
-        res.status(404).send("해당 정보를 찾을 수 없습니다.");
-      }
-    }
-  });
-});
-
-// 게시물 리스트 라우트: GET /dashboard/user/userpostlist
-router.get("/userpostlist", (req, res) => {
-  res.render("dashboard/user/userpostlist", { data: posts });
-});
-
-// 게시물 검색 라우트: GET /dashboard/user/search
-router.get("/search", (req, res) => {
-  const keyword = req.query.keyword;
-  const filteredPosts = posts.filter((post) => post.title.includes(keyword));
-  res.render("dashboard/user/userpostlist", { data: filteredPosts });
-});
-
-router.get("/class/u_morningClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_morningClassPosts", { data: posts });
-});
-
-router.get("/class/u_afternoonClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_afternoonClassPosts", { data: posts });
-});
-
-router.get("/class/u_alldayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_alldayClassPosts", { data: posts });
-});
-
-router.get("/class/u_onedayClassPosts", (req, res) => {
-  res.render("dashboard/user/class/u_onedayClassPosts", { data: posts });
-});
-
-// 유저 캘린더 화면
-router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/user_Calendar");
-});
-
-// 유저 메인페이지 화면
-router.get("/usermainpage", (req, res) => {
   res.render("mainpage");
 });
 

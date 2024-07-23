@@ -18,6 +18,10 @@ body {
     padding: 20px 0px;
 }
 
+#cover a {
+    color: #000;
+}
+
 /* 카테고리 메뉴 설정 */
 .category-menu {
     position: fixed;
@@ -88,6 +92,11 @@ body {
     padding: 8px;
     border-radius: 3px;
     border: 1px solid #ccc;
+}
+
+select {
+       font-size: 16px;
+    height: 25px;
 }
 
 .search-form button {

@@ -1,4 +1,7 @@
-/* admin_facilitiesMain_style.css */
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
 
 body {
     padding: 0px;
