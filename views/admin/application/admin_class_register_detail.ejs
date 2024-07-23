@@ -1,0 +1,70 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/application_style.css"> <!-- CSS 파일 임포트 -->
+</head>
+
+<div ><!-- 받아온 신청자 정보를 토대로 클래스 정보 테이블에 저장할 것임-->
+  <h3><%= locals.title></h3>
+  <form action="/admin/classreg/apply" method="POST">
+    <label for="owner_name"><b>신청자</b></label>
+    <input type="text" placeholder="<%=data.owner_name>" name="owner_name" readonly>
+   
+    <label for="pet_name"><b>강아지 이름</b></label>
+    <input type="text" placeholder="<%=data.pet_name>" name="pet_name" readonly>
+
+    <label for="startday"><b>희망 시작일</b></label>
+    <input type="date"  name="startday" placeholder="<%= data.startday%>">
+    <label for="endday"><b>희망 종료일</b></label>
+    <input type="date"  name="endday"   placeholder="<%= data.endday%>">
+
+    <label for="feed"><b>급식 신청여부</b></label>
+    <div class="radio-group">
+      <div class="radio-container">
+        <input type="radio" id="feed" name="feed" value="feed">
+        <label for="feed" class="radio-label">신청</label>
+      </div>
+      <div class="radio-container">
+        <input type="radio" id="feed" name="feed" value="">
+        <label for="feed" class="radio-label">미신청</label>
+      </div>
+    </div>
+    <label for="feed"><b>픽업 신청</b></label>
+    <div class="radio-group">
+      <div class="radio-container">
+        <input type="radio" id="pickup" name="pickup" value="pickup">
+        <label for="pickup1" class="radio-label">신청</label>
+      </div>
+      <div class="radio-container">
+        <input type="radio" id="pickup" name="pickup" value="">
+        <label for="pickup2" class="radio-label">미신청</label>
+      </div>
+    </div>
+
+    <label for="job"><b>클래스 신청</b></label>
+    <div class="radio-group">
+      <div class="radio-container">
+        <input type="radio" id="radio1" name="class" value="morning" class="radio-input" required>
+        <label for="radio1" class="radio-label">오전</label>
+      </div>
+      <div class="radio-container">
+        <input type="radio" id="radio2" name="class" value="daytime" class="radio-input" required>
+        <label for="radio2" class="radio-label">오후</label>
+      </div>
+      <div class="radio-container">
+        <input type="radio" id="radio3" name="job" value="allday" class="radio-input" required>
+        <label for="radio3" class="radio-label">종일</label>
+      </div>
+      <div class="radio-container">
+        <input type="radio" id="radio4" name="job" value="oneday" class="radio-input" required>
+        <label for="radio4" class="radio-label">일일</label>
+      </div>
+    </div>
+    <label for="consultation"><b>특이사항</b></label>
+    <textarea placeholder="특이사항" name="consultation" readonly><%=data.consultation%></textarea>
+    <input type="submit" value="등록">
+  </form>
+  <button onclick="location.href='/admin/application/delete/<%=data.id%>'">삭제</button>
+</div>
+

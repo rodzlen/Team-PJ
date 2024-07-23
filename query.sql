@@ -45,6 +45,10 @@ CREATE TABLE Facilities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility_name VARCHAR(50) NOT NULL,
     main_facilities TEXT NOT NULL,
+<<<<<<< HEAD
+    facility_photo BLOB
+);
+=======
     photo BLOB
 );
 
@@ -54,12 +58,20 @@ VALUES ('운동장', '배드민턴 코트, 농구장, 축구장', NULL),
        ('도서실', '동화책, 교과서, 만화책', NULL),
        ('식당', '급식장, 뷔페, 음료 자판기', NULL),
        ('수영장', '풀장, 물놀이용 장난감, 수영복', NULL);
+>>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 직원소개 테이블
 CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
+<<<<<<< HEAD
+    contact_info VARCHAR(40),
+    staff_photo BLOB
+);
+
+
+=======
     photo BLOB
 );
 
@@ -69,6 +81,7 @@ VALUES ('김직원', '교사', NULL),
        ('박직원', '교사', NULL),
        ('최직원', '보조교사', NULL),
        ('정직원', '행정직원', NULL);
+>>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 강아지 테이블
 CREATE TABLE Dogs (
@@ -87,6 +100,8 @@ CREATE TABLE Dogs (
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
 
+<<<<<<< HEAD
+=======
 INSERT INTO Dogs (dog_photo, pet_name, owner_id, walk_date, walk_time, walk_photo, teacher_id, class_info, note_info, feed)
 VALUES (NULL, '멍멍이', 1, '2024-07-23', '09:00:00', NULL, 1, '초보반', '오늘은 산책을 잘 함', true),
        (NULL, '야옹이', 2, '2024-07-23', '10:30:00', NULL, 2, '중급반', '어제는 조금 신경질적이었음', true),
@@ -94,6 +109,7 @@ VALUES (NULL, '멍멍이', 1, '2024-07-23', '09:00:00', NULL, 1, '초보반', '�
        (NULL, '키키', 4, '2024-07-23', '14:30:00', NULL, 4, '고급반', '오늘은 조금 물이 빠르게 마시지 않았음', true),
        (NULL, '초코', 5, '2024-07-23', '16:00:00', NULL, 5, '초보반', '오늘은 소소한 반응이 있었음', false);
 
+>>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 -- 수업시간표 테이블 (오전)
 CREATE TABLE MorningClassSchedule (
     schedule_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -149,6 +165,8 @@ CREATE TABLE FreeBoard (
     image BLOB
 );
 
+<<<<<<< HEAD
+=======
 INSERT INTO FreeBoard (title, content, image)
 VALUES ('우리 아이의 성장기', '우리 아이가 요즘 무슨 모습을 보이나요? 공유해 주세요.', NULL),
        ('오늘의 일기', '오늘 하루 어떤 일이 있었나요? 기록해 보세요.', NULL),
@@ -156,6 +174,7 @@ VALUES ('우리 아이의 성장기', '우리 아이가 요즘 무슨 모습을 
        ('휴일 계획', '다가오는 주말에 무엇을 계획하고 계십니까? 공유해 주세요.', NULL),
        ('식당 후기', '최근에 방문한 맛집 후기를 나누어 주세요.', NULL);
 
+>>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 -- 질문 테이블
 CREATE TABLE Questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -188,4 +207,35 @@ VALUES (1, '제가 추천하는 영어 교재는 ABC English Series입니다.', 
        (4, '급식의 단 맛을 줄이기 위해 과일을 다양하게 포함시키거나, 단맛을 감소시킬 수 있는 식자재를 추가하는 방법을 고려해 보세요.', '영양 전문가'),
        (5, '아이의 학교 불안을 해소하기 위해 아이와 소통하고 학교 환경을 긍정적으로 변화시키는 노력이 필요합니다.', '상담 전문가');
 
+<<<<<<< HEAD
+-- 펫 추가 테이블
+CREATE TABLE Pets (
+    pet_id INT AUTO_INCREMENT PRIMARY KEY,
+    pet_name VARCHAR(50) NOT NULL,
+    pet_gender ENUM('Male', 'Female') NOT NULL, 
+    pet_neutering VARCHAR(20),
+    peculiarity VARCHAR(100),
+    u_id INT,  
+    FOREIGN KEY (u_id) REFERENCES Users(u_id)
+);
+
+-- 수강신청 테이블
+CREATE TABLE ClassRegistration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    owner_name VARCHAR(100) NOT NULL,
+    dog_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_day DATE NOT NULL,
+    end_day DATE NOT NULL,
+    consultation TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    admin_id INT,
+    FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
+);
+
+--수강목록 테이블 
+=======
 commit;
+>>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c

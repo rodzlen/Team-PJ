@@ -22,13 +22,16 @@
       <div class="class-container">
         <div class="class-box">
           <h3>오전 클래스</h3>
-          <a href="/class/a_morningClassPosts">오전 클래스</a>
+          <a href="/admin/class/admin_morningClassPosts">오전 클래스</a>
           <ul class="admin-posts">
             <% if (data.morning) { %> <% data.morning.forEach(post => { %>
             <li>
-              <a href="/user/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
+              <div class="post-title">
+                <a href="/user/userdashboard/<%= post.dog_id %>"
+                  ><%= post.pet_name %></a
+                >
+              </div>
+              <br />
             </li>
             <% }) %> <% } %>
           </ul>
@@ -36,14 +39,17 @@
 
         <div class="class-box">
           <h3>오후 클래스</h3>
-          <a href="/dashboard/admin/class/a_afternoonClassPosts">오후 클래스</a>
+          <a href="/admin/class/admin_afternoonClassPosts">오후 클래스</a>
 
           <ul class="admin-posts">
             <% if (data.afternoon) { %> <% data.afternoon.forEach(post => { %>
             <li>
-              <a href="/user/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
+              <div class="post-title">
+                <a href="/user/userdashboard/<%= post.dog_id %>"
+                  ><%= post.pet_name %></a
+                >
+              </div>
+              <br />
             </li>
             <% }) %> <% } %>
           </ul>
@@ -51,29 +57,31 @@
 
         <div class="class-box">
           <h3>종일 클래스</h3>
-          <a href="/dashboard/admin/class/a_alldayClassPosts">종일 클래스</a>
+          <a href="/admin/class/admin_alldayClassPosts">종일 클래스</a>
 
           <ul class="admin-posts">
             <% if (data.allday) { %> <% data.allday.forEach(post => { %>
-            <li>
-              <a href="/user/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
+            <div class="post-title">
+              <a href="/user/userdashboard/<%= post.dog_id %>"
+                ><%= post.pet_name %></a
+              >
+            </div>
+            <br />
             <% }) %> <% } %>
           </ul>
         </div>
 
         <div class="class-box">
           <h3>일일 클래스</h3>
-          <a href="/dashboard/admin/class/a_onedayClassPosts">일일 클래스</a>
+          <a href="/admin/class/admin_onedayClassPosts">일일 클래스</a>
           <ul class="admin-posts">
             <% if (data.oneday) { %> <% data.oneday.forEach(post => { %>
-            <li>
-              <a href="/user/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
+            <div class="post-title">
+              <a href="/user/userdashboard/<%= post.dog_id %>"
+                ><%= post.pet_name %></a
+              >
+            </div>
+            <br />
             <% }) %> <% } %>
           </ul>
         </div>
