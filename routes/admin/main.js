@@ -50,7 +50,6 @@ router.get(
 router.get(
   "/notice/add",
   checkAdminLogin,
-  checkAdminLogin,
   asyncHandler(async (req, res) => {
     const locals = { title: "공지사항 추가" };
     res.render("admin/notice/admin_notice_add", { locals });
