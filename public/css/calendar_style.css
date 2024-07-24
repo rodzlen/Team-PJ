@@ -12,7 +12,25 @@ body {
     /*가로축 스크롤 제거*/
 }
 
+#calendar {
+    display: flex;
+    align-items: center;
+    margin: 50px 0px;
+}
+
+#left {
+    width: 50%;
+}
+
+#right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #priceTable {
+    width: 100%;
     margin: 20px auto;
     max-width: 600px;
     background-color: #fff;
@@ -37,6 +55,14 @@ body {
     background-color: #f2f2f2;
 }
 
+#calendarModal {
+    width: 65%;
+}
+
+label {
+    display: flex;
+    justify-content: center;
+}
 #calendarBox {
     margin: 20px auto;
     max-width: 800px;
@@ -72,8 +98,18 @@ body {
     font-weight: bold;
 }
 
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .modal-body .form-group {
     margin-bottom: 15px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .modal-body .form-control {
@@ -82,6 +118,8 @@ body {
 
 .modal-footer {
     border-top: none;
+    display: flex;
+    justify-content: center;
 }
 
 .modal-footer .btn {
@@ -117,3 +155,43 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+#btnBox {
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px 0px;
+}
+
+#addBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+}
+
+#addBtn:hover {
+    background-color: #218838;
+}
+
+
+#delBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #fa5329;
+    color: #fff;
+    cursor: pointer;
+}
+
+#delBtn:hover {
+    background-color: #d6431f;
+}
+
+/* #xBtn {
+    opacity: 0.1;
+} */
