@@ -97,3 +97,16 @@ textarea {
 #delBtn:hover {
     background-color: #d6431f;
 }
+
+/* qna 전용 */
+#answer {
+    width: 80%;
+    display: flex;
+    align-items: center;
+}
+
+#bBox {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
