@@ -1472,7 +1472,6 @@ router.post("/dashboard/delete/:dog_id", (req, res) => {
 });
 
 // 직원소개 및 시설소개 모든 데이터
-// 직원소개 및 시설소개 모든 데이터
 router.get("/adminfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
