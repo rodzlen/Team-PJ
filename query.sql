@@ -34,6 +34,8 @@ CREATE TABLE Users (
     peculiarity VARCHAR(100)
 );
 
+ALTER TABLE USers change user_pw user_pw VARCHAR(255);
+
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),
        ('user2', 'userpw2', '사용자2', '010-2222-2222', '야옹이', 'Female', 'No', '꼬리가 길고 털이 길다'),
@@ -64,7 +66,7 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(user_name) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,

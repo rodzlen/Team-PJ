@@ -826,26 +826,6 @@ router.post(
   })
 );
 
-// // 강아지 정보 유저 대시보드 라우트
-// router.get("/dashboard/user_dashboard/:id", async (req, res) => {
-//   const dog_id = req.params.id;
-//   const query = "SELECT * FROM dogs WHERE dog_id = ?";
-
-//   try {
-//     const [rows] = await db.query(query, [dog_id]);
-//     console.log("Query result:", rows); // 콘솔에서 쿼리 결과 확인
-
-//     if (rows.length > 0) {
-//       const dogData = rows[0];
-//       res.render("user/dashboard/user_dashboard", { data: dogData });
-//     } else {
-//       res.status(404).send("해당 정보를 찾을 수 없습니다.");
-//     }
-//   } catch (err) {
-//     console.error("Database query error:", err);
-//     res.status(500).send("서버 오류가 발생했습니다.");
-//   }
-// });
 
 // 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
 router.get(
@@ -949,6 +929,7 @@ router.get("/class/user_onedayClassPosts", (req, res) => {
 router.get("/userCalendar", (req, res) => {
   res.render("user/calendar/user_Calendar");
 });
+
 
 router.get("/mainpage", (req, res) => {
   res.render("mainpage");

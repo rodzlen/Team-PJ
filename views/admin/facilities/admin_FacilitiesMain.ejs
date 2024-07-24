@@ -18,12 +18,7 @@
                         <% staff.forEach((employee, index)=> { %>
                             <td>
                                 <div class="employee-card">
-<<<<<<< HEAD
-                                    <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image"
-                                        onerror="this.onerror=null; this.src='/img/wait2.png';">
-=======
                                     <img src="/img/<%=employee.staff_photo %>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait2.png';">
->>>>>>> 0a2bbf278501d81a800ad1b954233f55ff2aa706
                                     <ul class="employee-info">
                                         <li>이름: <%=employee.name %>
                                         </li>
@@ -51,27 +46,15 @@
                 직원추가
             </button>
         </div>
-<<<<<<< HEAD
-
-=======
         
->>>>>>> 0a2bbf278501d81a800ad1b954233f55ff2aa706
-
         <h2>시설소개</h2>
         <div class="container facility-container">
             <table class="facility-table">
                 <tr>
                     <% facilities.forEach((facility, index)=> { %>
                         <td>
-<<<<<<< HEAD
-                            <div class="facility-card">
-                                <img src="/img/<%=facilities.facility_photo%>" alt="시설 사진" class="facility-image"
-                                    onerror="this.onerror=null; this.src='/img/wait.gif';">
-=======
                             <div class="facility-card">     
                                 <img src="/img/<%=facility.facility_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait.gif';">
->>>>>>> 0a2bbf278501d81a800ad1b954233f55ff2aa706
-                                <ul class="facility-info">
                                     <li>시설 이름: <%=facility.facility_name %>
                                     </li>
                                     <li>주요 시설: <%=facility.main_facilities %>
