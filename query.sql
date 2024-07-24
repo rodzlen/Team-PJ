@@ -70,10 +70,12 @@ CREATE TABLE Dogs (
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
+    teacher VARCHAR(15) NOT NULL,
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_name) REFERENCES Users(user_name)
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
+    FOREIGN KEY (teacher) REFERENCES Staff(name)
 );
 
 INSERT INTO Dogs (dog_photo, pet_name, owner_id, walk_date, walk_time, walk_photo, teacher_id, class_info, note_info, feed)
