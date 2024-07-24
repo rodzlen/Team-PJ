@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/admin_notice_style.css"> <!-- CSS 파일 임포트 -->
+    <link rel="stylesheet" href="/css/communityMain_style.css"> <!-- CSS 파일 임포트 -->
 </head>
 <body>
-    <div id="cover">
-    <!-- 카테고리 메뉴 -->
+    <div id="community">
     <aside class="category-menu">
         <h3>카테고리</h3>
         <ul>
@@ -18,16 +17,14 @@
         </ul>
     </aside>
 
-    
+    <div id="cover">
     <h3>공지사항</h3>
     <!-- 메인 콘텐츠 -->
-    <div id="main-content">
+    <div class="main-content">
         <!-- 검색 폼 -->
-        <form class="search-form" action="/admin/notice" method="GET">
-            <div class="search-container">
+        <form action="/admin/notice" method="GET">
                 <input type="text" name="search" placeholder="제목 검색">
                 <button type="submit">검색</button>
-            </div>
         </form>
 
         <!-- 공지사항 목록 테이블 -->
@@ -57,6 +54,7 @@
             <button onclick="location.href='/admin/notice/add'">글쓰기</button>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>
