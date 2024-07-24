@@ -13,8 +13,6 @@ CREATE TABLE Admin (
     admin_phone VARCHAR(20) NOT NULL
 );
 
-ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
-
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
@@ -35,7 +33,6 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
-ALTER TABLE USers change user_pw user_pw VARCHAR(255);
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),
@@ -68,7 +65,7 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_id INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
@@ -76,7 +73,7 @@ CREATE TABLE Dogs (
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES Users(u_id),
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
 

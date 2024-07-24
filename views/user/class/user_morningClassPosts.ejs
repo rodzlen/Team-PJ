@@ -18,14 +18,9 @@
       </div>
 
       <div class="search-form">
-        <form action="/dashboard/admin/search" method="GET">
-          <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="검색어를 입력하세요"
-          />
-          <input type="submit" value="검색" class="btn" />
+        <form action="/admin/admin_morningClassPosts" method="GET">
+          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+          <button type="submit">검색</button>
         </form>
       </div>
       <ul class="admin-posts">
@@ -34,8 +29,6 @@
           <a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">
             <%= post.pet_name %>
           </a>
-          
-           
         </li>
         <% }) %>
       </ul>
