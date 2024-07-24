@@ -1,45 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= locals.title %></title>
-  <link rel="stylesheet" href="/css/qna_styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= locals.title %>
+    </title>
+    <link rel="stylesheet" href="/css/communityDetail_style.css">
 </head>
+
 <body>
-  <h1>QnA 상세</h1>
-  <h2><%= question.title %></h2>
-  <p><%= question.question %></p>
-  <p>작성일: <%= question.question_date %></p>
-  <p>작성자: <%= question.question_by %></p>
+    <div id="detail">
+        <h3>QnA 상세</h3>
+        <div id="cover">
+            <h4>
+                <%= question.title %>
+            </h4>
+            <p>
+                <%= question.question %>
+            </p>
+            <p>작성일: <%= question.question_date %>
+            </p>
+            <p>작성자: <%= question.question_by %>
+            </p>
 
-  <h3>답변</h3>
-  <% answers.forEach(function(answer) { %>
-      <div>
-          <p><%= answer.answer %></p>
-          <p>작성일: <%= answer.answer_date %></p>
-          <p>작성자: <%= answer.answered_by %></p>
-      </div>
-  <% }) %>
+            <h4>답변</h4>
+            <% answers.forEach(function(answer) { %>
+                <div>
+                    <p>
+                        <%= answer.answer %>
+                    </p>
+                    <p>작성일: <%= answer.answer_date %>
+                    </p>
+                    <p>작성자: <%= answer.answered_by %>
+                    </p>
+                </div>
+                <% }) %>
 
-  <% if (!answers.length) { %>
-      <p>아직 답변이 없습니다.</p>
-  <% } %>
+                    <% if (!answers.length) { %>
+                        <p>아직 답변이 없습니다.</p>
+                        <% } %>
 
-<!-- admin페이지에서만 보일거임 아직 세션처리가 안돼서 여기에 남김 -->
-      <h3>답변 작성</h3>
-      <form action="/admin/qna/answer/<%= question.question_id %>" method="POST">
-          <textarea name="answer" required></textarea>
-        
-          <button type="submit">답변하기</button>
-      </form>
+                            <!-- admin페이지에서만 보일거임 아직 세션처리가 안돼서 여기에 남김 -->
+                            <h3>답변 작성</h3>
+                            <form align-item="center" action="/admin/qna/answer/<%= question.question_id %>" method="POST">
+                                <textarea name="answer" required></textarea>
+                                <button id="editBtn" type="submit">답변하기</button>
+                            </form>
 
+        </div>
 
-  <h3>관리</h3>
-  <form action="/admin/qna/delete/<%= question.question_id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-      <button type="submit">질문 삭제</button>
-  </form>
+        <div id="btnBox">
+            <form action="/admin/qna/delete/<%= question.question_id %>" method="POST"
+                onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                <button id="delBtn" type="submit">질문 삭제</button>
+            </form>
 
-  <a href="/qna">목록으로</a>
+            <button id="backBtn" onclick="href='/admin/qna'">목록으로</button>
+        </div>
+    </div>
 </body>
+
 </html>
