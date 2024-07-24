@@ -38,24 +38,6 @@ form {
     flex-direction: column;
 }
 
-/* form input[type="text"] {
-    width: 400px;
-    height: 30px;
-    font-size: 18px;
-    margin-bottom: 20px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-} 
-
-textarea {
-    width: 600px;
-    height: 500px;
-    resize: none;
-    font-size: 18px;
-    margin-bottom: 20px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-} */
 
 #btnBox {
     width: 50%;
