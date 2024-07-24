@@ -9,11 +9,11 @@
   <body>
     <div id="content">
       <div class="admin-title">
-        <h2>오후반 - 유저</h2>
-        
+        <h2>오후반 - 관리자</h2>
       </div>
+
       <div class="search-form">
-        <form action="/dashboard/search" method="GET">
+        <form action="/dashboard/admin/search" method="GET">
           <input
             type="text"
             id="searchInput"
@@ -26,9 +26,9 @@
       <ul class="admin-posts">
         <% data.forEach(post => { %>
         <li>
-            <a href="/user/userdashboard/<%= post._id %>">
-                <%=  post.pet_name %>
-            </a>
+          <a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">
+            <%= post.pet_name %>
+          </a>
         </li>
         <% }) %>
       </ul>
