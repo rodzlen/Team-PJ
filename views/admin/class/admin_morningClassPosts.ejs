@@ -21,19 +21,39 @@
           <button type="submit">검색</button>
         </form>
       </div>
-      <ul class="admin-posts">
-        <% data.forEach(post => { %>
-          <li>
-            <div class="post-title">
-              <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>"><%= post.pet_name %></a>
-            </div><br>
-          </li>
-        <% }) %>
-      </ul>
 
+      <table>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>강아지 이름</th>
+            <th>주인 이름</th>
+            <th>등록일(시작/마지막)</th>
+            <th>정보 상세보기</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (data.length) { %>
+            <% data.forEach((post, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= post.pet_name %></td>
+              <td><%= post.owner_name %></td>
+              <td>
+                <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
+                <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
+              </td>
+              <td><a href="/admin/dashboard/admin_edit/<%= post.dog_id %>">정보 상세 보기</a></td>
+            </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">데이터가 없습니다.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
       
     <script src="/js/main.js"></script>
   </body>
 </html>
-
-<!-- views/admin/class/admin_morningClassPosts -->

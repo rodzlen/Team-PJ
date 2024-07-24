@@ -910,27 +910,42 @@ router.get("/search", (req, res) => {
 });
 
 // 게시물 클래스별 라우트
-router.get("/class/user_morningClassPosts", (req, res) => {
-  db.query("SELECT * FROM Dogs WHERE class_info = '오전'", (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
-    }
-    res.render("user/class/user_morningClassPosts", { data: posts });
-  });
-});
+router.get(
+  "/admin_morningClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
 
-router.get("/class/user_afternoonClassPosts", (req, res) => {
-  db.query("SELECT * FROM dogs WHERE class_info = '오후'", (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
+    let query = `
+    SELECT 
+      d.dog_id, 
+      d.pet_name, 
+      d.owner_name, 
+      c.start_date, 
+      c.end_date 
+    FROM 
+      dogs d
+    LEFT JOIN 
+      classregistration c ON d.pet_name = c.pet_name 
+    WHERE 
+      d.class_info = '오전'
+  `;
+
+    if (searchQuery) {
+      query += " AND d.pet_name LIKE ?";
     }
-    res.render("user/class/user_afternoonClassPosts", {
-      data: posts,
+
+    const queryParams = searchQuery ? [`%${searchQuery}%`] : [];
+
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/class/admin_morningClassPosts", { data: results });
+      }
     });
-  });
-});
+  })
+);
 
 router.get("/class/user_alldayClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
