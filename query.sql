@@ -138,11 +138,14 @@ CREATE TABLE FreeBoard (
 
 -- 질문 테이블
 CREATE TABLE Questions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT AUTO_INCREMENT PRIMARY KEY,
+    title varchar(255),
     question TEXT NOT NULL,
     question_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    create_by VARCHAR(255) NOT NULL
+    question_by VARCHAR(255) NOT NULL
 );
+
+
 
 INSERT INTO Questions (question, create_by)
 VALUES ('초등학생에게 추천할 만한 영어 교재는 무엇인가요?', '학부모1'),
@@ -153,14 +156,14 @@ VALUES ('초등학생에게 추천할 만한 영어 교재는 무엇인가요?',
 
 -- 답변 테이블
 CREATE TABLE Answers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    answer_id INT AUTO_INCREMENT PRIMARY KEY,
     question_id INT,
+    title varchar(255),
     answer TEXT NOT NULL,
     answer_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     answered_by VARCHAR(255) NOT NULL,
-    FOREIGN KEY (question_id) REFERENCES Questions(id)
+    FOREIGN KEY (question_id) REFERENCES Questions(question_id)
 );
-
 INSERT INTO Answers (question_id, answer, answered_by)
 VALUES (1, '제가 추천하는 영어 교재는 ABC English Series입니다.', '영어 교육 전문가'),
         (2, '아이의 관심을 끌 수 있는 새로운 학습 방법을 시도해 보세요. 예를 들어 게임을 활용한 학습이 효과적일 수 있습니다.', '교육 전문가'),
