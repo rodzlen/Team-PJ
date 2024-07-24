@@ -51,7 +51,20 @@ router.get(
 
     let query = "SELECT * FROM noticeBoard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -95,7 +108,6 @@ router.get(
   })
 );
 
-// 자유게시판 목록
 router.get(
   "/freeboard",
   asyncHandler(async (req, res) => {
@@ -105,7 +117,19 @@ router.get(
 
     let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -115,6 +139,8 @@ router.get(
         res.render("user/freeboard/user_freeboard_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
