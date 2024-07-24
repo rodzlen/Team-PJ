@@ -81,3 +81,17 @@ th {
 tbody tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+button {
+  width: 100px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

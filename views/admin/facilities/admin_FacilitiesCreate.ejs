@@ -10,9 +10,8 @@
 
 <body>
   <div id="create">
-    <form id="facilitiesedit" style="height: 100vh" class="container d-flex flex-column justify-content-center"
-      action="/admin/adminfacilitiescreate" method="post" enctype="multipart/form-data">
-      <h2 class="text-center">Create</h2>
+    <form action="/admin/adminfacilitiescreate" method="post" enctype="multipart/form-data">
+      <h2>시설 생성</h2>
       <div id="cover">
         <div class="in">
           시설 이름 &nbsp; <input name="facility_name" type="text" />
@@ -21,7 +20,7 @@
           주요 시설 &nbsp; <input name="main_facilities" type="text" />
         </div>
         <div class="ln">
-          <label for="facility_photo">Upload Image:</label>
+          <label for="facility_photo">Upload Image: &nbsp;</label>
           <input name="facility_photo" type="file" />
         </div>
         <div class="in">

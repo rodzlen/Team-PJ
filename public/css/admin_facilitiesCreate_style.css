@@ -46,7 +46,7 @@ form {
   width: 100%;
   max-width: 500px; /* 최대 너비 설정 */
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   margin-bottom: 20px;
 }
@@ -67,6 +67,7 @@ input[type="text"] {
 #addBtn {
   width: 100px;
   padding: 8px 15px;
+  margin-top: 20px;
   border: none;
   border-radius: 3px;
   background-color: #28a745;
