@@ -270,7 +270,19 @@ router.get(
 
     let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }}
+
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -280,6 +292,8 @@ router.get(
         res.render("admin/freeboard/admin_freeboard_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: adminLayout,
         });
       }
@@ -463,6 +477,7 @@ router.post(
   })
 );
 
+// qna 메인
 router.get(
   "/qna",
   asyncHandler(async (req, res) => {
@@ -471,7 +486,19 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
@@ -480,6 +507,8 @@ router.get(
         res.render("admin/qna/admin_qna_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: adminLayout,
         });
       }
