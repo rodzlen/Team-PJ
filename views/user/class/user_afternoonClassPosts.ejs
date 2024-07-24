@@ -12,7 +12,7 @@
       <h2>오후반 - 유저</h2>
     </div>
     <div class="search-form">
-      <form action="/admin/admin_afternoonClassPosts" method="GET">
+      <form action="/user/user_afternoonClassPosts" method="GET">
         <input type="text" name="search" placeholder="검색" />
         <button type="submit">검색</button>
       </form>
@@ -20,7 +20,7 @@
     <ul class="admin-posts">
       <% data.forEach(post => { %>
       <li>
-        <a href="/user/userdashboard/<%= post.id %>">
+        <a href="/user/class/userdashboard/<%= post.id %>">
           <%= post.pet_name %>
         </a>
       </li>

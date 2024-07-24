@@ -978,7 +978,7 @@ router.get("/user/class/user_alldayClassPosts", (req, res) => {
   });
 });
 
-router.get("/class/user_onedayClassPosts", (req, res) => {
+router.get("/user/class/user_onedayClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '일일'", (err, posts) => {
     if (err) {
       console.error(err);

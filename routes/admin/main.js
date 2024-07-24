@@ -567,7 +567,7 @@ router.get(
           );
       }
       const locals = { classReg: results[0] };
-      res.render("admin/application/admin_class_register_detail.ejs", {
+      res.render("admin/application/admin_class_register_detail", {
         locals,
         layout: adminLayout,
       });
@@ -774,7 +774,7 @@ router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res
       console.error(err);
       res.status(500).send("서버 오류가 발생했습니다.");
     } else {
-      res.render("admin/class/admin_class_list", {
+      res.render("admin/class/admin_classlist", {
         data: results,
         layout: adminLayout,
       });
