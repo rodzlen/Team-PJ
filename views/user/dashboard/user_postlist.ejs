@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>게시물 리스트 - 유저</title>
-    <link rel="stylesheet" href="/css/postlist.css" />
-  </head>
-  <body>
-    <div id="content">
-      <div class="search-form">
-        <form action="/dashboard/search" method="GET">
-          <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="검색어를 입력하세요"
-          />
-          <input type="submit" value="검색" class="btn" />
-        </form>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시물 리스트 - 유저</title>
+  <link rel="stylesheet" href="/css/postlist_style.css" />
+</head>
+
+<body>
+  <div id="postlist">
+    <div id="cover">
+      <form action="/dashboard/search" method="GET">
+        <input type="text" id="searchInput" name="keyword" placeholder="검색어를 입력하세요" />
+        <button type="submit">검색</button>
+      </form>
 
       <div class="class-container">
         <div class="class-box">
           <h3>오전 클래스</h3>
           <a href="/user/class/user_morningClassPosts">오전 클래스</a>
           <ul class="user-posts">
-            <% if (data.morning) { %> <% data.morning.forEach(post => { %>
-            <li>
-              <a href="/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
-            <% }) %> <% } %>
+            <% if (data.morning) { %>
+              <% data.morning.forEach(post=> { %>
+                <li>
+                  <a href="/userdashboard/<%= post.dog_id %>">
+                    <%= post.pet_name %>
+                  </a>
+                </li>
+                <% }) %>
+                  <% } %>
           </ul>
         </div>
 
@@ -40,13 +38,15 @@
           <a href="/user/class/user_afternoonClassPosts">오후 클래스</a>
 
           <ul class="user-posts">
-            <% if (data.afternoon) { %> <% data.afternoon.forEach(post => { %>
-            <li>
-              <a href="/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
-            <% }) %> <% } %>
+            <% if (data.afternoon) { %>
+              <% data.afternoon.forEach(post=> { %>
+                <li>
+                  <a href="/userdashboard/<%= post.dog_id %>">
+                    <%= post.pet_name %>
+                  </a>
+                </li>
+                <% }) %>
+                  <% } %>
           </ul>
         </div>
 
@@ -55,13 +55,15 @@
           <a href="/user/class/user_alldayClassPosts">종일 클래스</a>
 
           <ul class="user-posts">
-            <% if (data.allday) { %> <% data.allday.forEach(post => { %>
-            <li>
-              <a href="/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
-            <% }) %> <% } %>
+            <% if (data.allday) { %>
+              <% data.allday.forEach(post=> { %>
+                <li>
+                  <a href="/userdashboard/<%= post.dog_id %>">
+                    <%= post.pet_name %>
+                  </a>
+                </li>
+                <% }) %>
+                  <% } %>
           </ul>
         </div>
 
@@ -69,20 +71,23 @@
           <h3>일일 클래스</h3>
           <a href="/user/class/user_onedayClassPosts">일일 클래스</a>
           <ul class="admin-posts">
-            <% if (data.oneday) { %> <% data.oneday.forEach(post => { %>
-            <li>
-              <a href="/userdashboard/<%= post.dog_id %>">
-                <%= post.pet_name %>
-              </a>
-            </li>
-            <% }) %> <% } %>
+            <% if (data.oneday) { %>
+              <% data.oneday.forEach(post=> { %>
+                <li>
+                  <a href="/userdashboard/<%= post.dog_id %>">
+                    <%= post.pet_name %>
+                  </a>
+                </li>
+                <% }) %>
+                  <% } %>
           </ul>
         </div>
       </div>
     </div>
+  </div>
+  <script src="/js/main.js"></script>
+</body>
 
-    <script src="/js/main.js"></script>
-  </body>
 </html>
 
 <!-- views/user/dashboard/user_postlist.ejs -->

@@ -3,7 +3,7 @@
 
 <head>
   <title>직원 및 시설 소개</title>
-  <link rel="stylesheet" href="/css/admin_facilitiesFucntion_style.css">
+  <link rel="stylesheet" href="/css/facilitiesFucntion_style.css">
 </head>
 
 <body>
@@ -11,26 +11,27 @@
     <form id="form" action="/admin/adminstaffcreate" method="post" enctype="multipart/form-data">
       <h2>직원 생성</h2>
       <div id="cover">
-      <div class="in">
-        직원 이름 &nbsp;<input name="name" class="w-50 form-control text-center" type="text" />
+        <div class="in">
+          직원 이름 &nbsp;<input name="name" class="w-50 form-control text-center" type="text" />
+        </div>
+        <div class="in">
+          직원 직급 &nbsp;<input name="role" class="w-50 form-control text-center" type="text" />
+        </div>
+        <div class="in">
+          직원 경력 &nbsp;<input name="contact_info" class="w-50 form-control text-center" type="text" />
+        </div>
+        <div class="ln">
+          <label for="staff_photo">Upload Image:&nbsp;</label>
+          <input name="staff_photo" class="form-control-file" type="file" />
+        </div>
+        <div class="in">
+          <div id="btnBox">
+            <button id="addBtn" type="submit" class="btn btn-primary">글쓰기</button>
+            <button id="backBtn" type="button" class="btn btn-secondary"
+              onclick="location.href='/admin/adminFacilitiesMain'">뒤로가기</button>
+          </div>
+        </div>
       </div>
-      <div class="in">
-        직원 직급 &nbsp;<input name="role" class="w-50 form-control text-center" type="text" />
-      </div>
-      <div class="in">
-        직원 경력 &nbsp;<input name="contact_info" class="w-50 form-control text-center" type="text" />
-      </div>
-      <div class="ln">
-        <label for="staff_photo">Upload Image:&nbsp;</label>
-        <input name="staff_photo" class="form-control-file" type="file" />
-      </div>
-      <div class="in">
-        <button id="addBtn" type="submit" class="btn btn-primary">글쓰기</button>
-      </div>
-      <div class="in">
-        <button id="addBtn" type="button" class="btn btn-secondary" onclick="location.href='/admin/adminFacilitiesMain'">뒤로가기</button>
-      </div>  
-    </div>
     </form>
   </div>
 </body>

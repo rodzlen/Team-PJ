@@ -1,0 +1,58 @@
+:root {
+  --brown: #dd8e55;
+  --yellow: #fbd663;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+#container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: var(--brown);
+  text-align: center;
+}
+
+h2 {
+  color: var(--brown);
+}
+
+.photo-section, .date-info-section {
+  margin-bottom: 20px;
+}
+
+.photo-section img, .date-info-section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#infoDisplay {
+  margin-top: 10px;
+}
+
+#infoDisplay p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+#infoDisplay p:last-child {
+  margin-bottom: 0;
+}
+
+/* 추가적으로 필요한 스타일링이 있으면 여기에 추가하세요 */

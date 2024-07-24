@@ -4,23 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>게시물 리스트 - 관리자</title>
-    <link rel="stylesheet" href="/css/postlist.css" />
+    <link rel="stylesheet" href="/css/adminClassPosts_style.css" />
   </head>
   <body>
-    <div id="content">
-      <div class="admin-title">
-        <h2>오전반 - 관리자</h2>
-        <a href="/admin/admin_dashboard" class="new-post-button">
-          새 게시물 추가
-        </a>
-      </div>
+    <div id="postlist">
+      <div id="cover">
+          <div class="class-box">
+            <h3>오전 클래스</h3>
+            <a href="/admin/class/admin_morningClassPosts">오전 클래스</a>
+            <ul class="admin-posts">
+              <% if (data.morning) { %> 
+                <% data.morning.forEach(post => { %>
+                  <li>
+                    <div class="post-title">
+                      <a href="/user/userdashboard/<%= post.dog_id %>">
+                        <%= post.pet_name %>
+                      </a>
+                    </div>
+                    <br />
+                  </li>
+                <% }) %> 
+              <% } %>
+            </ul>
+          </div>
 
-      <div class="search-form">
-        <form action="/admin/admin_afternoonClassPosts" method="GET">
-          <input type="text" name="search" placeholder="검색" />
-          <button type="submit">검색</button>
-        </form>
-      </div>
+          <div class="class-box">
+            <h3>오후 클래스</h3>
+            <a href="/admin/class/admin_afternoonClassPosts">오후 클래스</a>
+            <ul class="admin-posts">
+              <% if (data.afternoon) { %> 
+                <% data.afternoon.forEach(post => { %>
+                  <li>
+                    <div class="post-title">
+                      <a href="/user/userdashboard/<%= post.dog_id %>">
+                        <%= post.pet_name %>
+                      </a>
+                    </div>
+                    <br />
+                  </li>
+                <% }) %> 
+              <% } %>
+            </ul>
+          </div>
 
       <table>
         <thead>
@@ -40,6 +65,7 @@
               <td><%= post.pet_name %></td>
               <td><%= post.owner_name %></td>
               <td>
+                <!-- 날짜 형식 변환 및 기본값 설정 -->
                 <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
                 <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
               </td>
@@ -57,4 +83,3 @@
     <script src="/js/main.js"></script>
   </body>
 </html>
-

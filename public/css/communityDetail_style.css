@@ -1,0 +1,112 @@
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+}
+#detail {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+#detail a {
+    color: #000;
+}
+
+#cover {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    font-size: 18px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+#btnBox {
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px 0px;
+}
+
+#editBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+}
+
+#editBtn:hover {
+    background-color: #218838;
+}
+
+#backBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#backBtn:hover {
+    background-color: #0056b3;
+}
+
+
+#delBtn {
+    width: 100px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #fa5329;
+    color: #fff;
+    cursor: pointer;
+}
+
+#delBtn:hover {
+    background-color: #d6431f;
+}
+
+/* qna 전용 */
+#answer {
+    width: 80%;
+    display: flex;
+    align-items: center;
+}
+
+#bBox {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
