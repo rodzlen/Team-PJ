@@ -13,8 +13,6 @@ CREATE TABLE Admin (
     admin_phone VARCHAR(20) NOT NULL
 );
 
-ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
-
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
@@ -35,7 +33,6 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
-ALTER TABLE USers change user_pw user_pw VARCHAR(255);
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),

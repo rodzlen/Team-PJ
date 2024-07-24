@@ -20,17 +20,13 @@
 
       <!-- 날짜 선택 및 정보 표시 -->
       <div class="date-info-section">
-        <h2>날짜 정보</h2>
-        <form action="/admin/getinfo" method="POST">
-          <label for="selectedDate">날짜 선택:</label>
-          <input type="date" id="selectedDate" name="selectedDate" required />
-          <button type="submit">조회</button>
-        </form>
+        <h2><%= data.pet_name %></h2>
         <div id="infoDisplay">
           <!-- 날짜별 정보 표시 -->
-          <% if (data.walk_date) { %>
+          <p>작성 날짜: <%= data.walk_date %></p>
           <p>강아지 이름: <%= data.pet_name %></p>
-          <p>산책 시간: <%= data.walk_time %></p>
+          <p>산책 시작 시간: <%= data.walk_starttime %></p>
+          <p>산책 끝 시간: <%= data.walk_endtime %></p>
           <img src="/img/<%= data.walk_photo %>" alt="오늘의 산책 사진" />
           <p>수업 시간: <%= data.class_info %></p>
           <p>담당자 이름: <%= data.teacher %></p>
@@ -41,8 +37,6 @@
           <% } else{ %>
           <p>급식 신청: 아니오</p>
 
-          <% } %> <% } else { %>
-          <p>선택된 날짜의 정보가 없습니다.</p>
           <% } %>
         </div>
       </div>

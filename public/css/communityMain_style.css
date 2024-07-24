@@ -11,14 +11,14 @@ body {
     /*가로축 스크롤 제거*/
 }
 
-#freeboard {
+#community {
     width: 100%;
     display: flex;
     justify-content: center;
     padding: 20px 0px;
 }
 
-#freeboard a {
+#community a {
     color: #000; 
     text-decoration: none; 
 }
