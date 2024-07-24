@@ -9,15 +9,16 @@
   <body>
     <div id="content">
       <div class="admin-title">
-        <h2>오전반 - 관리자</h2>
+        <h2>오전반 - 유저</h2>
       </div>
 
       <div class="search-form">
-        <form action="/admin/admin_morningClassPosts" method="GET">
-          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+        <form action="/admin/admin_afternoonClassPosts" method="GET">
+          <input type="text" name="search" placeholder="검색" />
           <button type="submit">검색</button>
         </form>
       </div>
+      
       <ul class="admin-posts">
         <% data.forEach(post => { %>
         <li>

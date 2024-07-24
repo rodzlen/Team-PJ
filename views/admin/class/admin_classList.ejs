@@ -27,6 +27,7 @@
             <thead>
                 <tr>
                     <th>번호</th>
+<<<<<<< HEAD:views/admin/class/admin_class_list.ejs
                     <th>견주이름</th>
                     <th>강아지 이름</th>
                     <th>수업</th>
@@ -34,12 +35,20 @@
                     <th>종료 날짜</th>
                     <th>신청일</th>
                     <th>상세 보기</th>
+=======
+                    <th>신청자</th>
+                    <th>강아지 이름</th>
+                    <th>신청 상태</th>
+                    <th>등록일</th>
+                    <th>수업 신청 상세 보기</th>
+>>>>>>> 72a8dcfa270ac5076a098fe753d9c8a6ab44e6b1:views/admin/class/admin_classList.ejs
                 </tr>
             </thead>
             <tbody>
                 <% if (data.length) { %>
                     <% data.forEach((data) => { %>
                     <tr>
+<<<<<<< HEAD:views/admin/class/admin_class_list.ejs
                         <td><%= data.id %></td>
                         <td><%= data.owner_name %></td>
                         <td><%= data.pet_name %></td>
@@ -48,6 +57,14 @@
                         <td><%= new Date(data.end_date).toISOString().split('T')[0] %></td>
                         <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
                         <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
+=======
+                        <td><%= attendance.id %></td>
+                        <td><%= attendance.owner_name %></td>
+                        <td><%= attendance.pet_name %></td>
+                        <td><%= attendance.status %></td>
+                        <td><%= new Date(attendance.created_at).toISOString().split('T')[0] %></td>
+                        <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">수업 신청 상세 보기</a></td>
+>>>>>>> 72a8dcfa270ac5076a098fe753d9c8a6ab44e6b1:views/admin/class/admin_classList.ejs
                     </tr>
                 </thead>
                 <tbody>
@@ -92,5 +109,11 @@
     </div>
     </div>
 </body>
+<<<<<<< HEAD:views/admin/class/admin_class_list.ejs
 
 </html>
+=======
+</html>
+
+<!-- views/admin/class/admin_classList.ejs -->
+>>>>>>> 72a8dcfa270ac5076a098fe753d9c8a6ab44e6b1:views/admin/class/admin_classList.ejs

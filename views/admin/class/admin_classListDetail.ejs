@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= locals.title %></title>
+    <link rel="stylesheet" href="/css/user_class_register_style.css.css" />
+    <!-- CSS 파일 임포트 -->
+  </head>
+  <body>
+    <div class="Attendance-detail">
+      <h1><%= locals.title %></h1>
+      <table>
+        <tr>
+          <th>번호</th>
+          <td><%= attendance.id %></td>
+        </tr>
+        <tr>
+          <th>신청자</th>
+          <td><%= attendance.owner_name %></td>
+        </tr>
+        <tr>
+          <th>반려동물 이름</th>
+          <td><%= attendance.pet_name %></td>
+        </tr>
+        <tr>
+          <th>수업 이름</th>
+          <td><%= attendance.class_name %></td>
+        </tr>
+        <tr>
+          <th>급식 여부</th>
+          <td><%= attendance.feed_status ? '예' : '아니오' %></td>
+        </tr>
+        <tr>
+          <th>픽업 여부</th>
+          <td><%= attendance.pickup_status ? '예' : '아니오' %></td>
+        </tr>
+        <tr>
+          <th>시작 날짜</th>
+          <td><%= attendance.start_date.toISOString().split('T')[0] %></td>
+        </tr>
+        <tr>
+          <th>종료 날짜</th>
+          <td><%= attendance.end_date.toISOString().split('T')[0] %></td>
+        </tr>
+        <tr>
+          <th>상담 내용</th>
+          <td><%= attendance.consultation %></td>
+        </tr>
+        <tr>
+          <th>등록일</th>
+          <td><%= attendance.created_at.toISOString().split('T')[0] %></td>
+        </tr>
+      </table>
+
+      <a href="/admin/classAttendanceList">목록으로 돌아가기</a>
+    </div>
+  </body>
+</html>
+
+<!-- views/admin/class/admin_classListDetail.ejs -->
