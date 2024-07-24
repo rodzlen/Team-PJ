@@ -1472,7 +1472,7 @@ router.post("/dashboard/delete/:dog_id", (req, res) => {
 });
 
 // 직원소개 및 시설소개 모든 데이터
-
+// 직원소개 및 시설소개 모든 데이터
 router.get("/adminfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
@@ -1509,10 +1509,12 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
+
 // 시설 생성 페이지
 router.get("/adminfacilitiescreate", (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
 });
+
 // 시설 생성 처리
 router.post("/adminfacilitiescreate", upload.single("facility_photo"),
   (req, res) => {
@@ -1541,7 +1543,6 @@ router.post("/adminfacilitiescreate", upload.single("facility_photo"),
 );
 
 // 시설 수정 페이지
-
 router.get("/adminfacilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
@@ -1682,6 +1683,7 @@ router.post("/delete2", (req, res) => {
     }
   });
 });
+
 
 // 어드민 메인페이지
 router.get("/adminmainpage", (req, res) => {
