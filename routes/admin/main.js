@@ -1225,7 +1225,6 @@ router.get(
     const typeQuery = req.query.type || "";
     let query = "SELECT * FROM dogs";
     let queryParams = [];
-
     if (searchQuery) {
       if (typeQuery === "class_info") {
         query += " WHERE class_info LIKE ?";
@@ -1573,7 +1572,6 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
-
 // 시설 생성 페이지
 router.get("/adminfacilitiescreate", (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
@@ -1750,7 +1748,6 @@ router.post("/delete2", (req, res) => {
     }
   });
 });
-
 
 // 어드민 메인페이지
 router.get("/adminmainpage", (req, res) => {

@@ -64,6 +64,12 @@ input[type="text"] {
   padding: 10px 5px;
 }
 
+#btnBox {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 #addBtn {
   width: 100px;
   padding: 8px 15px;
@@ -78,7 +84,7 @@ input[type="text"] {
   background-color: #218838;
 }
 
-#editBtn {
+#editBtn, #backBtn {
   width: 100px;
   padding: 8px 15px;
   border: none;
@@ -88,7 +94,7 @@ input[type="text"] {
   cursor: pointer;
 }
 
-#editBtn:hover {
+#editBtn:hover, #backBtn:hover {
   background-color: #0056b3;
 }
 

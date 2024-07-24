@@ -22,16 +22,15 @@
         <h3>공지사항</h3>
         <div class="main-content">
             <form action="/notice" method="GET">
-                <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+                <input type="text" name="search" placeholder="검색">
                 <select name="type">
-                    <option value="title" <%= typeQuery === 'title' ? 'selected' : '' %>>제목</option>
-          <option value="createBy" <%= typeQuery === 'createBy' ? 'selected' : '' %>>작성자</option>
-          <option value="title||createBy" <%= typeQuery === 'title||createBy' ? 'selected' : '' %>>제목+작성자</option>
+                    <option value="title">제목</option>
+                    <option value="createBy">작성자</option>
+                    <option value="title||createBy" default="default">제목+작성자</option>
                 </select>
                 <button type="submit">검색</button>
             </form>
-    
-           
+
             <table>
                 <thead>
                     <tr>
@@ -45,7 +44,7 @@
                     <% data.forEach(function(e1,index){ %>
                         <tr>
                             <td>
-                                <%= index +1 %> 
+                                <%=index +1 %>
                             </td>
                             <td class="notice-title"><a href="/notice/<%= e1.id %>">
                                     <%= e1.title %>

@@ -935,7 +935,7 @@ router.get(
 );
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
-router.get("/class/user_postlist", (req, res) => {
+router.get("/user_postlist", (req, res) => {
   db.query("SELECT * FROM Dogs", (err, posts) => {
     if (err) {
       console.error(err);

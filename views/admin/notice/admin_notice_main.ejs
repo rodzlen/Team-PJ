@@ -22,17 +22,15 @@
     <!-- 메인 콘텐츠 -->
     <div class="main-content">
         <!-- 검색 폼 -->
-
- <form action="/admin/notice" method="GET">
-            <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
-            <select name="type">
-                <option value="title" <%= typeQuery === 'title' ? 'selected' : '' %>>제목</option>
-      <option value="createBy" <%= typeQuery === 'createBy' ? 'selected' : '' %>>작성자</option>
-      <option value="title||createBy" <%= typeQuery === 'title||createBy' ? 'selected' : '' %>>제목+작성자</option>
-            </select>
-            <button type="submit">검색</button>
+        <form action="/admin/notice" method="GET">
+                <input type="text" name="search" placeholder="검색">
+                <select name="type">
+                    <option value="title">제목</option>
+                    <option value="createBy">작성자</option>
+                    <option value="title||createBy" default="default">제목+작성자</option>
+                </select>
+                <button type="submit">검색</button>
         </form>
-
 
         <!-- 공지사항 목록 테이블 -->
         <table>
@@ -50,7 +48,7 @@
                     <td><%=index +1 %></td>
                     <td class="notice-title"><a href="/admin/notice/detail/<%= e1.id %>"><%= e1.title %></a></td>
                     <td><%= e1.createBy %></td>
-                    <td><%= e1.post_date.toISOString().split('T')[0] %></td>
+                    <td><%= e1.post_date %></td>
                 </tr>
                 <% }) %>
             </tbody>
