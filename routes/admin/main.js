@@ -543,7 +543,7 @@ router.post("/qna/delete/:id", checkAdminLogin, async (req, res) => {
   }
 });
 
-// 수업 신청 수정 페이지
+// 수업 신청 상세 페이지
 router.get(
   "/classRegList/detail/:id",
   checkAdminLogin,
@@ -567,7 +567,7 @@ router.get(
             '<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin/classRegList";</script>'
           );
       }
-      const locals = { registration: results[0] };
+      const locals = { classReg: results[0] };
       res.render("admin/application/admin_class_register_detail.ejs", {
         locals,
         layout: adminLayout,
@@ -581,7 +581,7 @@ router.post("/classreg/apply/:id", checkAdminLogin, (req, res) => {
 
   // 신청서 승인
   const updateQuery =
-    'UPDATE ClassRegistration SET status = "approved", admin_id = ? WHERE id = ?';
+    'UPDATE ClassRegistration SET status = "승인됨", admin_id = ? WHERE id = ?';
   db.query(updateQuery, [req.session.admin.id, id], (err) => {
     if (err) {
       console.error("Database error:", err);
@@ -629,12 +629,12 @@ router.post("/classreg/apply/:id", checkAdminLogin, (req, res) => {
             return res
               .status(500)
               .send(
-                '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreg/list";</script>'
+                '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreglist";</script>'
               );
           }
 
           res.send(
-            '<script>alert("신청이 승인되고 수강 정보가 등록되었습니다!"); window.location.href="/admin/classreg/list";</script>'
+            '<script>alert("신청이 승인되고 수강 정보가 등록되었습니다!"); window.location.href="/admin/classreglist";</script>'
           );
         }
       );
@@ -668,7 +668,7 @@ router.get(
   "/classRegList",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const { search = "", type = "no||createBy" } = req.query;
+    const { search = "", type = "no||owner_name" } = req.query;
 
     let query = "SELECT * FROM ClassRegistration";
     let queryParams = [];
@@ -677,10 +677,10 @@ router.get(
       if (type === "no") {
         query += " WHERE id LIKE ?";
         queryParams.push(`%${search}%`);
-      } else if (type === "createBy") {
+      } else if (type === "owner_name") {
         query += " WHERE owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`);
-      } else if (type === "no||createBy") {
+      } else if (type === "no||owner_name") {
         query += " WHERE id LIKE ? OR owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`, `%${search}%`);
       }
@@ -700,6 +700,7 @@ router.get(
     });
   })
 );
+
 
 // 수업 신청 수정 처리
 router.post(
@@ -749,6 +750,62 @@ router.post(
     );
   })
 );
+
+//수업 수강정보
+
+router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { search = '', type = 'no' } = req.query;
+
+  let query = 'SELECT * FROM ClassAttendance';
+  let queryParams = [];
+
+  if (search) {
+    if (type === 'no') {
+      query += ' WHERE id LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (type === 'owner_name') {
+      query += ' WHERE owner_name LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (type === 'no||owner_name') {
+      query += ' WHERE id LIKE ? OR owner_name LIKE ?';
+      queryParams.push(`%${search}%`, `%${search}%`);
+    }
+  }
+
+  try {
+    const [attendances] = await db.query(query, queryParams);
+    console.log('Attendances:', attendances);  // 데이터 구조 확인
+    const locals = { 
+      title: '수업 수강정보 목록', 
+      classAttendances: Array.isArray(attendances) ? attendances : []  // 배열로 보장
+    };
+    res.render('admin/class/admin_class_list', { locals, layout: adminLayout });
+  } catch (err) {
+    console.error('Database query error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}));
+
+
+
+// 수업수강정보 상세
+router.get('/classAttendance/detail/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [attendance] = await db.query('SELECT * FROM ClassAttendance WHERE id = ?', [id]);
+
+    if (attendance.length === 0) {
+      return res.status(404).send('수업 수강정보를 찾을 수 없습니다.');
+    }
+
+    const locals = { title: '수업 수강정보 상세', attendance: attendance[0] };
+    res.render('admin/class/admin_class_detail', { locals, layout: adminLayout });
+  } catch (err) {
+    console.error('Database query error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}));
 
 // 홈 페이지(관리자용)
 router.get(
@@ -1062,24 +1119,32 @@ router.get(
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
-
     let query = "SELECT * FROM dogs";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
-
+    let queryParams = [];
+    
+    if (searchQuery) {
+      if (typeQuery === "class_info") {
+        query += " WHERE class_info LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "pet_name") {
+        query += " WHERE pet_name LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "class_info||pet_name") {
+        query += " WHERE class_info LIKE ? OR pet_name LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+      return { query, queryParams };
+    }
     // 로그를 추가하여 쿼리와 파라미터를 확인
-    console.log("Final Query:", finalQuery);
+    console.log("Final Query:", query);
     console.log("Query Parameters:", queryParams);
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("admin/class/admin_postlist", { data: results });
+        res.render("admin/dashboard/admin_postlist", { data: results });
       }
     });
   })
@@ -1380,8 +1445,11 @@ router.get("/adminfacilitiesMain", (req, res) => {
     });
 });
 
-
-// 시설 생성
+// 시설 생성 페이지
+router.get("/adminfacilitiescreate", (req, res) => {
+  res.render("admin/facilities/admin_FacilitiesCreate");
+});
+// 시설 생성 처리
 router.post("/adminfacilitiescreate", upload.single("facility_photo"),
   (req, res) => {
     try {
@@ -1446,10 +1514,7 @@ router.post("/adminfacilitiesedit/:id",upload.single("facility_photo"),
   }
 );
 
-// 시설 생성 페이지
-router.get("/adminfacilitiescreate", (req, res) => {
-  res.render("admin/facilities/admin_FacilitiesCreate");
-});
+
 
 // 시설 정보 삭제 처리
 router.post("/delete", (req, res) => {

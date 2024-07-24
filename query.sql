@@ -13,8 +13,6 @@ CREATE TABLE Admin (
     admin_phone VARCHAR(20) NOT NULL
 );
 
-ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
-
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
@@ -35,8 +33,11 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
+<<<<<<< HEAD
 
 ALTER TABLE USers change user_pw user_pw VARCHAR(255);
+=======
+>>>>>>> e61b957b9819df5d990a03dafe9cc1025944a76c
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),
@@ -69,15 +70,14 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(user_name) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
-
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES Users(u_id),
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
 
@@ -179,23 +179,7 @@ CREATE TABLE Pets (
     FOREIGN KEY (u_id) REFERENCES Users(u_id)
 );
 
--- 수강신청 테이블
-CREATE TABLE ClassRegistration (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    owner_name VARCHAR(100) NOT NULL,
-    pet_name VARCHAR(100) NOT NULL,
-    class_name VARCHAR(100) NOT NULL,
-    feed_status BOOLEAN NOT NULL,
-    pickup_status BOOLEAN NOT NULL,
-    start_day DATE NOT NULL,
-    end_day DATE NOT NULL,
-    consultation TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    admin_id INT,
-    FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
-);
-
---수강목록 테이블 
+--수업 수강정보테이블
 CREATE TABLE ClassAttendance (
     id INT AUTO_INCREMENT PRIMARY KEY,
     registration_id INT,
@@ -209,4 +193,22 @@ CREATE TABLE ClassAttendance (
     consultation TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
+    FOREIGN KEY (class_name) REFERENCES Dogs(class_info) 
 );
+-- 수업 신청 테이블 생성
+CREATE TABLE ClassRegistration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    owner_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    consultation TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('대기중', '승인됨', '거부됨') DEFAULT '대기중',
+    admin_id INT, 
+    FOREIGN KEY (admin_id) REFERENCES Admin(a_id) 
+);
+

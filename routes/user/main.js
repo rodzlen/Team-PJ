@@ -577,8 +577,6 @@ router.post("/classregister", checkLogin, (req, res) => {
   );
 });
 
-module.exports = router;
-
 // 홈 페이지
 router.get(
   "/",
