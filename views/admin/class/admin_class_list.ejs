@@ -4,14 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= locals.title %>
-    </title>
+    <title><%= locals.title %></title>
     <!--<link rel="stylesheet" href="/css/">  CSS 파일 임포트 -->
 </head>
 
 <body>
-<div id="register">
+    <div id="register">
         <h3><%= locals.title %></h3>
         <div id="cover">
             <form action="/admin/classAttendanceList" method="GET">
@@ -23,73 +21,41 @@
                 </select>
                 <button type="submit">검색</button>
             </form>
-        <table>
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>견주이름</th>
-                    <th>강아지 이름</th>
-                    <th>수업</th>
-                    <th>시작 날짜</th>
-                    <th>종료 날짜</th>
-                    <th>신청일</th>
-                    <th>상세 보기</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (data.length) { %>
-                    <% data.forEach((data) => { %>
+            <table>
+                <thead>
                     <tr>
-                        <td><%= data.id %></td>
-                        <td><%= data.owner_name %></td>
-                        <td><%= data.pet_name %></td>
-                        <td><%= data.class_name %></td>
-                        <td><%= new Date(data.start_date).toISOString().split('T')[0] %></td>
-                        <td><%= new Date(data.end_date).toISOString().split('T')[0] %></td>
-                        <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
-                        <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
+                        <th>번호</th>
+                        <th>견주 이름</th>
+                        <th>강아지 이름</th>
+                        <th>수업</th>
+                        <th>시작 날짜</th>
+                        <th>종료 날짜</th>
+                        <th>신청일</th>
+                        <th>상세 보기</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (locals.classAttendances.length) { %>
-                        <% locals.classAttendances.forEach((attendance)=> { %>
+                    <% if (data.length) { %>
+                        <% data.forEach((data) => { %>
                             <tr>
-                                <td>
-                                    <%= attendance.id %>
-                                </td>
-                                <td>
-                                    <%= attendance.owner_name %>
-                                </td>
-                                <td>
-                                    <%= attendance.pet_name %>
-                                </td>
-                                <td>
-                                    <%= attendance.class_name %>
-                                </td>
-                                <td>
-                                    <%= new Date(attendance.start_date).toISOString().split('T')[0] %>
-                                </td>
-                                <td>
-                                    <%= new Date(attendance.end_date).toISOString().split('T')[0] %>
-                                </td>
-                                <td>
-                                    <%= attendance.status %>
-                                </td>
-                                <td>
-                                    <%= new Date(attendance.created_at).toISOString().split('T')[0] %>
-                                </td>
-                                <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">상세 보기</a></td>
+                                <td><%= data.id %></td>
+                                <td><%= data.owner_name %></td>
+                                <td><%= data.pet_name %></td>
+                                <td><%= data.class_name %></td>
+                                <td><%= new Date(data.start_date).toISOString().split('T')[0] %></td>
+                                <td><%= new Date(data.end_date).toISOString().split('T')[0] %></td>
+                                <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
+                                <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
                             </tr>
-                            <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="9">데이터가 없습니다.</td>
-                                    </tr>
-                                    <% } %>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="8">데이터가 없습니다.</td>
+                        </tr>
+                    <% } %>
                 </tbody>
             </table>
         </div>
-    </div>
     </div>
 </body>
 

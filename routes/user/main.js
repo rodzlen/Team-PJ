@@ -1031,7 +1031,7 @@ router.get("/class/user_morningClassPosts", (req, res) => {
     }
     res.render("user/class/user_morningClassPosts", {
       data: posts,
-      searchQuery: searchQuery,
+      searchQuery,
     });
   });
 });
