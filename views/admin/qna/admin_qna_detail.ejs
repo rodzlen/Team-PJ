@@ -14,12 +14,15 @@
   <p>작성자: <%= question.question_by %></p>
 
   <h3>답변</h3>
-  <% answers.forEach(function(answer) { %>
+  <%  answers.forEach(function(answer) { %>
       <div>
           <p><%= answer.answer %></p>
           <p>작성일: <%= answer.answer_date.toISOString().split('T')[0] %></p>
           <p>작성자: <%= answer.answered_by %></p>
       </div>
+      <form action="/admin/qna/delete/answer/<%= answer.answer_id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <button type="submit">답변 삭제</button>
+        </form>
   <% }) %>
 
   <% if (!answers.length) { %>
