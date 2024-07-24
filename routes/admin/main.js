@@ -1150,46 +1150,47 @@ router.get(
   })
 );
 
-// admin_afternoonClassPosts
+// 오후반 수업 게시물 리스트 조회
 router.get(
   "/admin_afternoonClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '오후'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("admin/class/admin_afternoonClassPosts", { data: results });
+        res.render("admin/class/admin_afternoonClassPosts", {
+          data: results,
+          searchQuery: searchQuery
+        });
       }
     });
   })
 );
-
 // admin_morningClassPosts
 router.get(
   "/admin_morningClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '오전'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
@@ -1205,16 +1206,15 @@ router.get(
   "/admin_alldayClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '종일'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
@@ -1230,16 +1230,15 @@ router.get(
   "/admin_onedayClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '일일'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");

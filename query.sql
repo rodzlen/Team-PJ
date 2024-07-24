@@ -65,7 +65,7 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_id INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
@@ -73,7 +73,7 @@ CREATE TABLE Dogs (
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES Users(u_id),
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
 
