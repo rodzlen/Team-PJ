@@ -35,6 +35,7 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
+
 ALTER TABLE USers change user_pw user_pw VARCHAR(255);
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
@@ -68,11 +69,11 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_id INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
-    teacher_id INT NOT NULL, -- staff(staff_id) 테이블 참조
+
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
