@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- FullCalendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
+
+    <link rel="stylesheet" href="/css/calendar_style.css">
+
+</head>
+<body>
+    <div id="priceTable">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">시간</th>
+                    <th scope="col">가격</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>오전</td>
+                    <td>#</td>
+                </tr>
+                <tr>
+                    <td>오후</td>
+                    <td>#</td>
+                </tr>
+                <tr>
+                    <td>종일</td>
+                    <td>#</td>
+                </tr>
+                <tr>
+                    <td>일일</td>
+                    <td>#</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <img src="/img/userCalendar.png" class="calendar-img">
+
+    <div id="calendarBox">
+        <div id="calendar"></div>
+    </div>
+
+    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">일정을 입력하세요.</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-form-label">일정 내용</label>
+                        <input type="text" class="form-control" id="calendar_content">
+                        <label class="col-form-label">날짜</label>
+                        <input type="date" class="form-control" id="calendar_date">
+                        <label class="col-form-label">시작 시간</label>
+                        <input type="time" class="form-control" id="calendar_start_time">
+                        <label class="col-form-label">종료 시간</label>
+                        <input type="time" class="form-control" id="calendar_end_time">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" id="addCalendar">추가</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            if (!calendarEl) {
+                console.error('Calendar element not found');
+                return;
+            }
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                timeZone: 'UTC',
+                initialView: 'dayGridMonth',
+                events: [],  // 이벤트 로드 필요 시 배열로 추가
+                headerToolbar: {
+                    // Hide the addEventButton by not including it in the headerToolbar
+                    // center: 'addEventButton'
+                },
+                customButtons: {
+                    addEventButton: {
+                        text: "일정 추가",
+                        click: function () {
+                            $("#calendarModal").modal("show");
+                        }
+                    }
+                },
+                editable: false,
+                displayEventTime: true,
+                displayEventEnd: true,
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false,
+                    hour12: false
+                },
+                eventContent: function (arg) {
+                    let startTime = arg.timeText.split(" - ")[0];
+                    let endTime = arg.timeText.split(" - ")[1];
+                    return {
+                        html: `<div class='fc-event-time'>${startTime} - ${endTime}</div>
+                               <div class='fc-event-title' title='${arg.event.title}'>${arg.event.title}</div>`
+                    };
+                },
+                eventClick: function(info) {
+                    if (confirm(`이벤트를 삭제하시겠습니까? "${info.event.title}"`)) {
+                        info.event.remove(); // 캘린더에서 이벤트 삭제
+                    }
+                }
+            });
+            calendar.render();
+        });
+    </script>
+</body>
+</html>

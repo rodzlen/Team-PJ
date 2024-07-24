@@ -1,0 +1,119 @@
+
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+}
+
+#priceTable {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#priceTable table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#priceTable th,
+#priceTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#priceTable th {
+    background-color: #f2f2f2;
+}
+
+#calendarBox {
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* FullCalendar */
+/*#calendar {
+    font-family: Arial, sans-serif !important;
+    font-size: 14px !important;
+    max-width: 100% !important;
+    margin: auto !important;
+    height: 600px; /* 명시적으로 높이 설정 */
+/*}
+
+/* Modal */
+.modal-content {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background-color: var(--yellow);
+    color: #fff;
+    border-bottom: none;
+}
+
+.modal-title {
+    color: #333;
+    font-weight: bold;
+}
+
+.modal-body .form-group {
+    margin-bottom: 15px;
+}
+
+.modal-body .form-control {
+    width: calc(100% - 20px); /* 입력 필드 너비 설정 */
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-footer .btn {
+    padding: 8px 20px;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.modal-footer .btn-warning {
+    background-color: var(--yellow);
+    border: 2px solid var(--yellow);
+    color: #fff;
+}
+
+.modal-footer .btn-warning:hover {
+    background-color: #fff;
+    color: var(--yellow);
+}
+
+.modal-footer .btn-secondary {
+    background-color: #ccc;
+    border: none;
+    color: #333;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #999;
+    color: #fff;
+}
+
+.calendar-img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

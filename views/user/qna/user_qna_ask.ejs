@@ -1,0 +1,26 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/communityFunction_style.css">
+</head>
+<body>
+  <div id="add">
+  <h3><%= locals.title %></h3>
+  <div id="cover">
+      <form action="/qna/ask" method="POST">
+    <!-- <input type="hidden" name="user_id" value="">  session 구현시 추가 -->
+      <div>
+          <input type="text" id="title" name="title" placeholder="제목" required>
+      </div>
+      <div>
+          <textarea id="content" name="content" placeholder="내용" required></textarea>
+      </div>
+      <div id="btnBox">
+      <button id="addBtn" type="submit">제출</button>
+      <button id="backBtn" onclick= 'location.href="/qna"'>뒤로가기</button>
+    </div>
+  </form>
+</div>
+</div>
+</body>

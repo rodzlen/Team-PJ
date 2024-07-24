@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시물 리스트 - 관리자</title>
+    <link rel="stylesheet" href="/css/admin_postlist_style.css" /> 
+  </head>
+  <body>
+    <div id="postlist">
+      <div id="cover">
+
+      <div class="class-container">
+        <div class="class-box">
+          <h3>오전 클래스</h3>
+          <a href="/admin/class/admin_morningClassPosts">오전 클래스</a>
+          <ul class="admin-posts">
+            <% if (data.morning) { %> <% data.morning.forEach(post => { %>
+            <li>
+              <div class="post-title">
+                <a href="/user/userdashboard/<%= post.dog_id %>"
+                  ><%= post.pet_name %></a
+                >
+              </div>
+              <br />
+            </li>
+            <% }) %> <% } %>
+          </ul>
+        </div>
+
+        <div class="class-box">
+          <h3>오후 클래스</h3>
+          <a href="/admin/class/admin_afternoonClassPosts">오후 클래스</a>
+
+          <ul class="admin-posts">
+            <% if (data.afternoon) { %> <% data.afternoon.forEach(post => { %>
+            <li>
+              <div class="post-title">
+                <a href="/user/userdashboard/<%= post.dog_id %>"
+                  ><%= post.pet_name %></a
+                >
+              </div>
+              <br />
+            </li>
+            <% }) %> <% } %>
+          </ul>
+        </div>
+
+        <div class="class-box">
+          <h3>종일 클래스</h3>
+          <a href="/admin/class/admin_alldayClassPosts">종일 클래스</a>
+
+          <ul class="admin-posts">
+            <% if (data.allday) { %> <% data.allday.forEach(post => { %>
+            <div class="post-title">
+              <a href="/user/userdashboard/<%= post.dog_id %>"
+                ><%= post.pet_name %></a
+              >
+            </div>
+            <br />
+            <% }) %> <% } %>
+          </ul>
+        </div>
+
+        <div class="class-box">
+          <h3>일일 클래스</h3>
+          <a href="/admin/class/admin_onedayClassPosts">일일 클래스</a>
+          <ul class="admin-posts">
+            <% if (data.oneday) { %> <% data.oneday.forEach(post => { %>
+            <div class="post-title">
+              <a href="/user/userdashboard/<%= post.dog_id %>"
+                ><%= post.pet_name %></a
+              >
+            </div>
+            <br />
+            <% }) %> <% } %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
+
+<!-- views/admin/dashboard/admi_postlist.ejs -->

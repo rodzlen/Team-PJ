@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/user_mypagestyle.css">
+    <title>내 정보 수정</title>
+</head>
+<body>
+    <div id="react-root"></div>
+
+    <div id="userMyPage">
+        <h2>내 정보 수정</h2>
+        <form class="wrapBox" id="userForm" action="/users/mypage/update" method="post">  
+            <div id="coverU">
+                <fieldset id="userInfo">
+                    <legend>견주 정보</legend>
+                    <input type="text" name="user_id" id="user_id" placeholder="<%= locals.user.user_id %>" disabled><br>
+                    <input type="password" name="current_password" id="current_password" placeholder="기존 비밀번호" disabled><br>
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="변경할 비밀번호" required><br>
+                    <input type="text" name="user_name" id="user_name" placeholder="<%= locals.user.user_name %>" disabled><br>
+                    <input type="tel" name="user_phone" id="user_phone" placeholder="<%= locals.user.user_phone %>" required><br>
+                </fieldset>
+            </div>
+
+            <div id="coverD">
+                <fieldset id="dogInfo">
+                    <legend>대표 강아지 정보</legend><br>
+                    <input type="text" name="pet_name" id="pet_name" placeholder="<%= locals.user.pet_name %>" required><br>
+                    <div>
+                        강아지 성별
+                        <label>
+                            <input type="radio" name="sex" id="male" value="male" required>
+                            남
+                        </label>
+                        <label>
+                            <input type="radio" name="sex" id="female" value="female" required>
+                            여
+                        </label>
+                    </div><br>
+                    <div>
+                        중성화 여부
+                        <label>
+                            <input type="radio" name="neutering" id="yes" value="yes" required>
+                            예
+                        </label>
+                        <label>
+                            <input type="radio" name="neutering" id="no" value="no" required>
+                            아니오
+                        </label>
+                    </div><br>
+                    <div>
+                        <label>특이사항</label>
+                        <textarea name="peculiarity" id="peculiarity" placeholder="<%= locals.user.peculiarity %>"></textarea>
+                    </div><br>
+                    <div id="add">
+                        <button type="button" id="addBtn">+ 내 강아지 추가</button>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div id="btnBox">
+                <button type="submit">정보 수정</button>
+                <button type="button" id="withdrawBtn">회원 탈퇴</button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- 자바스크립트 파일 추가 -->
+    <script src="/js/user_mypage.js"></script>
+    <script>
+        // 페이지 로드 시 사용자 정보 불러오기
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('/users/mypage/info')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('user_id').value = data.user_id;
+                    document.getElementById('current_password').value = data.user_pw; // 왜 안돼 ㅠㅠ
+                    document.getElementById('user_name').value = data.user_name;
+                    document.getElementById('user_phone').value = data.user_phone;
+                    document.getElementById('pet_name').value = data.pet_name;
+
+                    // 강아지 성별 설정
+                    if (data.pet_gender === 'male') {
+                        document.getElementById('male').checked = true;
+                    } else if (data.pet_gender === 'female') {
+                        document.getElementById('female').checked = true;
+                    }
+
+                    // 중성화 여부 설정
+                    if (data.pet_neutering === 'yes') {
+                        document.getElementById('yes').checked = true;
+                    } else if (data.pet_neutering === 'no') {
+                        document.getElementById('no').checked = true;
+                    }
+
+                    document.getElementById('peculiarity').value = data.peculiarity;
+                })
+                .catch(error => {
+                    console.error('사용자 정보 불러오기 실패:', error);
+                    alert('사용자 정보를 불러오는 도중 오류가 발생했습니다.');
+                });
+        });
+
+        // 회원 탈퇴 버튼 클릭 시 처리
+        document.getElementById('withdrawBtn').addEventListener('click', () => {
+            if (confirm('정말로 회원 탈퇴하시겠습니까?')) {
+                fetch('/users/mypage/withdraw', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    window.location.href = '/'; // 회원 탈퇴 후 홈 페이지로 이동
+                })
+                .catch(error => {
+                    console.error('회원 탈퇴 요청 실패:', error);
+                    alert('회원 탈퇴 요청 중 오류가 발생했습니다.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

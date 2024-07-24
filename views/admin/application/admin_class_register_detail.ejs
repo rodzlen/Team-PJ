@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/user_class_register_style.css" />
+    <title>수업 신청 확인</title>
+</head>
+
+<body>
+    <div id="register">
+        <h1>수업 신청 확인</h1>
+        <div id="cover">
+            <form action="/admin/classreg/apply/<%= locals.classReg.id%>" method="post">
+                <input type="text" name="owner_name" value="<%= locals.classReg.owner_name %>" readonly><br>
+                <input type="text" name="pet_name" value="<%= locals.classReg.pet_name %>" readonly><br>
+                <label for="class_name">수업 종류</label>
+                <input type="text" name="class_name" value="<%= locals.classReg.class_name %>" readonly><br>
+                <label for="feed_status">급식 여부</label>
+                <input type="checkbox" name="feed_status" id="feed_status" <%= locals.classReg.feed_status ? 'checked' : '' %> disabled><br>
+                <label for="pickup_status">픽업 여부</label>
+                <input type="checkbox" name="pickup_status" id="pickup_status" <%= locals.classReg.pickup_status ? 'checked' : '' %> disabled><br>
+                <label for="start_date">시작 날짜</label>
+                <input type="date" name="start_date" value="<%= locals.classReg.start_date %>" readonly><br>
+                <label for="end_date">종료 날짜</label>
+                <input type="date" name="end_date" value="<%= locals.classReg.end_date %>" readonly><br>
+                <div id="btnBox">
+                    <button id="addBtn" type="submit">승인</button>
+                    <button id="backBtn" type="button" onclick="location.href='/admin/classRegList'">뒤로가기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
