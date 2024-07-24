@@ -14,7 +14,7 @@
       <!-- 강아지 사진 -->
       <div class="photo-section">
         <h2>강아지 사진</h2>
-        <img src="/public/img/<%= data.dog_photo %>" alt="강아지 사진" />
+        <img src="/img/<%= data.dog_photo %>" alt="Dog Photo" />
       </div>
       <hr />
 
@@ -31,10 +31,7 @@
           <% if (data.walk_date) { %>
           <p>강아지 이름: <%= data.pet_name %></p>
           <p>산책 시간: <%= data.walk_time %></p>
-          <img
-            src="/public/img/<%= data.walk_photo %>"
-            alt="오늘의 산책 사진"
-          />
+          <img src="/img/<%= data.walk_photo %>" alt="오늘의 산책 사진" />
           <p>수업 시간: <%= data.class_info %></p>
           <p>담당자 이름: <%= data.teacher %></p>
           <p>특이사항: <%= data.note_info %></p>

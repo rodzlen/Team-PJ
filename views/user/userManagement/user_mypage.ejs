@@ -15,10 +15,10 @@
             <div id="coverU">
                 <fieldset id="userInfo">
                     <legend>견주 정보</legend>
-                    <input type="text" name="user_id" id="user_id" placeholder="<%= locals.user.user_id %>" readonly><br>
-                    <input type="password" name="current_password" id="current_password" placeholder="기존 비밀번호" required><br>
-                    <input type="password" name="confirm_password" id="confirm_password" placeholder="기존 비밀번호 확인" required><br>
-                    <input type="text" name="user_name" id="user_name" placeholder="<%= locals.user.user_name %>" readonly><br>
+                    <input type="text" name="user_id" id="user_id" placeholder="<%= locals.user.user_id %>" disabled><br>
+                    <input type="password" name="current_password" id="current_password" placeholder="기존 비밀번호" disabled><br>
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="변경할 비밀번호" required><br>
+                    <input type="text" name="user_name" id="user_name" placeholder="<%= locals.user.user_name %>" disabled><br>
                     <input type="tel" name="user_phone" id="user_phone" placeholder="<%= locals.user.user_phone %>" required><br>
                 </fieldset>
             </div>
@@ -76,6 +76,7 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('user_id').value = data.user_id;
+                    document.getElementById('current_password').value = data.user_pw; // 왜 안돼 ㅠㅠ
                     document.getElementById('user_name').value = data.user_name;
                     document.getElementById('user_phone').value = data.user_phone;
                     document.getElementById('pet_name').value = data.pet_name;

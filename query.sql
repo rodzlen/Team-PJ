@@ -8,10 +8,13 @@ use kindergarten;
 CREATE TABLE Admin (
     a_id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id VARCHAR(50) NOT NULL,
-    admin_pw VARCHAR(50) NOT NULL,
+    admin_pw VARCHAR(255) NOT NULL,
     admin_name VARCHAR(50) NOT NULL,
     admin_phone VARCHAR(20) NOT NULL
 );
+
+ALTER TABLE admin change admin_pw admin_pw VARCHAR(255);
+
 
 INSERT INTO Admin (admin_id, admin_pw, admin_name, admin_phone)
 VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
@@ -24,7 +27,7 @@ VALUES ('admin1', 'password1', '관리자1', '010-1234-5678'),
 CREATE TABLE Users (
     u_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(50) NOT NULL,
-    user_pw VARCHAR(50) NOT NULL,
+    user_pw VARCHAR(255) NOT NULL,
     user_name VARCHAR(50) NOT NULL,
     user_phone VARCHAR(20) NOT NULL,
     pet_name VARCHAR(50) NOT NULL,
@@ -32,6 +35,7 @@ CREATE TABLE Users (
     pet_neutering VARCHAR(20),
     peculiarity VARCHAR(100)
 );
+ALTER TABLE USers change user_pw user_pw VARCHAR(255);
 
 INSERT INTO Users (user_id, user_pw, user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity)
 VALUES ('user1', 'userpw1', '사용자1', '010-1111-1111', '멍멍이', 'Male', 'Yes', '앞발에 작은 흰 반점'),
@@ -45,43 +49,19 @@ CREATE TABLE Facilities (
     id INT AUTO_INCREMENT PRIMARY KEY,
     facility_name VARCHAR(50) NOT NULL,
     main_facilities TEXT NOT NULL,
-<<<<<<< HEAD
     facility_photo BLOB
 );
-=======
-    photo BLOB
-);
-
-INSERT INTO Facilities (facility_name, main_facilities, photo)
-VALUES ('운동장', '배드민턴 코트, 농구장, 축구장', NULL),
-       ('미술실', '도자기, 수채화, 캔버스 그림', NULL),
-       ('도서실', '동화책, 교과서, 만화책', NULL),
-       ('식당', '급식장, 뷔페, 음료 자판기', NULL),
-       ('수영장', '풀장, 물놀이용 장난감, 수영복', NULL);
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 직원소개 테이블
 CREATE TABLE Staff (
     staff_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     role VARCHAR(50),
-<<<<<<< HEAD
     contact_info VARCHAR(40),
     staff_photo BLOB
 );
 
 
-=======
-    photo BLOB
-);
-
-INSERT INTO Staff (name, role, photo)
-VALUES ('김직원', '교사', NULL),
-       ('이직원', '교사', NULL),
-       ('박직원', '교사', NULL),
-       ('최직원', '보조교사', NULL),
-       ('정직원', '행정직원', NULL);
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 
 -- 강아지 테이블
 CREATE TABLE Dogs (
@@ -162,16 +142,6 @@ CREATE TABLE FreeBoard (
     image BLOB
 );
 
-<<<<<<< HEAD
-=======
-INSERT INTO FreeBoard (title, content, image)
-VALUES ('우리 아이의 성장기', '우리 아이가 요즘 무슨 모습을 보이나요? 공유해 주세요.', NULL),
-       ('오늘의 일기', '오늘 하루 어떤 일이 있었나요? 기록해 보세요.', NULL),
-       ('가정에서의 재미있는 시간', '가정에서 함께 즐길 수 있는 활동이나 추천하고 싶은 책이나 게임이 있나요?', NULL),
-       ('휴일 계획', '다가오는 주말에 무엇을 계획하고 계십니까? 공유해 주세요.', NULL),
-       ('식당 후기', '최근에 방문한 맛집 후기를 나누어 주세요.', NULL);
-
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
 -- 질문 테이블
 CREATE TABLE Questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -204,7 +174,6 @@ VALUES (1, '제가 추천하는 영어 교재는 ABC English Series입니다.', 
        (4, '급식의 단 맛을 줄이기 위해 과일을 다양하게 포함시키거나, 단맛을 감소시킬 수 있는 식자재를 추가하는 방법을 고려해 보세요.', '영양 전문가'),
        (5, '아이의 학교 불안을 해소하기 위해 아이와 소통하고 학교 환경을 긍정적으로 변화시키는 노력이 필요합니다.', '상담 전문가');
 
-<<<<<<< HEAD
 -- 펫 추가 테이블
 CREATE TABLE Pets (
     pet_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -216,27 +185,36 @@ CREATE TABLE Pets (
     FOREIGN KEY (u_id) REFERENCES Users(u_id)
 );
 
--- 수강신청 테이블
-CREATE TABLE ClassRegistration (
+--수업 수강정보테이블
+
+CREATE TABLE ClassAttendance (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    registration_id INT,
     owner_name VARCHAR(100) NOT NULL,
-    dog_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
     class_name VARCHAR(100) NOT NULL,
     feed_status BOOLEAN NOT NULL,
     pickup_status BOOLEAN NOT NULL,
-    start_day DATE NOT NULL,
-    end_day DATE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     consultation TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    admin_id INT,
-    FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
-<<<<<<< HEAD
+    FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
 );
-=======
+-- 수업 신청 테이블 생성
+CREATE TABLE ClassRegistration (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    owner_name VARCHAR(100) NOT NULL,
+    pet_name VARCHAR(100) NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    feed_status BOOLEAN NOT NULL,
+    pickup_status BOOLEAN NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    consultation TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('대기중', '승인됨', '거부됨') DEFAULT '대기중',
+    admin_id INT, 
+    FOREIGN KEY (admin_id) REFERENCES Admin(a_id) 
 );
 
---수강목록 테이블 
-=======
-commit;
->>>>>>> 7e1b50aa685d05733d149926fe20b4aeda4ac25c
->>>>>>> fe90f50597d7b1072b4b1b995403af6ba73c57ab
