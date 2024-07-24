@@ -4,6 +4,7 @@ const mainLayout = "../views/layouts/main.ejs";
 const userLayout = "../views/layouts/user";
 const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
+const mysql = require("mysql2/promise");
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
@@ -825,26 +826,42 @@ router.post(
   })
 );
 
-// 강아지 정보 유저 대시보드 라우트
-router.get("/dashboard/user_dashboard/:id", async (req, res) => {
-  const dog_id = req.params.id;
-  const query = "SELECT * FROM dogs WHERE dog_id = ?";
 
-  try {
-    const [rows] = await db.query(query, [dog_id]);
-    console.log("Query result:", rows); // 콘솔에서 쿼리 결과 확인
+// 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
+router.get(
+  "/dashboard/user_dashboard/:dog_id",
+  asyncHandler(async (req, res) => {
+    const postId = req.params.dog_id;
 
-    if (rows.length > 0) {
-      const dogData = rows[0];
-      res.render("user/dashboard/user_dashboard", { data: dogData });
-    } else {
-      res.status(404).send("해당 정보를 찾을 수 없습니다.");
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      port: db.config.port,
+      user: db.config.user,
+      password: db.config.password,
+      database: db.config.database,
+    });
+
+    try {
+      const [rows] = await connection.execute(
+        "SELECT * FROM dogs WHERE dog_id = ?",
+        [postId]
+      );
+
+      const post = rows[0];
+
+      if (!post) {
+        return res.status(404).send("강아지 정보를 찾을 수 없습니다.");
+      }
+
+      res.render("user/dashboard/user_dashboard", {
+        title: "강아지 정보 확인",
+        data: post, // 'data'로 전달
+      });
+    } finally {
+      await connection.end();
     }
-  } catch (err) {
-    console.error("Database query error:", err);
-    res.status(500).send("서버 오류가 발생했습니다.");
-  }
-});
+  })
+);
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
 router.get("/class/user_postlist", (req, res) => {

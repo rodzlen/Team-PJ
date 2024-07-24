@@ -5,14 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>직원 및 시설 소개</title>
-  <link rel="stylesheet" href="/css/admin_facilitiesCreate_style.css">
+  <link rel="stylesheet" href="/css/admin_facilitiesFucntion_style.css">
 </head>
 
 <body>
   <div id="create">
-    <form id="facilitiesedit" style="height: 100vh" class="container d-flex flex-column justify-content-center"
-      action="/admin/adminfacilitiescreate" method="post" enctype="multipart/form-data">
-      <h2 class="text-center">시설 생성</h2>
+    <form id="form" action="/admin/adminfacilitiescreate" method="post" enctype="multipart/form-data">
+      <h2>시설 생성</h2>
       <div id="cover">
         <div class="in">
           시설 이름 &nbsp; <input name="facility_name" type="text" />
@@ -21,7 +20,7 @@
           주요 시설 &nbsp; <input name="main_facilities" type="text" />
         </div>
         <div class="ln">
-          <label for="facility_photo">Upload Image:</label>
+          <label for="facility_photo">Upload Image: &nbsp;</label>
           <input name="facility_photo" type="file" />
         </div>
         <div class="in">

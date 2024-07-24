@@ -10,7 +10,7 @@
 
 <body>
     <div id="register">
-        <h1>수업 신청</h1>
+        <h3>수업 신청</h3>
         <div id="cover">
             <form action="/classregister" method="post">
                 <input type="text" name="owner_name" value="<%= locals.user.user_name %>" readonly><br>
@@ -21,10 +21,10 @@
                     <option value="오후">오후</option>
                     <option value="종일">종일</option>
                 </select><br>
-                <label for="feed_status">급식 여부</label>
-                <input type="checkbox" name="feed_status" id="feed_status"><br>
-                <label for="pickup_status">픽업 여부</label>
-                <input type="checkbox" name="pickup_status" id="pickup_status"><br>
+                <label for="feed_status">급식 여부
+                <input type="checkbox" name="feed_status" id="feed_status"></label><br>
+                <label for="pickup_status">픽업 여부
+                <input type="checkbox" name="pickup_status" id="pickup_status"></label><br>
                 <label for="start_date">시작 날짜</label>
                 <input type="date" name="start_date" id="start_date" required><br>
                 <label for="end_date">종료 날짜</label>

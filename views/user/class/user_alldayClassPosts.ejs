@@ -1,5 +1,3 @@
-<!-- views/dashboard/admin/adminpostlist.ejs -->
-
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -13,29 +11,26 @@
       <div class="admin-title">
         <h2>종일반 - 유저</h2>
       </div>
+
       <div class="search-form">
-        <form action="/dashboard/search" method="GET">
-          <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="검색어를 입력하세요"
-          />
+        <form action="/admin/admin_alldayClassPosts" method="GET">
+          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+          <button type="submit">검색</button>
+        </form>
           <input type="submit" value="검색" class="btn" />
         </form>
       </div>
       <ul class="admin-posts">
         <% data.forEach(post => { %>
         <li>
-            <a href="/user/userdashboard/<%= post._id %>">
-                <%=  post.pet_name %>
-            </a>
-            
+          <a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">
+            <%= post.pet_name %>
+          </a>
+
         </li>
         <% }) %>
       </ul>
 
-      
     <script src="/js/main.js"></script>
   </body>
 </html>
