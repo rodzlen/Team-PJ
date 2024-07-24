@@ -9,42 +9,40 @@
 <body>
     <div class="Attendance-box">
         <h3><%= locals.title %></h3>
-        <form action="/admin/classAttendanceList" method="GET">
-            <input type="text" name="search" placeholder="검색" value="<%= locals.search || '' %>">
-            <select name="type">
-                <option value="no" <% if (locals.type === 'no') { %> selected <% } %>>번호</option>
-                <option value="owner_name" <% if (locals.type === 'owner_name') { %> selected <% } %>>신청자</option>
-                <option value="no||owner_name" <% if (locals.type === 'no||owner_name') { %> selected <% } %>>번호+신청자</option>
-            </select>
-            <button type="submit">검색</button>
-        </form>
+            <form action="/admin/classAttendanceList" method="GET">
+                <input type="text" name="search" placeholder="검색">
+                <select name="type">
+                    <option value="pet_name">강아지 이름</option>
+                    <option value="owner_name">견주</option>
+                    <option value="pet_name||owner_name" selected>강아지 이름+견주</option>
+                </select>
+                <button type="submit">검색</button>
+            </form>
         <table>
             <thead>
                 <tr>
                     <th>번호</th>
-                    <th>신청자</th>
-                    <th>반려동물 이름</th>
-                    <th>수업 이름</th>
+                    <th>견주이름</th>
+                    <th>강아지 이름</th>
+                    <th>수업</th>
                     <th>시작 날짜</th>
                     <th>종료 날짜</th>
-                    <th>상태</th>
-                    <th>등록일</th>
+                    <th>신청일</th>
                     <th>상세 보기</th>
                 </tr>
             </thead>
             <tbody>
-                <% if (locals.classAttendances.length) { %>
-                    <% locals.classAttendances.forEach((attendance) => { %>
+                <% if (data.length) { %>
+                    <% data.forEach((data) => { %>
                     <tr>
-                        <td><%= attendance.id %></td>
-                        <td><%= attendance.owner_name %></td>
-                        <td><%= attendance.pet_name %></td>
-                        <td><%= attendance.class_name %></td>
-                        <td><%= new Date(attendance.start_date).toISOString().split('T')[0] %></td>
-                        <td><%= new Date(attendance.end_date).toISOString().split('T')[0] %></td>
-                        <td><%= attendance.status %></td>
-                        <td><%= new Date(attendance.created_at).toISOString().split('T')[0] %></td>
-                        <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">상세 보기</a></td>
+                        <td><%= data.id %></td>
+                        <td><%= data.owner_name %></td>
+                        <td><%= data.pet_name %></td>
+                        <td><%= data.class_name %></td>
+                        <td><%= new Date(data.start_date).toISOString().split('T')[0] %></td>
+                        <td><%= new Date(data.end_date).toISOString().split('T')[0] %></td>
+                        <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
+                        <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
                     </tr>
                     <% }) %>
                 <% } else { %>
