@@ -750,7 +750,6 @@ router.post(
 );
 
 //수업 수강정보
-
 router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";
@@ -774,7 +773,7 @@ router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res
       console.error(err);
       res.status(500).send("서버 오류가 발생했습니다.");
     } else {
-      res.render("admin/class/admin_class_list", {
+      res.render("admin/class/admin_classlist", {
         data: results,
         layout: adminLayout,
       });
