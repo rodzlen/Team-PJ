@@ -28,15 +28,21 @@
     <h3><%= locals.title %></h3>
     <div class="main-content">
         <!-- 검색 폼 -->
+<<<<<<< HEAD
         <form action="/admin/freeboard" method="GET">
             <input type="text" name="search" placeholder="검색">
+=======
+        <form action="/freeboard" method="GET">
+            <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+>>>>>>> 20547747df7aba4dbfe1ff4dba8666f02a33607f
             <select name="type">
-                <option value="title">제목</option>
-                <option value="createBy">작성자</option>
-                <option value="title||createBy" selected>제목+작성자</option>
+                <option value="title" <%= typeQuery === 'title' ? 'selected' : '' %>>제목</option>
+      <option value="createBy" <%= typeQuery === 'createBy' ? 'selected' : '' %>>작성자</option>
+      <option value="title||createBy" <%= typeQuery === 'title||createBy' ? 'selected' : '' %>>제목+작성자</option>
             </select>
             <button type="submit">검색</button>
         </form>
+
 
         <!-- 게시글 목록 테이블 -->
         <table id="freeTable">
@@ -45,6 +51,7 @@
                     <th>번호</th>
                     <th>제목</th>
                     <th>작성일</th>
+                    <th>작성자</th>
                 </tr>
             </thead>
             <tbody>
@@ -53,6 +60,7 @@
                         <td><%= index + 1 %></td>
                         <td><a href="/admin/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
                         <td><%= FreeBoard.post_date.toISOString().split('T')[0] %></td>
+                        <td><%= FreeBoard.createBy %></td>
                     </tr>
                 <% }); %>
             </tbody>

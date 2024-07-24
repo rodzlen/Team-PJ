@@ -43,13 +43,25 @@ router.get(
   "/notice",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const locals = { user: req.session.user };
+    const locals = { admin: req.session.admin };
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
-    let query = "SELECT * FROM noticeBoard";
+    let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -58,7 +70,8 @@ router.get(
       } else {
         res.render("admin/notice/admin_notice_main", {
           locals,
-          data: results,
+          data: results,searchQuery, typeQuery,
+
           layout: adminLayout,
         });
       }

@@ -49,9 +49,23 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
-    let query = "SELECT * FROM noticeBoard";
+    let query = "SELECT * FROM noticeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
+
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -61,6 +75,8 @@ router.get(
         res.render("user/notice/user_notice_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
@@ -95,7 +111,6 @@ router.get(
   })
 );
 
-// 자유게시판 목록
 router.get(
   "/freeboard",
   asyncHandler(async (req, res) => {
@@ -105,7 +120,19 @@ router.get(
 
     let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -115,6 +142,8 @@ router.get(
         res.render("user/freeboard/user_freeboard_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
@@ -343,7 +372,7 @@ router.post(
   })
 );
 
-//qna 목록
+// qna 목록
 router.get(
   "/qna",
   asyncHandler(async (req, res) => {
@@ -353,7 +382,19 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE q.title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE q.title LIKE ? OR q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
@@ -362,6 +403,8 @@ router.get(
         res.render("user/qna/user_qna_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
