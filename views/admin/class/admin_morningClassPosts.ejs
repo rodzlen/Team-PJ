@@ -40,6 +40,7 @@
               <td><%= post.pet_name %></td>
               <td><%= post.owner_name %></td>
               <td>
+                <!-- 날짜 형식 변환 및 기본값 설정 -->
                 <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
                 <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
               </td>
