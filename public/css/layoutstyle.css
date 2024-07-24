@@ -13,6 +13,10 @@ body {
   /*가로축 스크롤 제거*/
 }
 
+#container{
+  min-height: 720px;
+}
+
 .single-day-regular {
   font-family: "Single Day", cursive;
   font-weight: 400;

@@ -19,7 +19,7 @@ body {
   padding: 20px 0px;
 }
 
-form {
+#form {
   width: 80%;
   max-width: 600px; /* 최대 너비 설정 */
   display: flex;
@@ -46,7 +46,7 @@ form {
   width: 100%;
   max-width: 500px; /* 최대 너비 설정 */
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
   margin-bottom: 20px;
 }
@@ -76,4 +76,32 @@ input[type="text"] {
 
 #addBtn:hover {
   background-color: #218838;
+}
+
+#editBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+#editBtn:hover {
+  background-color: #0056b3;
+}
+
+#delBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #fa5329;
+  color: #fff;
+  cursor: pointer;
+}
+
+#delBtn:hover {
+  background-color: #d6431f;
 }
