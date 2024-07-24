@@ -1,19 +1,33 @@
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/admin_notice_detail_style.css"> <!-- CSS 파일 임포트 -->
-  </head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= locals.title %>
+  </title>
+  <link rel="stylesheet" href="/css/communityDetail_style.css">
+</head>
 
+
+<body>
   <div id="detail">
-    <h3><%= data.title %></h3>
+    <h3>
+      <%= data.title %>
+    </h3>
     <div id="cover">
-    <p><%= data.content %></p>
-    <% if (data.image) { %>
+      <p>
+        <%= data.content %>
+      </p>
+      <% if (data.image) { %>
         <img src="/img/<%= data.image %>" alt="Uploaded Image">
         <% } %>
-    <p>작성일: <%= data.post_date %></p>
-    <p>작성자: <%= data.createBy %></p>
-    <button id="backBtn" onclick="location.href='/notice'">목록으로</button>
-</div>
-</div>
+          <p>작성일: <%= data.post_date %>
+          </p>
+          <p>작성자: <%= data.createBy %>
+          </p>
+          <button id="backBtn" onclick="location.href='/notice'">목록으로</button>
+    </div>
+  </div>
+</body>
+</html>
