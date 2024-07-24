@@ -52,7 +52,7 @@
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><a href="/admin/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
-                        <td><%= FreeBoard.post_date %></td>
+                        <td><%= FreeBoard.post_dateto.ISOString().split('T')[0] %></td>
                     </tr>
                 <% }); %>
             </tbody>

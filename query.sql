@@ -65,7 +65,7 @@ CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
     dog_photo BLOB,
     pet_name VARCHAR(15) NOT NULL, -- users(pet_name) 테이블 참조
-    owner_id INT NOT NULL, -- users(u_id) 테이블 참조
+    owner_name INT NOT NULL, -- users(u_id) 테이블 참조
     walk_date DATE NOT NULL,
     walk_time TIME NOT NULL,
     walk_photo BLOB,
@@ -73,9 +73,16 @@ CREATE TABLE Dogs (
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES Users(u_id),
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
     FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
 );
+
+INSERT INTO Dogs (dog_photo, pet_name, owner_id, walk_date, walk_time, walk_photo, teacher_id, class_info, note_info, feed)
+VALUES (NULL, '멍멍이', 1, '2024-07-23', '09:00:00', NULL, 1, '초보반', '오늘은 산책을 잘 함', true),
+       (NULL, '야옹이', 2, '2024-07-23', '10:30:00', NULL, 2, '중급반', '어제는 조금 신경질적이었음', true),
+       (NULL, '똥똥이', 3, '2024-07-23', '13:00:00', NULL, 3, '초보반', '오늘은 매우 잘 먹음', false),
+       (NULL, '키키', 4, '2024-07-23', '14:30:00', NULL, 4, '고급반', '오늘은 조금 물이 빠르게 마시지 않았음', true),
+       (NULL, '초코', 5, '2024-07-23', '16:00:00', NULL, 5, '초보반', '오늘은 소소한 반응이 있었음', false);
 
 -- 수업시간표 테이블 (오전)
 CREATE TABLE MorningClassSchedule (

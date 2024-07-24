@@ -13,13 +13,10 @@
       </div>
 
       <div class="search-form">
-        <form action="/dashboard/admin/search" method="GET">
-          <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="검색어를 입력하세요"
-          />
+        <form action="/admin/admin_alldayClassPosts" method="GET">
+          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+          <button type="submit">검색</button>
+        </form>
           <input type="submit" value="검색" class="btn" />
         </form>
       </div>

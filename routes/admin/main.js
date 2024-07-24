@@ -751,6 +751,7 @@ router.post(
 
 //수업 수강정보
 
+<<<<<<< HEAD
 router.get(
   "/classAttendanceList",
   checkAdminLogin,
@@ -772,6 +773,38 @@ router.get(
         queryParams.push(`%${search}%`, `%${search}%`);
       }
     }
+=======
+router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
+  const searchQuery = req.query.search || "";
+  const typeQuery = req.query.type || "";
+  let query = 'SELECT * FROM ClassAttendance';
+  let queryParams = [];
+
+  if (searchQuery) {
+    if (typeQuery === 'pet_name') {
+      query += ' WHERE pet_name LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (typeQuery === 'owner_name') {
+      query += ' WHERE owner_name LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (typeQuery === 'pet_name||owner_name') {
+      query += ' WHERE pet_name LIKE ? OR owner_name LIKE ?';
+      queryParams.push(`%${search}%`, `%${search}%`);
+    }
+  }
+  db.query(query, queryParams, (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("서버 오류가 발생했습니다.");
+    } else {
+      res.render("admin/class/admin_class_list", {
+        data: results,
+        layout: adminLayout,
+      });
+    }
+  });
+}))
+>>>>>>> a8b25cb3bb1a53ad7e91e00375d1fd2a7bcb99ea
 
     try {
       const [attendances] = await db.query(query, queryParams);
@@ -792,6 +825,7 @@ router.get(
 );
 
 // 수업수강정보 상세
+<<<<<<< HEAD
 router.get(
   "/classAttendance/detail/:id",
   checkAdminLogin,
@@ -819,6 +853,92 @@ router.get(
     }
   })
 );
+=======
+router.get('/classAttendance/detail/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const  id  = req.params.id;
+  const locals  = {title: "수업 수강정보 상세"  }
+
+
+  const query = "SELECT * FROM classattendance WHERE id = ?";
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("서버 오류가 발생했습니다.");
+    } else {
+      if (results.length > 0) {
+        res.render("admin/class/admin_class_list_detail", {
+          locals,
+          data: results[0],
+          layout: adminLayout,
+        });
+      } else {
+        res.status(404).send("게시글을 찾을 수 없습니다.");
+      }
+    }
+  });
+})
+);
+
+// 수업 수강정보 수정 페이지
+router.get('/classAttendance/edit/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const locals = { title: "수업 수강정보 수정" };
+
+  const query = "SELECT * FROM ClassAttendance WHERE id = ?";
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("서버 오류가 발생했습니다.");
+    } else {
+      if (results.length > 0) {
+        res.render("admin/class/admin_class_edit", {
+          locals,
+          data: results[0],
+          layout: adminLayout,
+        });
+      } else {
+        res.status(404).send("수업 수강정보를 찾을 수 없습니다.");
+      }
+    }
+  });
+}));
+
+// 수업 수강정보 수정 처리
+router.post('/classAttendance/edit/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date, consultation } = req.body;
+
+  const query = `
+    UPDATE ClassAttendance
+    SET owner_name = ?, pet_name = ?, class_name = ?, feed_status = ?, pickup_status = ?, start_date = ?, end_date = ?, consultation = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [owner_name, pet_name, class_name, feed_status, pickup_status, start_date, end_date, consultation, id], (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("서버 오류가 발생했습니다.");
+    } else {
+      res.redirect(`/admin/classAttendance/detail/${id}`);
+    }
+  });
+}));
+
+// 수업 수강정보 삭제 처리
+router.post('/classAttendance/delete/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const query = "DELETE FROM ClassAttendance WHERE id = ?";
+  db.query(query, [id], (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("서버 오류가 발생했습니다.");
+    } else {
+      res.redirect('/admin/classAttendanceList');
+    }
+  });
+}));
+>>>>>>> a8b25cb3bb1a53ad7e91e00375d1fd2a7bcb99ea
 
 // 홈 페이지(관리자용)
 router.get(
@@ -1166,37 +1286,40 @@ router.get(
   })
 );
 
-// admin_afternoonClassPosts
+// 오후반 수업 게시물 리스트 조회
 router.get(
   "/admin_afternoonClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '오후'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("admin/class/admin_afternoonClassPosts", { data: results });
+        res.render("admin/class/admin_afternoonClassPosts", {
+          data: results,
+          searchQuery: searchQuery
+        });
       }
     });
   })
 );
-
 // admin_morningClassPosts
 router.get(
   "/admin_morningClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
+<<<<<<< HEAD
     let query = `
       SELECT 
         d.dog_id, 
@@ -1218,6 +1341,15 @@ router.get(
 
     const queryParams = searchQuery ? [`%${searchQuery}%`] : [];
 
+=======
+    let query = "SELECT * FROM dogs WHERE class_info = '오전'";
+    const queryParams = [];
+
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+>>>>>>> a8b25cb3bb1a53ad7e91e00375d1fd2a7bcb99ea
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
@@ -1235,16 +1367,15 @@ router.get(
   "/admin_alldayClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '종일'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
@@ -1260,16 +1391,15 @@ router.get(
   "/admin_onedayClassPosts",
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
-    const typeQuery = req.query.type || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '일일'";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
+    const queryParams = [];
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    if (searchQuery) {
+      query += " AND pet_name LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    }
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");

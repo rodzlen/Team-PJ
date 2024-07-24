@@ -10,14 +10,14 @@
   <h1>QnA 상세</h1>
   <h2><%= question.title %></h2>
   <p><%= question.question %></p>
-  <p>작성일: <%= question.question_date %></p>
+  <p>작성일: <%= question.question_date.toISOString().split('T')[0] %></p>
   <p>작성자: <%= question.question_by %></p>
 
   <h3>답변</h3>
   <% answers.forEach(function(answer) { %>
       <div>
           <p><%= answer.answer %></p>
-          <p>작성일: <%= answer.answer_date %></p>
+          <p>작성일: <%= answer.answer_date.toISOString().split('T')[0] %></p>
           <p>작성자: <%= answer.answered_by %></p>
       </div>
   <% }) %>

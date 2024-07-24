@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="/css/facilitiesMain_style.css"> <!-- CSS 파일 임포트 -->
 </head>
+
 <body>
+    <div id="facilities">
         <h2>직원소개</h2>
         <div class="container">
             <div class="employee-container">
                 <table class="employee-table">
-                    <tr>        
-                        <% staff.forEach((employee, index) => { %>
+                    <tr>
+                        <% staff.forEach((employee, index)=> { %>
                             <td>
                                 <div class="employee-card">
-                                    <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait2.png';">
+                                    <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image"
+                                        onerror="this.onerror=null; this.src='/img/wait2.png';">
                                     <ul class="employee-info">
-                                        <li>이름: <%=employee.name %></li>
-                                        <li>직급: <%=employee.role %></li>
-                                        <li>경력: <%=employee.contact_info %></li>
+                                        <li>이름: <%=employee.name %>
+                                        </li>
+                                        <li>직급: <%=employee.role %>
+                                        </li>
+                                        <li>경력: <%=employee.contact_info %>
+                                        </li>
                                     </ul>
                                 </div>
                             </td>
-                            <% if ((index + 1) % 5 === 0) { %>
-                                </tr><tr>
-                            <% } %>
-                        <% }); %>
+                            <% if ((index + 1) % 5===0) { %>
+                    </tr>
+                    <tr>
+                        <% } %>
+                            <% }); %>
                     </tr>
                 </table>
             </div>
@@ -35,22 +44,28 @@
         <div class="container facility-container">
             <table class="facility-table">
                 <tr>
-                    <% facilities.forEach((facility, index) => { %>
+                    <% facilities.forEach((facility, index)=> { %>
                         <td>
-                            <div class="facility-card">     
-                                <img src="/img/<%=facilities.facility_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait.gif';">
+                            <div class="facility-card">
+                                <img src="/img/<%=facilities.facility_photo%>" alt="시설 사진" class="facility-image"
+                                    onerror="this.onerror=null; this.src='/img/wait.gif';">
                                 <ul class="facility-info">
-                                    <li>시설 이름: <%=facility.facility_name %></li>
-                                    <li>주요 시설: <%=facility.main_facilities %></li>
+                                    <li>시설 이름: <%=facility.facility_name %>
+                                    </li>
+                                    <li>주요 시설: <%=facility.main_facilities %>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
-                        <% if ((index + 1) % 3 === 0) { %>
-                            </tr><tr>
-                        <% } %>
-                    <% }); %>
+                        <% if ((index + 1) % 3===0) { %>
+                </tr>
+                <tr>
+                    <% } %>
+                        <% }); %>  
                 </tr>
             </table>
         </div>
-    </body>
-    </html>
+    </div>
+</body>
+
+</html>
