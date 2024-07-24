@@ -47,7 +47,7 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
-    let query = "SELECT * FROM freeboard";
+    let query = "SELECT * FROM noticeboard";
     let queryParams = [];
 
     if (searchQuery) {
