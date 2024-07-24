@@ -52,7 +52,9 @@
             </tr>
         </table>
         <a href="/admin/classAttendance/edit/<%= data.id %>">수정하기</a> 
-        <a href="/admin/classAttendance/delete/<%= data.id %>">삭제하기</a>
+        <form action="/admin/classAttendance/delete/<%= data.id %>" method="POST" style="display:inline;">
+            <button type="submit">삭제하기</button>
+        </form>
         <a href="/admin/classAttendanceList">목록으로</a>
     </div>
 </body>

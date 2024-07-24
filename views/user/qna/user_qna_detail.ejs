@@ -14,13 +14,13 @@
   <div id="detail">
     <h3>QnA 상세</h3>
     <div id="cover">
-      <h2>
+      <h4>
         <%= question.title %>
-      </h2>
+      </h4>
       <p>
         <%= question.question %>
       </p>
-      <p>작성일: <%= question.question_date %>
+      <p>작성일: <%= question.question_date.toISOString().split('T')[0] %>
       </p>
       <p>작성자: <%= question.question_by %>
       </p>
@@ -31,7 +31,7 @@
           <p>
             <%= answer.answer %>
           </p>
-          <p>작성일: <%= answer.answer_date %>
+          <p>작성일: <%= answer.answer_date.toISOString().split('T')[0] %>
           </p>
           <p>작성자: <%= answer.answered_by %>
           </p>
@@ -41,7 +41,8 @@
           <% if (!answers.length) { %>
             <p>아직 답변이 없습니다.</p>
             <% } %>
-              <button id="editBtn" onclick="location.href='/qna/edit/<%= question.question_id %>'">수정하기</button>
+
+              <button id="editBtn" onclick="location.href='/qna/edit/<%= question.question_id %>'">질문 수정하기</button>
     </div>
 
     <div id="btnBox">
@@ -50,7 +51,6 @@
         <button id="delBtn" type="submit">질문 삭제</button>
       </form>
     </div>
-
   </div>
 </body>
 

@@ -1,34 +1,29 @@
-<!-- views/dashboard/admin/adminpostlist.ejs -->
-
 <!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>게시물 리스트 - 관리자</title>
+    <title>게시물 리스트 - 유저</title>
     <link rel="stylesheet" href="/css/postlist.css" />
   </head>
   <body>
     <div id="content">
       <div class="admin-title">
-        <h2>일일권 - 관리자</h2>
-        <a href="/dashboard/admin/admindashboard" class="new-post-button">
-          새 게시물 추가
-        </a>
+        <h2>일일권 - 유저</h2>
       </div>
+
       <div class="search-form">
-        <form action="/admin/admin_onedayClassPosts" method="GET">
-          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+        <form action="/user/class/user_afternoonClassPosts" method="GET">
+          <input type="text" name="search" placeholder="검색" />
           <button type="submit">검색</button>
         </form>
       </div>
       <ul class="admin-posts">
         <% data.forEach(post => { %>
         <li>
-            <a href="/user/userdashboard/<%= post._id %>">
-                <%=  post.pet_name %>
-            </a>
-            
+          <a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">
+            <%= post.pet_name %>
+          </a>
         </li>
         <% }) %>
       </ul>

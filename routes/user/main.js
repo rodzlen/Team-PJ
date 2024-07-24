@@ -4,6 +4,7 @@ const mainLayout = "../views/layouts/main.ejs";
 const userLayout = "../views/layouts/user";
 const asyncHandler = require("express-async-handler");
 const db = require("../../config/db").db;
+const mysql = require("mysql2/promise");
 const upload = require("../../config/upload");
 const multer = require("multer");
 const session = require("express-session");
@@ -825,26 +826,70 @@ router.post(
   })
 );
 
-// 강아지 정보 유저 대시보드 라우트
-router.get("/dashboard/user_dashboard/:id", async (req, res) => {
-  const dog_id = req.params.id;
-  const query = "SELECT * FROM dogs WHERE dog_id = ?";
+// 회원 탈퇴 라우터
+router.post('/mypage/withdraw', checkLogin, asyncHandler(async (req, res) => {
+  const userId = req.session.user.user_id;
 
-  try {
-    const [rows] = await db.query(query, [dog_id]);
-    console.log("Query result:", rows); // 콘솔에서 쿼리 결과 확인
-
-    if (rows.length > 0) {
-      const dogData = rows[0];
-      res.render("user/dashboard/user_dashboard", { data: dogData });
-    } else {
-      res.status(404).send("해당 정보를 찾을 수 없습니다.");
-    }
-  } catch (err) {
-    console.error("Database query error:", err);
-    res.status(500).send("서버 오류가 발생했습니다.");
+  if (!userId) {
+    return res.status(400).json({ message: '사용자 정보가 유효하지 않습니다.' });
   }
-});
+
+  const query = 'DELETE FROM Users WHERE user_id = ?';
+  db.query(query, [userId], (err) => {
+    if (err) {
+      console.error('회원 탈퇴 중 오류 발생:', err);
+      return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    }
+
+    // 세션 파괴
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('세션 파괴 중 오류 발생:', err);
+        return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+      }
+
+      res.clearCookie('connect.sid'); // 세션 쿠키 제거
+      res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });
+    });
+  });
+}));
+
+
+// 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
+router.get(
+  "/dashboard/user_dashboard/:dog_id",
+  asyncHandler(async (req, res) => {
+    const postId = req.params.dog_id;
+
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      port: db.config.port,
+      user: db.config.user,
+      password: db.config.password,
+      database: db.config.database,
+    });
+
+    try {
+      const [rows] = await connection.execute(
+        "SELECT * FROM dogs WHERE dog_id = ?",
+        [postId]
+      );
+
+      const post = rows[0];
+
+      if (!post) {
+        return res.status(404).send("강아지 정보를 찾을 수 없습니다.");
+      }
+
+      res.render("user/dashboard/user_dashboard", {
+        title: "강아지 정보 확인",
+        data: post, // 'data'로 전달
+      });
+    } finally {
+      await connection.end();
+    }
+  })
+);
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
 router.get("/class/user_postlist", (req, res) => {
@@ -865,7 +910,44 @@ router.get("/search", (req, res) => {
 });
 
 // 게시물 클래스별 라우트
-router.get("/class/user_morningClassPosts", (req, res) => {
+router.get(
+  "/admin_morningClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+
+    let query = `
+    SELECT 
+      d.dog_id, 
+      d.pet_name, 
+      d.owner_name, 
+      c.start_date, 
+      c.end_date 
+    FROM 
+      dogs d
+    LEFT JOIN 
+      classregistration c ON d.pet_name = c.pet_name 
+    WHERE 
+      d.class_info = '오전'
+  `;
+
+    if (searchQuery) {
+      query += " AND d.pet_name LIKE ?";
+    }
+
+    const queryParams = searchQuery ? [`%${searchQuery}%`] : [];
+
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("user/class/admin_morningClassPosts", { data: results });
+      }
+    });
+  })
+);
+//게시물 클래스별 라우트
+router.get("/user/class/user_morningClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '오전'", (err, posts) => {
     if (err) {
       console.error(err);
@@ -874,20 +956,17 @@ router.get("/class/user_morningClassPosts", (req, res) => {
     res.render("user/class/user_morningClassPosts", { data: posts });
   });
 });
-
-router.get("/class/user_afternoonClassPosts", (req, res) => {
-  db.query("SELECT * FROM dogs WHERE class_info = '오후'", (err, posts) => {
+router.get("/user/class/user_afternoonClassPosts", (req, res) => {
+  db.query("SELECT * FROM Dogs WHERE class_info = '오후'", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("user/class/user_afternoonClassPosts", {
-      data: posts,
-    });
+    res.render("user/class/user_afternoonClassPosts", { data: posts });
   });
 });
 
-router.get("/class/user_alldayClassPosts", (req, res) => {
+router.get("/user/class/user_alldayClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
     if (err) {
       console.error(err);
@@ -899,7 +978,7 @@ router.get("/class/user_alldayClassPosts", (req, res) => {
   });
 });
 
-router.get("/class/user_onedayClassPosts", (req, res) => {
+router.get("/user/class/user_onedayClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '일일'", (err, posts) => {
     if (err) {
       console.error(err);
@@ -910,8 +989,10 @@ router.get("/class/user_onedayClassPosts", (req, res) => {
 });
 
 router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/user_Calendar");
+  const locals = {user:req.session.user};
+  res.render("user/calendar/user_Calendar", {locals, layout:mainLayout});
 });
+
 
 router.get("/mainpage", (req, res) => {
   res.render("mainpage");
@@ -921,6 +1002,7 @@ router.get("/mainpage", (req, res) => {
 router.get("/userfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
+  const locals = {user: req.session.user};
 
   const facilitiesPromise = new Promise((resolve, reject) => {
     db.query(facilitiesQuery, (err, result) => {
@@ -946,6 +1028,8 @@ router.get("/userfacilitiesMain", (req, res) => {
     .then(([facilitiesResult, staffResult]) => {
       res.render("user/facilities/user_FacilitiesMain", {
         // 경로 수정
+        locals,
+        layout : mainLayout,
         facilities: facilitiesResult,
         staff: staffResult,
       });

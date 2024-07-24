@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= locals.title %>
+    </title>
+    <!--<link rel="stylesheet" href="/css/">  CSS 파일 임포트 -->
+</head>
+
+<body>
+<div id="register">
+        <h3><%= locals.title %></h3>
+        <div id="cover">
+            <form action="/admin/classAttendanceList" method="GET">
+                <input type="text" name="search" placeholder="검색">
+                <select name="type">
+                    <option value="pet_name">강아지 이름</option>
+                    <option value="owner_name">견주</option>
+                    <option value="pet_name||owner_name" selected>강아지 이름+견주</option>
+                </select>
+                <button type="submit">검색</button>
+            </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>견주이름</th>
+                    <th>강아지 이름</th>
+                    <th>수업</th>
+                    <th>시작 날짜</th>
+                    <th>종료 날짜</th>
+                    <th>신청일</th>
+                    <th>상세 보기</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (data.length) { %>
+                    <% data.forEach((data) => { %>
+                    <tr>
+                        <td><%= data.id %></td>
+                        <td><%= data.owner_name %></td>
+                        <td><%= data.pet_name %></td>
+                        <td><%= data.class_name %></td>
+                        <td><%= new Date(data.start_date).toISOString().split('T')[0] %></td>
+                        <td><%= new Date(data.end_date).toISOString().split('T')[0] %></td>
+                        <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
+                        <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
+                    </tr>
+                </thead>
+                <tbody>
+                            <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="9">데이터가 없습니다.</td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
+
+<!-- views/admin/class/admin_classList.ejs -->

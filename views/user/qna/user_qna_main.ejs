@@ -55,7 +55,7 @@
                                 <%= question.question_by %>
                             </td>
                             <td>
-                                <%= question.question_date %>
+                                <%= question.question_date.toISOString().split('T')[0] %>
                             </td>
                         </tr>
                         <% }) %>
