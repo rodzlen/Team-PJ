@@ -22,9 +22,13 @@
                 <label for="pickup_status">픽업 여부</label>
                 <input type="checkbox" name="pickup_status" id="pickup_status" <%= locals.classReg.pickup_status ? 'checked' : '' %> disabled><br>
                 <label for="start_date">시작 날짜</label>
-                <input type="date" name="start_date" value="<%= locals.classReg.start_date %>" readonly><br>
+                <input type="date" name="start_date" value="<%= locals.classReg.start_date %>"required><br>
+                <label for="start_date1">신청한 시작날짜</label>
+                <p name="start_date1"><%= locals.classReg.start_date.toISOString().split('T')[0] %></p>
                 <label for="end_date">종료 날짜</label>
-                <input type="date" name="end_date" value="<%= locals.classReg.end_date %>" readonly><br>
+                <input type="date" name="end_date" value="<%= locals.classReg.end_date %>"required><br>
+                <label for="end_date1">신청한 종료날짜</label>
+                <p name="end_date1"><%= locals.classReg.end_date.toISOString().split('T')[0] %></p>
                 <div id="btnBox">
                     <button id="addBtn" type="submit">신청</button>
                     <button id="backBtn" type="button" onclick="location.href='/admin/classRegList'">뒤로가기</button>
