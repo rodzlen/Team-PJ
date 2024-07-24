@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>시설 수정/삭제</title>
+  <link rel="stylesheet" href="/css/admin_facilitiesFucntion_style.css">
 </head>
+
 <body>
-  <form
-    id="facilitiesedit"
-    style="height: 100vh"
-    class="container d-flex flex-column justify-content-center"
-    action="/admin/adminfacilitiesedit/<%=Data.id %>"
-    method="post"
-    enctype="multipart/form-data"
-  >
-    <h2 class="text-center">시설 수정/삭제</h2>
-    <input type="hidden" name="id" value="<%=Data.id %>">
-    <div class="d-flex justify-content-center">
-      시설 이름<input name="facility_name" class="w-50 form-control text-center" type="text" value="<%=Data.facility_name %>" />
-    </div>
-    <div class="d-flex justify-content-center">
-      주요 시설<input name="main_facilities" class="w-50 form-control text-center" type="text" value="<%=Data.main_facilities %>" />
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-      <label for="facility_photo">시설 사진:</label>
-      <input name="facility_photo" class="form-control-file" type="file" />
-    </div>
-    <input type="hidden" name="facility_photo" value="<%=Data.facility_photo %>">
-    <div class="text-center mt-3">
-      <button type="submit" class="btn btn-primary">수정하기</button>
-      <button type="submit" form="delete" class="btn btn-danger ml-3">삭제</button>
-    </div>
-  </form>
-  
-  <form id="delete" action="/admin/delete" method="post">
-    <input type="hidden" name="id" value="<%= Data.id %>">
-  </form>
+  <div id="create">
+    <form id="form" action="/admin/adminfacilitiesedit/<%=Data.id %>" method="post" enctype="multipart/form-data">
+      <h2>시설 수정/삭제</h2>
+      <div id="cover">
+        <input type="hidden" name="id" value="<%=Data.id %>">
+        <div class="in">
+          시설 이름 &nbsp;<input name="facility_name" class="w-50 form-control text-center" type="text"
+            value="<%=Data.facility_name %>" />
+        </div>
+        <div class="in">
+          주요 시설 &nbsp;<input name="main_facilities" class="w-50 form-control text-center" type="text"
+            value="<%=Data.main_facilities %>" />
+        </div>
+        <div class="ln">
+          <label for="facility_photo">시설 사진: &nbsp;</label>
+          <input name="facility_photo" class="form-control-file" type="file" />
+        </div>
+        <input type="hidden" name="facility_photo" value="<%=Data.facility_photo %>">
+        <div id="btnBox">
+          <button id="editBtn" type="submit" class="btn btn-primary">수정하기</button>
+          <button id="delBtn" type="submit" form="delete" class="btn btn-danger ml-3">삭제</button>
+        </div>
+    </form>
+
+    <form action="/admin/delete" method="post">
+      <input type="hidden" name="id" value="<%= Data.id %>">
+    </form>
+  </div>
+  </div>
 </body>
+
 </html>
