@@ -1500,6 +1500,7 @@ router.get("/adminfacilitiesMain", (req, res) => {
   Promise.all([facilitiesPromise, staffPromise])
     .then(([facilitiesResult, staffResult]) => {
       res.render("admin/facilities/admin_FacilitiesMain", {
+        layout : adminLayout,
         facilities: facilitiesResult,
         staff: staffResult,
       });
@@ -1693,7 +1694,7 @@ router.get("/adminmainpage", (req, res) => {
 
 
 router.get("/adminCalendar", (req, res) => {
-  res.render("admin/calendar/admin_Calendar");
+  res.render("admin/calendar/admin_Calendar",{layout:adminLayout});
 });
 
 module.exports = router;

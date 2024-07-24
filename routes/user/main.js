@@ -826,6 +826,34 @@ router.post(
   })
 );
 
+// 회원 탈퇴 라우터
+router.post('/mypage/withdraw', checkLogin, asyncHandler(async (req, res) => {
+  const userId = req.session.user.user_id;
+
+  if (!userId) {
+    return res.status(400).json({ message: '사용자 정보가 유효하지 않습니다.' });
+  }
+
+  const query = 'DELETE FROM Users WHERE user_id = ?';
+  db.query(query, [userId], (err) => {
+    if (err) {
+      console.error('회원 탈퇴 중 오류 발생:', err);
+      return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    }
+
+    // 세션 파괴
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('세션 파괴 중 오류 발생:', err);
+        return res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+      }
+
+      res.clearCookie('connect.sid'); // 세션 쿠키 제거
+      res.status(200).json({ message: '회원 탈퇴가 완료되었습니다.' });
+    });
+  });
+}));
+
 
 // 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
 router.get(
@@ -927,7 +955,8 @@ router.get("/class/user_onedayClassPosts", (req, res) => {
 });
 
 router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/user_Calendar");
+  const locals = {user:req.session.user};
+  res.render("user/calendar/user_Calendar", {locals, layout:mainLayout});
 });
 
 
@@ -939,6 +968,7 @@ router.get("/mainpage", (req, res) => {
 router.get("/userfacilitiesMain", (req, res) => {
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
+  const locals = {user: req.session.user};
 
   const facilitiesPromise = new Promise((resolve, reject) => {
     db.query(facilitiesQuery, (err, result) => {
@@ -964,6 +994,8 @@ router.get("/userfacilitiesMain", (req, res) => {
     .then(([facilitiesResult, staffResult]) => {
       res.render("user/facilities/user_FacilitiesMain", {
         // 경로 수정
+        locals,
+        layout : mainLayout,
         facilities: facilitiesResult,
         staff: staffResult,
       });
