@@ -14,8 +14,6 @@
     <div id="btnBox">
     <button id="backBtn" onclick="location.href='/admin/notice'">목록으로</button>
     <button id="editBtn" onclick="location.href='/admin/notice/edit/<%= data.id%>'">수정</button>
-    <!-- <a href='/admin/notice'>목록으로</a><br>
-    <a href="/admin/notice/edit/<%= data.id%>">수정</a><br> -->
     <form action="/admin/notice/delete/<%= data.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
         <button id="delBtn" type="submit">삭제</button>
       </div>
