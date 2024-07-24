@@ -549,12 +549,12 @@ router.post(
     try {
       // 데이터베이스에서 질문의 작성자 정보 조회
       const [question] = await db.query(
-        "SELECT createBy FROM Questions WHERE question_id = ?",
+        "SELECT question_by FROM Questions WHERE question_id = ?",
         [questionId]
       );
 
       // 작성자와 현재 사용자 비교
-      if (question.createBy !== userId) {
+      if (question.question_by !== userId) {
         return res.status(403).send("권한이 없습니다.");
       }
 
