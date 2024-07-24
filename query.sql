@@ -77,8 +77,7 @@ CREATE TABLE Dogs (
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
     feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
-    FOREIGN KEY (teacher_id) REFERENCES Staff(staff_id)
+    FOREIGN KEY (owner_name) REFERENCES Users(user_name)
 );
 
 -- 수업시간표 테이블 (오전)
