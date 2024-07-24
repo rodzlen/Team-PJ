@@ -1,45 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>유저 대시보드</title>
-  <link rel="stylesheet" href="/css/userClassPosts_style.css" />
-</head>
-
-<body>
-  <div id="postlist">
-    <h1>강아지 정보</h1>
-
-    <!-- 강아지 사진 섹션 -->
-    <div class="photo-section">
-      <h2>강아지 사진</h2>
-      <img src="/img/<%= data.dog_photo %>" alt="강아지 사진" />
-    </div>
-    <hr />
-
-    <!-- 날짜 정보 섹션 -->
-    <div class="date-info-section">
-      <h2><%= data.pet_name %></h2>
-      <div id="infoDisplay">
-        <!-- 날짜별 정보 표시 -->
-        <p>작성 날짜: <%= data.walk_date %></p>
-        <p>강아지 이름: <%= data.pet_name %></p>
-        <p>산책 시작 시간: <%= data.walk_starttime %></p>
-        <p>산책 끝 시간: <%= data.walk_endtime %></p>
-        <img src="/img/<%= data.walk_photo %>" alt="오늘의 산책 사진" />
-        <p>수업 시간: <%= data.class_info %></p>
-        <p>담당자 이름: <%= data.teacher %></p>
-        <p>특이사항: <%= data.note_info %></p>
-        
-        <% if(data.feed){ %>
-          <p>급식 신청: 예</p>
-        <% } else { %>
-          <p>급식 신청: 아니오</p>
-        <% } %>
-        
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시물 리스트 - 유저</title>
+    <link rel="stylesheet" href="/css/postlist.css" />
+  </head>
+  <body>
+    <div id="content">
+      <div class="admin-title">
+        <h2>오전반 - 유저</h2>
       </div>
-    </div>
-  </div>
-</body>
+
+      <div class="search-form">
+        <form action="/admin/classAttendanceList" method="GET">
+          <input type="text" name="search" placeholder="검색">
+          <select name="type">
+              <option value="pet_name">강아지 이름</option>
+              <option value="owner_name">견주</option>
+              <option value="pet_name||owner_name" selected>강아지 이름+견주</option>
+          </select>
+          <button type="submit">검색</button>
+      </form>
+
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>강아지 이름</th>
+            <th>주인 이름</th>
+            <th>등록일(시작/마지막)</th>
+            <th>정보 상세보기</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (data.length) { %>
+            <% data.forEach((post, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= post.pet_name %></td>
+              <td><%= post.owner_name %></td>
+              <td>
+                <!-- 날짜 형식 변환 및 기본값 설정 -->
+                <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
+                <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
+              </td>
+              <td><a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">정보 상세 보기</a></td>
+            </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">데이터가 없습니다.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      
+    <script src="/js/main.js"></script>
+  </body>
 </html>

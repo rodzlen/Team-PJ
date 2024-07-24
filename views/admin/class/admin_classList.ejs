@@ -51,6 +51,35 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <% if (locals.classAttendances.length) { %>
+                        <% locals.classAttendances.forEach((attendance)=> { %>
+                            <tr>
+                                <td>
+                                    <%= attendance.id %>
+                                </td>
+                                <td>
+                                    <%= attendance.owner_name %>
+                                </td>
+                                <td>
+                                    <%= attendance.pet_name %>
+                                </td>
+                                <td>
+                                    <%= attendance.class_name %>
+                                </td>
+                                <td>
+                                    <%= new Date(attendance.start_date).toISOString().split('T')[0] %>
+                                </td>
+                                <td>
+                                    <%= new Date(attendance.end_date).toISOString().split('T')[0] %>
+                                </td>
+                                <td>
+                                    <%= attendance.status %>
+                                </td>
+                                <td>
+                                    <%= new Date(attendance.created_at).toISOString().split('T')[0] %>
+                                </td>
+                                <td><a href="/admin/classAttendance/detail/<%= attendance.id %>">상세 보기</a></td>
+                            </tr>
                             <% }) %>
                                 <% } else { %>
                                     <tr>
@@ -63,6 +92,11 @@
     </div>
     </div>
 </body>
+<<<<<<< HEAD:views/admin/class/admin_classList.ejs
 </html>
 
 <!-- views/admin/class/admin_classList.ejs -->
+=======
+
+</html>
+>>>>>>> a8b25cb3bb1a53ad7e91e00375d1fd2a7bcb99ea:views/admin/class/admin_class_list.ejs

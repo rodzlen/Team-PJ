@@ -14,6 +14,7 @@
     <form id="form" action="/admin/adminstaffedit/<%=Data2.staff_id %>" method="post" enctype="multipart/form-data">
       <h2>직원 수정/삭제</h2>
       <div id="cover">
+        <input type="hidden" name="staff_id" value="<%=Data2.staff_id %>">
         <div class="in">
           직원 이름 &nbsp;<input name="name" class="w-50 form-control text-center" type="text" value="<%=Data2.name %>"
             required />
@@ -30,6 +31,7 @@
           <label for="staff_photo">직원 사진: &nbsp;</label>
           <input name="staff_photo" class="form-control-file" type="file" />
         </div>
+        <input type="hidden" name="staff_photo" value="<%=Data2.staff_photo %>">
         <div id="btnBox">
           <button id="editBtn" type="submit" class="btn btn-primary mr-3">수정하기</button>
           <button id="delBtn" type="submit" form="delete" class="btn btn-danger">삭제</button>
