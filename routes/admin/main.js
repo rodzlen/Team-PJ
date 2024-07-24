@@ -750,7 +750,6 @@ router.post(
 );
 
 //수업 수강정보
-
 router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
   const searchQuery = req.query.search || "";
   const typeQuery = req.query.type || "";

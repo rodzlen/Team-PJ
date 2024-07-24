@@ -49,6 +49,8 @@
                         <td><%= new Date(data.created_at).toISOString().split('T')[0] %></td>
                         <td><a href="/admin/classAttendance/detail/<%= data.id %>">상세 보기</a></td>
                     </tr>
+                </thead>
+                <tbody>
                             <% }) %>
                                 <% } else { %>
                                     <tr>
