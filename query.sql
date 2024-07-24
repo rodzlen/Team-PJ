@@ -64,7 +64,6 @@ CREATE TABLE Staff (
 );
 
 
-
 -- 강아지 테이블
 CREATE TABLE Dogs (
     dog_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -194,6 +193,7 @@ CREATE TABLE ClassAttendance (
     FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
     FOREIGN KEY (class_name) REFERENCES Dogs(class_info) 
 );
+
 -- 수업 신청 테이블 생성
 CREATE TABLE ClassRegistration (
     id INT AUTO_INCREMENT PRIMARY KEY,
