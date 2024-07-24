@@ -21,9 +21,13 @@ app.use(
   })
 );
 
+// Method-Override 설정
+//app.use(methodOverride("_method"));
+
 connectDB();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("public"));
 app.use(expressLayouts);
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -32,6 +36,7 @@ app.use(bodyParser.json());
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
+
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -42,4 +47,9 @@ app.listen(port, () => {
   console.log(`서버가 ${port}에서 실행중입니다.`);
 });
 
-// app.js
+// url 확인용 코드(지워도 됨)
+app.use((req, res, next) => {
+  console.log(`Request URL: ${req.url}`);
+  next();
+});
+

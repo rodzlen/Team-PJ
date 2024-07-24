@@ -11,9 +11,16 @@
     <aside class="category-menu">
         <h3>카테고리</h3>
         <ul>
-            <li><a href="/notice">공지사항</a></li>
-            <li><a href="/qna">QnA</a></li>
-            <li><a href="/freeboard">자유게시판</a></li>
+            <% if(locals.admin){ %>  
+                <li><a href="/admin/notice">공지사항</a></li>
+            <li><a href="/admin/qna">QnA</a></li>
+            <li><a href="/admin/freeboard">자유게시판</a></li>
+
+                <% }else{%>
+                    <li><a href="/notice">공지사항</a></li>
+                    <li><a href="/qna">QnA</a></li>
+                    <li><a href="/freeboard">자유게시판</a></li>
+              <% } %>
         </ul>
     </aside>
 

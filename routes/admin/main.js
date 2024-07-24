@@ -19,6 +19,24 @@ const checkAdminLogin = (req, res, next) => {
   }
   next();
 };
+//게시글 검색기능
+// let queryParams = []; 같이사용
+function search(query, searchQuery, typeQuery) {
+  if (searchQuery) {
+    if (typeQuery === "title") {
+      query += " WHERE title LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "createBy") {
+      query += " WHERE createBy LIKE ?";
+      queryParams.push(`%${searchQuery}%`);
+    } else if (typeQuery === "title||createBy") {
+      query += " WHERE title LIKE ? OR createBy LIKE ?";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+    }
+  }
+
+  return { query, queryParams };
+}
 
 // 공지사항 목록 페이지 라우터
 router.get(
@@ -48,6 +66,33 @@ router.get(
   })
 );
 
+// 자유게시판 세부 내용 페이지 라우터
+router.get(
+  "/notice/detail/:id",
+  asyncHandler(async (req, res) => {
+    const locals = { title: req.params.title, admin: req.session.admin };
+    const id = req.params.id;
+
+    const query = "SELECT * FROM noticeboard WHERE id = ?";
+    db.query(query, [id], (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (results.length > 0) {
+          res.render("admin/notice/admin_notice_detail", {
+            locals,
+            data: results[0],
+            layout: adminLayout,
+          });
+        } else {
+          res.status(404).send("게시글을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
+
 // 공지사항 추가 페이지
 router.get(
   "/notice/add",
@@ -57,6 +102,8 @@ router.get(
     res.render("admin/notice/admin_notice_add", { locals });
   })
 );
+
+
 
 // 공지사항 추가 처리
 router.post(
@@ -68,6 +115,7 @@ router.post(
       const { title, content, admin_id } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
+      const createBy = req.session.admin.admin_id;
 
       // MySQL 쿼리
       const query = `
@@ -136,46 +184,62 @@ router.get(
 );
 // 공지사항 수정 처리
 router.post(
-  "/notice/edit/:id",
+  '/notice/edit/:id',
   checkAdminLogin,
-  upload.single("image"),
+  upload.single('image'),
   asyncHandler(async (req, res) => {
     try {
       const { title, content } = req.body;
-      const Image = req.file ? req.file.filename : null;
-      await NoticeBoard.findByIdAndUpdate(req.params.id, {
-        title,
-        content,
-        Image,
-        date,
-      });
-      res.redirect("/admin/notice/edit/:id");
+      const image = req.file ? req.file.filename : null;
+      const id = req.params.id;
+      const post_date = new Date();
+
+      // 기존 이미지가 있는 경우 삭제하지 않는다면 업데이트하지 않음
+      let query = 'UPDATE NoticeBoard SET title = ?, content = ?, post_date = ?';
+      let queryParams = [title, content, post_date];
+
+      if (image) {
+        query += ', image = ?';
+        queryParams.push(image);
+      }
+
+      query += ' WHERE id = ?';
+      queryParams.push(id);
+
+      await db.query(query, queryParams);
+
+      res.send(`
+        <script>
+          alert('수정되었습니다');
+          window.location.href = '/admin/notice/detail/${id}';
+        </script>
+      `);
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send(
-          '<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
-        );
+      res.status(500).send(
+        '<script>alert("공지사항 수정 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+      );
     }
   })
 );
 
 // 공지사항 삭제
 router.post(
-  "/notice/delete/:id",
+  '/notice/delete/:id',
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     try {
-      await NoticeBoard.findByIdAndDelete(req.params.id);
-      res.redirect("/admin/notice");
+      const id = req.params.id;
+
+      const query = 'DELETE FROM NoticeBoard WHERE id = ?';
+      await db.query(query, [id]);
+
+      res.redirect('/admin/notice');
     } catch (error) {
       console.error(error);
-      res
-        .status(500)
-        .send(
-          '<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
-        );
+      res.status(500).send(
+        '<script>alert("공지사항 삭제 중 오류가 발생했습니다."); window.location.href="/admin/notice";</script>'
+      );
     }
   })
 );
@@ -184,7 +248,8 @@ router.post(
 router.get(
   "/freeboard",
   asyncHandler(async (req, res) => {
-    const locals = { title: "자유게시판", user: req.session.user };
+    
+    const locals = { title: "자유게시판", admin: req.session.admin };
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
@@ -197,7 +262,7 @@ router.get(
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("user/freeboard/user_freeboard_main", {
+        res.render("admin/freeboard/admin_freeboard_main", {
           locals,
           data: results,
           layout: adminLayout,
@@ -211,7 +276,7 @@ router.get(
 router.get(
   "/freeboard/detail/:id",
   asyncHandler(async (req, res) => {
-    const locals = { title: req.params.title, user: req.session.user };
+    const locals = { title: req.params.title, admin: req.session.admin };
     const id = req.params.id;
 
     const query = "SELECT * FROM freeBoard WHERE id = ?";
@@ -221,7 +286,7 @@ router.get(
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
         if (results.length > 0) {
-          res.render("user/freeboard/user_freeboard_detail", {
+          res.render("admin/freeboard/admin_freeboard_detail", {
             locals,
             data: results[0],
             layout: adminLayout,
@@ -239,8 +304,8 @@ router.get(
   "/freeboard/add",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const locals = { title: "새 게시글 작성", user: req.session.user };
-    res.render("user/freeboard/user_freeboard_add", {
+    const locals = { title: "새 게시글 작성", admin: req.session.admin };
+    res.render("admin/freeboard/admin_freeboard_add", {
       locals,
       layout: adminLayout,
     });
@@ -257,7 +322,7 @@ router.post(
       const { title, content } = req.body;
       const image = req.file ? req.file.filename : null;
       const post_date = new Date();
-      const createBy = req.session.user.user_id;
+      const createBy = req.session.admin.admin_id;
 
       // MySQL 쿼리
       const query = `
@@ -272,10 +337,10 @@ router.post(
           res
             .status(500)
             .send(
-              '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/freeboard/add";</script>'
+              '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/add";</script>'
             );
         } else {
-          res.redirect("/freeboard");
+          res.redirect("/admin/freeboard");
         }
       });
     } catch (error) {
@@ -283,7 +348,7 @@ router.post(
       res
         .status(500)
         .send(
-          '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/user/freeboard/add";</script>'
+          '<script>alert("게시글 추가 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/add";</script>'
         );
     }
   })
@@ -294,7 +359,7 @@ router.get(
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const userId = req.session.user.user_id;
+    const userId = req.session.admin.admin_id;
 
     // 게시글 정보 조회 쿼리
     const query = "SELECT * FROM freeboard WHERE id = ?";
@@ -310,19 +375,9 @@ router.get(
       }
 
       const post = results[0];
-
-      // 작성자 확인
-      if (post.createBy !== userId) {
-        return res
-          .status(403)
-          .send(
-            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
       // 게시글 수정 페이지 렌더링
-      const locals = { title: "게시글 수정", user: req.session.user };
-      res.render("user/freeboard/user_freeboard_edit", {
+      const locals = { title: "게시글 수정", admin: req.session.admin };
+      res.render("admin/freeboard/admin_freeboard_edit", {
         locals,
         data: post,
         layout: adminLayout,
@@ -336,7 +391,7 @@ router.post(
   checkAdminLogin,
   upload.single("image"),
   asyncHandler(async (req, res) => {
-    const locals = { title: "수정", user: req.session.user };
+    const locals = { title: "수정", admin: req.session.admin };
     const id = req.params.id;
     const { title, content } = req.body;
     const image = req.file ? req.file.filename : null;
@@ -358,12 +413,12 @@ router.post(
         res
           .status(500)
           .send(
-            '<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/freeboard/edit/' +
+            '<script>alert("게시글 수정 중 오류가 발생했습니다."); window.location.href="/admin/freeboard/edit/' +
               id +
               '";</script>'
           );
       } else {
-        res.redirect("/freeboard/detail/" + id);
+        res.redirect("/admin/freeboard/detail/" + id);
       }
     });
   })
@@ -374,137 +429,102 @@ router.post(
   checkAdminLogin,
   asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const userId = req.session.user.user_id;
+    const deleteQuery = "DELETE FROM freeboard WHERE id = ?";
 
-    // 먼저 게시글 작성자 확인
-    const checkQuery = "SELECT createBy FROM freeboard WHERE id = ?";
-
-    db.query(checkQuery, [id], (err, results) => {
+    db.query(deleteQuery, [id], (err, result) => {
       if (err) {
         console.error(err);
         return res
           .status(500)
           .send(
-            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
+            '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/admin/freeboard";</script>'
           );
+      } else {
+        return res.send(
+          '<script>alert("게시글이 삭제되었습니다."); window.location.href="/admin/freeboard";</script>'
+        );
       }
-
-      if (results.length === 0) {
-        return res
-          .status(404)
-          .send(
-            '<script>alert("게시글을 찾을 수 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
-      const post = results[0];
-
-      if (post.createBy !== userId) {
-        return res
-          .status(403)
-          .send(
-            '<script>alert("권한이 없습니다."); window.location.href="/freeboard";</script>'
-          );
-      }
-
-      // 작성자와 로그인한 사용자가 일치하면 삭제 진행
-      const deleteQuery = "DELETE FROM freeboard WHERE id = ?";
-
-      db.query(deleteQuery, [id], (err, result) => {
-        if (err) {
-          console.error(err);
-          return res
-            .status(500)
-            .send(
-              '<script>alert("게시글 삭제 중 오류가 발생했습니다."); window.location.href="/freeboard";</script>'
-            );
-        } else {
-          return res.send(
-            '<script>alert("게시글이 삭제되었습니다."); window.location.href="/freeboard";</script>'
-          );
-        }
-      });
     });
   })
 );
 
 
-//qna 목록
-router.get("/qna", checkAdminLogin, async (req, res) => {
-  const searchQuery = req.query.search || "";
-  const typeQuery = req.query.type || "";
-
-  let query = "SELECT * FROM Questions";
-  let queryParams = [];
-
-  if (searchQuery) {
-    if (typeQuery === "title") {
-      query += " WHERE title LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "question_by") {
-      query += " WHERE question_by LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
-    } else if (typeQuery === "title||question_by") {
-      query += " WHERE title LIKE ? OR question_by LIKE ?";
-      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
-    }
-  }
-
-  console.log("Search Query:", searchQuery);
-  console.log("Type Query:", typeQuery);
-  console.log("Query:", query);
-  console.log("Query Params:", queryParams);
-
-  try {
-    const [questions] = await db.query(query, queryParams);
-    console.log("Questions:", questions);
-
-    res.render("admin/qna/admin_qna_main", {
-      questions: Array.isArray(questions) ? questions : [],
-      searchQuery,
-      typeQuery,
-      title: "QnA 목록",
-      layout: adminLayout,
+router.get(
+  "/qna",
+  asyncHandler(async (req, res) => {
+    const locals = { title: "QnA 게시판", user: req.session.user };
+    let query =
+      "SELECT * from Questions";
+    const searchQuery = req.query.search || "";
+    const typeQuery = req.query.type || "";
+    let queryParams = [];
+    search(query, searchQuery, typeQuery);
+    db.query(query, queryParams, (err, results) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        res.render("admin/qna/admin_qna_main", {
+          locals,
+          data: results,
+          layout: adminLayout,
+        });
+      }
     });
-  } catch (err) {
-    console.error("Database query error:", err);
-    res.status(500).send("서버 오류");
-  }
-});
-// QnA 상세 페이지
-router.get("/qna/detail/:id", checkAdminLogin, async (req, res) => {
-  const questionId = req.params.id;
-  try {
-    const [questions] = await db.query("SELECT * FROM Questions WHERE id = ?", [
-      questionId,
-    ]);
-    const [answers] = await db.query(
-      "SELECT * FROM Answers WHERE question_id = ?",
-      [questionId]
-    );
-    if (questions.length === 0) {
-      return res.status(404).send("질문을 찾을 수 없습니다.");
-    }
-    res.render("admin/qna/qna-detail", {
-      question: questions[0],
-      answers,
-      isAdmin: req.user.isAdmin,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("서버 오류");
-  }
-});
+  })
+);
 
-router.post("/answer/:id", checkAdminLogin, async (req, res) => {
+//qna 세부
+router.get(
+  "/qna/detail/:id",
+  asyncHandler(async (req, res) => {
+    const id = req.params.id;
+
+    const questionQuery = "SELECT * FROM Questions WHERE question_id = ?";
+    const answerQuery = "SELECT * FROM Answers WHERE question_id = ?";
+    const locals = { title: "QnA 상세", admin: req.session.admin };
+
+    db.query(questionQuery, [id], (err, questionResults) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("서버 오류가 발생했습니다.");
+      } else {
+        if (questionResults.length > 0) {
+          db.query(answerQuery, [id], (err, answerResults) => {
+            if (err) {
+              console.error(err);
+              res.status(500).send("서버 오류가 발생했습니다.");
+            } else {
+              res.render("admin/qna/admin_qna_detail", {
+                locals,
+                question: questionResults[0],
+                answers: answerResults,
+                layout: adminLayout,
+                 adminId: req.session.admin || null   // 관리자 ID
+              });
+            }
+          });
+        } else {
+          res.status(404).send("질문을 찾을 수 없습니다.");
+        }
+      }
+    });
+  })
+);
+//답변 작성
+router.post("/qna/answer/:id", checkAdminLogin, async (req, res) => {
   const questionId = req.params.id;
-  const { admin_id, content } = req.body;
+  const { answer_Id, answer } = req.body;
+  const answer_date = new Date();
+  const answered_by = req.session.admin.admin_id
+  
+  
   try {
     await db.query(
-      "INSERT INTO Answers (question_id, admin_id, content) VALUES (?, ?, ?)",
-      [questionId, admin_id, content]
+      "INSERT INTO Answers (question_id, answer_Id, answer,answer_date,answered_by) VALUES (?, ?, ?,?,?)",
+      [questionId, answer_Id, answer,answer_date, answered_by]
     );
-    res.redirect("/qna/detail/" + questionId);
+    res.redirect("/admin/qna/detail/" + questionId);
   } catch (err) {
     console.error(err);
     res.status(500).send("서버 오류");
@@ -523,7 +543,7 @@ router.post("/qna/delete/:id", checkAdminLogin, async (req, res) => {
   }
 });
 
-// 수업 신청 수정 페이지
+// 수업 신청 상세 페이지
 router.get(
   "/classRegList/detail/:id",
   checkAdminLogin,
@@ -547,7 +567,7 @@ router.get(
             '<script>alert("수업 신청 정보를 찾을 수 없습니다."); window.location.href="/admin/classRegList";</script>'
           );
       }
-      const locals = { registration: results[0] };
+      const locals = { classReg: results[0] };
       res.render("admin/application/admin_class_register_detail.ejs", {
         locals,
         layout: adminLayout,
@@ -561,7 +581,7 @@ router.post("/classreg/apply/:id", checkAdminLogin, (req, res) => {
 
   // 신청서 승인
   const updateQuery =
-    'UPDATE ClassRegistration SET status = "approved", admin_id = ? WHERE id = ?';
+    'UPDATE ClassRegistration SET status = "승인됨", admin_id = ? WHERE id = ?';
   db.query(updateQuery, [req.session.admin.id, id], (err) => {
     if (err) {
       console.error("Database error:", err);
@@ -609,12 +629,12 @@ router.post("/classreg/apply/:id", checkAdminLogin, (req, res) => {
             return res
               .status(500)
               .send(
-                '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreg/list";</script>'
+                '<script>alert("내부 서버 오류가 발생했습니다."); window.location.href="/admin/classreglist";</script>'
               );
           }
 
           res.send(
-            '<script>alert("신청이 승인되고 수강 정보가 등록되었습니다!"); window.location.href="/admin/classreg/list";</script>'
+            '<script>alert("신청이 승인되고 수강 정보가 등록되었습니다!"); window.location.href="/admin/classreglist";</script>'
           );
         }
       );
@@ -648,7 +668,7 @@ router.get(
   "/classRegList",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const { search = "", type = "no||createBy" } = req.query;
+    const { search = "", type = "no||owner_name" } = req.query;
 
     let query = "SELECT * FROM ClassRegistration";
     let queryParams = [];
@@ -657,10 +677,10 @@ router.get(
       if (type === "no") {
         query += " WHERE id LIKE ?";
         queryParams.push(`%${search}%`);
-      } else if (type === "createBy") {
+      } else if (type === "owner_name") {
         query += " WHERE owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`);
-      } else if (type === "no||createBy") {
+      } else if (type === "no||owner_name") {
         query += " WHERE id LIKE ? OR owner_name LIKE ?"; // 수정: 'createBy'를 'owner_name'으로 변경
         queryParams.push(`%${search}%`, `%${search}%`);
       }
@@ -680,6 +700,7 @@ router.get(
     });
   })
 );
+
 
 // 수업 신청 수정 처리
 router.post(
@@ -729,6 +750,62 @@ router.post(
     );
   })
 );
+
+//수업 수강정보
+
+router.get('/classAttendanceList', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { search = '', type = 'no' } = req.query;
+
+  let query = 'SELECT * FROM ClassAttendance';
+  let queryParams = [];
+
+  if (search) {
+    if (type === 'no') {
+      query += ' WHERE id LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (type === 'owner_name') {
+      query += ' WHERE owner_name LIKE ?';
+      queryParams.push(`%${search}%`);
+    } else if (type === 'no||owner_name') {
+      query += ' WHERE id LIKE ? OR owner_name LIKE ?';
+      queryParams.push(`%${search}%`, `%${search}%`);
+    }
+  }
+
+  try {
+    const [attendances] = await db.query(query, queryParams);
+    console.log('Attendances:', attendances);  // 데이터 구조 확인
+    const locals = { 
+      title: '수업 수강정보 목록', 
+      classAttendances: Array.isArray(attendances) ? attendances : []  // 배열로 보장
+    };
+    res.render('admin/class/admin_class_list', { locals, layout: adminLayout });
+  } catch (err) {
+    console.error('Database query error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}));
+
+
+
+// 수업수강정보 상세
+router.get('/classAttendance/detail/:id', checkAdminLogin, asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [attendance] = await db.query('SELECT * FROM ClassAttendance WHERE id = ?', [id]);
+
+    if (attendance.length === 0) {
+      return res.status(404).send('수업 수강정보를 찾을 수 없습니다.');
+    }
+
+    const locals = { title: '수업 수강정보 상세', attendance: attendance[0] };
+    res.render('admin/class/admin_class_detail', { locals, layout: adminLayout });
+  } catch (err) {
+    console.error('Database query error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}));
 
 // 홈 페이지(관리자용)
 router.get(
@@ -1223,9 +1300,9 @@ router.get("/class/admin_onedayClassPosts", (req, res) => {
 
 // 강아지 정보 수정 페이지: GET /admin/dashboard/admin_edit/:id
 router.get(
-  "/dashboard/admin_edit/:id",
+  "/dashboard/admin_edit/:dog_id",
   asyncHandler(async (req, res) => {
-    const postId = req.params.id;
+    const postId = req.params.dog_id;
 
     const connection = await mysql.createConnection({
       host: "localhost",
@@ -1259,10 +1336,10 @@ router.get(
 
 // 강아지 정보 수정 처리: POST /admin/dashboard/admin_edit/:id
 router.post(
-  "/dashboard/admin_edit/:id",
+  "/dashboard/admin_edit/:dog_id",
   upload.single("walk_photo"),
   asyncHandler(async (req, res) => {
-    const postId = req.params.id;
+    const postId = req.params.dog_id;
     try {
       const { walk_date, walk_time, teacher, note_info, class_info, feed } =
         req.body;
@@ -1308,31 +1385,20 @@ router.post(
   })
 );
 
-// 강아지 정보 삭제 라우트: DELETE /admin/delete/:id
-router.delete(
-  "/dashboard/admin/delete/:id",
-  asyncHandler(async (req, res) => {
-    const id = req.params.id;
+// 강아지 정보 삭제 라우트: POST /admin/dashboard/delete/:dog_id
+router.post("/dashboard/delete/:dog_id", (req, res) => {
+  const dogId = req.params.dog_id; // URL 파라미터에서 강아지 ID를 가져옵니다.
+  const query = "DELETE FROM dogs WHERE dog_id = ?";
 
-    try {
-      const connection = await mysql.createConnection({
-        host: "localhost",
-        port: db.config.port,
-        user: db.config.user,
-        password: db.config.password,
-        database: db.config.database,
-      });
-
-      await connection.execute("DELETE FROM dogs WHERE dog_id = ?", [id]);
-      await connection.end();
-
-      res.redirect("/admin/class/admin_postlist");
-    } catch (error) {
-      console.error(error);
+  db.query(query, [dogId], (err, result) => {
+    if (err) {
+      console.log(err);
       res.status(500).send("정보 삭제 중 오류가 발생했습니다.");
+    } else {
+      res.redirect("/admin/class/admin_postlist"); // 삭제 후 리디렉션
     }
-  })
-);
+  });
+});
 
 // 직원소개 및 시설소개 모든 데이터
 
@@ -1376,11 +1442,8 @@ router.get("/adminfacilitiesMain", (req, res) => {
 router.get("/adminfacilitiescreate", (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
 });
-
-// 시설 생성
-router.post(
-  "/adminfacilitiescreate",
-  upload.single("facility_photo"),
+// 시설 생성 처리
+router.post("/adminfacilitiescreate", upload.single("facility_photo"),
   (req, res) => {
     try {
       const { facility_name, main_facilities = "" } = req.body;
@@ -1407,7 +1470,8 @@ router.post(
 );
 
 // 시설 수정 페이지
-router.get("/facilitiesedit/:id", (req, res) => {
+
+router.get("/adminfacilitiesedit/:id", (req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
   db.query(query, [ID], (err, result) => {
@@ -1416,22 +1480,19 @@ router.get("/facilitiesedit/:id", (req, res) => {
     } else if (result.length === 0) {
       res.send("찾으시는 페이지가 존재하지 않습니다.");
     } else {
-      res.render("facilitiesEdit", { Data: result[0] }); // 데이터 변수명을 "Data"로 맞추기
+      res.render("admin/facilities/admin_FacilitiesEdit", { Data: result[0] }); // 데이터 변수명을 "Data"로 맞추기
     }
   });
 });
 
+
 // 시설 정보 수정 처리
-router.post(
-  "/adminfacilitiesedit/:id",
-  upload.single("facility_photo"),
+router.post("/adminfacilitiesedit/:id",upload.single("facility_photo"),
   (req, res) => {
     const id = req.body.id;
     const name = req.body.facility_name || "default_name";
     const features = req.body.main_facilities || "default_features";
-    const facility_photo = req.file
-      ? req.file.path.replace(/\\/g, "/")
-      : req.body.facility_photo;
+    const facility_photo = req.file ? req.file.path.replace(/\\/g, "/") : req.body.facility_photo;
 
     const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
 
@@ -1446,10 +1507,7 @@ router.post(
   }
 );
 
-// 시설 생성 페이지
-router.get("/facilitiescreate", (req, res) => {
-  res.render("facilitiesCreate");
-});
+
 
 // 시설 정보 삭제 처리
 router.post("/delete", (req, res) => {
@@ -1559,12 +1617,10 @@ router.get("/adminmainpage", (req, res) => {
   res.render("mainpage");
 });
 
-router.get("/calendar", (req, res) => {
-  res.render("calendar");
-});
 
-router.get("/Calendar", (req, res) => {
-  res.render("admin/calendar/adminCalendar");
+
+router.get("/adminCalendar", (req, res) => {
+  res.render("admin/calendar/admin_Calendar");
 });
 
 module.exports = router;

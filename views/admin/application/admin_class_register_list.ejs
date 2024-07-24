@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/application_style.css"> <!-- CSS 파일 임포트 -->
+    <link rel="stylesheet" href="/css/user_class_register_style.css"> <!-- CSS 파일 임포트 -->
 </head>
 <body>
     <div class="FreeBoard-box">
@@ -13,8 +13,8 @@
             <input type="text" name="search" placeholder="검색">
             <select name="type">
                 <option value="no">no</option>
-                <option value="createBy">신청자</option>
-                <option value="no||createBy">no+신청자</option>
+                <option value="owner_name">신청자</option>
+                <option value="no||owner_name">no+신청자</option>
             </select>
             <button type="submit">검색</button>
         </form>
@@ -24,6 +24,7 @@
                     <th>no</th>
                     <th>신청자</th>
                     <th>작성일</th>
+                    <th>상태</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,6 +33,7 @@
                     <td><%= reg.id %></td>
                     <td><a href="/admin/classRegList/detail/<%= reg.id %>"><%= reg.owner_name %></a></td>
                     <td><%= reg.created_at %></td>
+                    <td><%= reg.status %></td> <!-- 상태 표시 -->
                 </tr>
                 <% }) %>
             </tbody>

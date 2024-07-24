@@ -8,7 +8,7 @@
   </head>
   <body>
     <form
-      action="/admin/dashboard/admin_edit/<%= post.dog_id %>?_method=PUT"
+      action="/admin/dashboard/admin_edit/<%= post.dog_id %>"
       method="POST"
       enctype="multipart/form-data"
     >
@@ -66,7 +66,7 @@
         <label for="walk_photo"><b>오늘의 산책 사진</b></label>
         <input type="file" name="walk_photo" id="walk_photo" />
         <img
-          src="/img/todaywalkphotos/<%= post.walk_photo %>"
+          src="/img/<%= post.walk_photo %>"
           alt="오늘의 산책 사진"
           style="max-width: 200px"
         />
@@ -113,10 +113,7 @@
       </div>
     </form>
     <!--delete 폼-->
-    <form
-      action="/admin/dashboard/admin/delete/<%= post.dog_id %>?_method=DELETE"
-      method="POST"
-    >
+    <form action="/admin/dashboard/delete/<%= post.dog_id %>" method="POST">
       <input
         type="submit"
         value="삭제"

@@ -1,48 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QnA 상세</title>
-    <link rel="stylesheet" href="/css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= locals.title %></title>
+  <link rel="stylesheet" href="/css/qna_styles.css">
 </head>
 <body>
-    <h1>QnA 상세</h1>
-    <h2><%= question.title %></h2>
-    <p><%= question.content %></p>
-    <p>작성일: <%= question.created_at %></p>
-    <p>작성자: <%= question.user_id %></p>
+  <h1>QnA 상세</h1>
+  <h2><%= question.title %></h2>
+  <p><%= question.question %></p>
+  <p>작성일: <%= question.question_date %></p>
+  <p>작성자: <%= question.question_by %></p>
 
-    <h3>답변</h3>
-    <% answers.forEach(function(answer) { %>
-        <div>
-            <p><%= answer.content %></p>
-            <p>작성일: <%= answer.created_at %></p>
-            <p>작성자: <%= answer.admin_id %></p>
-        </div>
-    <% }) %>
+  <h3>답변</h3>
+  <% answers.forEach(function(answer) { %>
+      <div>
+          <p><%= answer.answer %></p>
+          <p>작성일: <%= answer.answer_date %></p>
+          <p>작성자: <%= answer.answered_by %></p>
+      </div>
+  <% }) %>
 
-    <% if (!answers.length) { %>
-        <p>아직 답변이 없습니다.</p>
-    <% } %>
+  <% if (!answers.length) { %>
+      <p>아직 답변이 없습니다.</p>
+  <% } %>
 
-    <% if (isAdmin) { %>
-        <h3>답변 작성</h3>
-        <form action="/qna/answer/<%= question.id %>" method="POST">
-            <textarea name="content" required></textarea>
-            <input type="hidden" name="admin_id" value="<%= adminId %>">
-            <button type="submit">답변하기</button>
-        </form>
-    <% } %>
+<!-- admin페이지에서만 보일거임 아직 세션처리가 안돼서 여기에 남김 -->
+      <h3>답변 작성</h3>
+      <form action="/admin/qna/answer/<%= question.question_id %>" method="POST">
+          <textarea name="answer" required></textarea>
+        
+          <button type="submit">답변하기</button>
+      </form>
 
-    <h3>관리</h3>
-    <form action="/admin/qna/delete/question/<%= question.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-        <button type="submit">질문 삭제</button>
-    </form>
-    <% answers.forEach(function(answer) { %>
-        <form action="/admin/qna/delete/answer/<%= answer.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-            <input type="hidden" name="questionId" value="<%= question.id %>">
-            <button type="submit">답변 삭제</button>
-        </form>
-    <% }) %>
 
-    <a href="/qna">목록으로</a>
+  <h3>관리</h3>
+  <form action="/admin/qna/delete/<%= question.question_id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+      <button type="submit">질문 삭제</button>
+  </form>
+
+  <a href="/qna">목록으로</a>
 </body>
+</html>
