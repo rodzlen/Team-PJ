@@ -1212,18 +1212,18 @@ router.get(
         d.class_info = '오전'
     `;
 
-    const queryParams = [];
-
     if (searchQuery) {
       query += " AND d.pet_name LIKE ?";
-      queryParams.push(`%${searchQuery}%`);
     }
+
+    const queryParams = searchQuery ? [`%${searchQuery}%`] : [];
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
+        console.log(results); // 쿼리 결과를 로그로 출력하여 확인
         res.render("admin/class/admin_morningClassPosts", { data: results });
       }
     });

@@ -20,7 +20,7 @@
           <input type="text" name="search" placeholder="검색" />
           <button type="submit">검색</button>
         </form>
-      </div>s
+      </div>
 
       <table>
         <thead>
@@ -40,12 +40,9 @@
               <td><%= post.pet_name %></td>
               <td><%= post.owner_name %></td>
               <td>
-                <td>
-                  <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
-                  <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
-                </td>
-        <%= formattedStartDate %> / <%= formattedEndDate %>
-      </td>
+                <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
+                <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
+              </td>
               <td><a href="/admin/dashboard/admin_edit/<%= post.dog_id %>">정보 상세 보기</a></td>
             </tr>
             <% }) %>
@@ -60,5 +57,3 @@
     <script src="/js/main.js"></script>
   </body>
 </html>
-
-<!-- views/admin/class/admin_morningClassPosts -->
