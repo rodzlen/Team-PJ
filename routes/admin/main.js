@@ -1119,24 +1119,32 @@ router.get(
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
-
     let query = "SELECT * FROM dogs";
-    const { query: finalQuery, queryParams } = search(
-      query,
-      searchQuery,
-      typeQuery
-    );
-
+    let queryParams = [];
+    
+    if (searchQuery) {
+      if (typeQuery === "class_info") {
+        query += " WHERE class_info LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "pet_name") {
+        query += " WHERE pet_name LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "class_info||pet_name") {
+        query += " WHERE class_info LIKE ? OR pet_name LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+      return { query, queryParams };
+    }
     // 로그를 추가하여 쿼리와 파라미터를 확인
-    console.log("Final Query:", finalQuery);
+    console.log("Final Query:", query);
     console.log("Query Parameters:", queryParams);
 
-    db.query(finalQuery, queryParams, (err, results) => {
+    db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("admin/class/admin_postlist", { data: results });
+        res.render("admin/dashboard/admin_postlist", { data: results });
       }
     });
   })
