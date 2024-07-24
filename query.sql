@@ -73,9 +73,7 @@ CREATE TABLE Dogs (
     teacher VARCHAR(15) NOT NULL,
     class_info VARCHAR(15) NOT NULL,
     note_info TEXT,
-    feed BOOLEAN NOT NULL,
-    FOREIGN KEY (owner_name) REFERENCES Users(user_name),
-    FOREIGN KEY (teacher) REFERENCES Staff(name)
+    feed BOOLEAN NOT NULL
 );
 
 INSERT INTO Dogs (dog_photo, pet_name, owner_id, walk_date, walk_time, walk_photo, teacher_id, class_info, note_info, feed)
@@ -197,7 +195,6 @@ CREATE TABLE ClassAttendance (
     consultation TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (registration_id) REFERENCES ClassRegistration(id) -- 신청 ID와 연결
-    FOREIGN KEY (class_name) REFERENCES Dogs(class_info) 
 );
 
 -- 수업 신청 테이블 생성
