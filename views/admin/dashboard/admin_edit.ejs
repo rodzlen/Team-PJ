@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="/css/dashboardstyle.css" />
   </head>
   <body>
-    <!-- 수정 폼 -->
     <form
-      action="/dashboard/admin_edit/<%= post.id %>?_method=PUT"
+      action="/admin/dashboard/admin_edit/<%= post.dog_id %>"
       method="POST"
       enctype="multipart/form-data"
     >
@@ -67,7 +66,7 @@
         <label for="walk_photo"><b>오늘의 산책 사진</b></label>
         <input type="file" name="walk_photo" id="walk_photo" />
         <img
-          src="/img/todaywalkphotos/<%= post.walk_photo %>"
+          src="/img/<%= post.walk_photo %>"
           alt="오늘의 산책 사진"
           style="max-width: 200px"
         />
@@ -113,26 +112,20 @@
         />
       </div>
     </form>
-
-    <!-- 삭제 폼 -->
-    <form
-      action="/dashboard/admin_delete/<%= post.id %>?_method=DELETE"
-      method="POST"
-    >
-      <div>
-        <input
-          type="submit"
-          value="삭제"
-          class="btn-delete btn"
-          onclick="return confirm('정말 삭제하시겠습니까?')"
-        />
-        <input
-          type="button"
-          value="뒤로"
-          class="btn"
-          onclick="window.location.href='/admin/class/admin_postlist'"
-        />
-      </div>
+    <!--delete 폼-->
+    <form action="/admin/dashboard/delete/<%= post.dog_id %>" method="POST">
+      <input
+        type="submit"
+        value="삭제"
+        class="btn-delete btn"
+        onclick="return confirm('정말 삭제하시겠습니까?')"
+      />
+      <input
+        type="button"
+        value="뒤로"
+        class="btn"
+        onclick="window.location.href='/admin/class/admin_postlist'"
+      />
     </form>
   </body>
 </html>

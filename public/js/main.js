@@ -11,4 +11,8 @@ function handleSearch(event) {
         });
 }
 
+<<<<<<< HEAD
 // public/js/main.js
+=======
+// public/js/main.js
+>>>>>>> fe90f50597d7b1072b4b1b995403af6ba73c57ab

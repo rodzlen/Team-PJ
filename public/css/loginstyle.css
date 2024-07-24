@@ -1,17 +1,4 @@
 :root {
-<<<<<<< HEAD
-  --brown: #dd8e55;
-  --yellow: #fbd663;
-}
-
-body {
-  padding: 0px;
-  margin: 0px;
-  width: 100vw;
-  overflow-x: hidden;
-  /*가로축 스크롤 제거*/
-}
-=======
     /* 커스텀 css 변수 정의 */
     --brown: #dd8e55;
     --yellow: #fbd663;
@@ -25,7 +12,20 @@ body {
     overflow-x: hidden;
     /*가로축 스크롤 제거*/
   }
->>>>>>> chae
+
+  #top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #top a {
+    text-decoration: none;
+    padding: 2px 4px;
+    color: var(--brown);
+    font-weight: 700;
+    border-bottom: 1px solid var(--brown);
+    font-size: 14px;
+  }
 
 /* 로그인 및 회원가입 페이지 */
 textarea {
@@ -108,6 +108,34 @@ textarea {
     box-shadow: none;
     transition: 0.1;
   }
+
+  #exclude {
+    width: 80%;
+  } 
+
+ input[type=radio] {
+  width: 30px;
+ }
+
+  #duplicate {
+    display: inline-block;
+    border: 2px solid var(--yellow);
+    background: var(--yellow);
+    color: var(--yellow);
+    border-radius: 25px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0px;
+    transition: all 0.1s ease-out;
+  }
+
+  #duplicate:hover {
+    cursor: pointer;
+    color: #fff;
+    background-color: var(--yellow);
+    border: 2px solid var(--yellow);
+  }
   
   /* 여기까지 했어용 */
   .login-content form.wrapBox input:valid {
@@ -118,7 +146,7 @@ textarea {
     border-bottom: 1px solid var(--brown);
   }
   
-  .login-content form.wrapBox button {
+  .login-content form.wrapBox button[type="submit"] {
     display: inline-block;
     margin-top: 30px;
     border: 2px solid var(--yellow);
@@ -132,7 +160,7 @@ textarea {
     transition: all 0.1s ease-out;
   }
   
-  .login-content form.wrapBox button:hover {
+  .login-content form.wrapBox button[type="submit"]:hover {
     cursor: pointer;
     color: var(--yellow);
     background: #fff;

@@ -1,0 +1,159 @@
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+  }
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+}
+
+#cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+#cover a {
+    color: #000;
+}
+
+/* 카테고리 메뉴 설정 */
+.category-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    background-color: beige;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-menu h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.category-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.category-menu ul li {
+    margin-bottom: 8px;
+}
+
+.category-menu ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.category-menu ul li a:hover {
+    color: #333;
+}
+
+/* 메인 콘텐츠 설정 */
+#main-content {
+    margin: 0 auto;
+    width: 80%; /* 메인 콘텐츠 너비 80%로 조정 */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* 가운데 정렬 */
+}
+
+#main-content h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* 검색 폼 설정 */
+.search-form {
+    margin-bottom: 30px;
+    text-align: center; /* 가운데 정렬 */
+}
+
+.search-container {
+    display: inline-flex;
+    align-items: center;
+}
+
+.search-form input[type="text"] {
+    width: 500px;
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+select {
+       font-size: 16px;
+    height: 25px;
+}
+
+.search-form button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+}
+
+/* 공지사항 목록 테이블 설정 */
+.notice-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notice-table th,
+.notice-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    color: #000;
+}
+
+.notice-table th {
+    background-color: #f2f2f2;
+}
+
+.notice-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.notice-title a {
+    text-decoration: none;
+}
+
+/* 글쓰기 버튼 설정 */
+.write-button {
+    text-align: center; 
+    margin-top: 20px;
+}
+
+.write-button button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.write-button button:hover {
+    background-color: #218838;
+}

@@ -23,7 +23,7 @@
       <div class="class-container">
         <div class="class-box">
           <h3>오전 클래스</h3>
-          <a href="/dashboard/user/class/u_morningClassPosts">오전 클래스</a>
+          <a href="/user/class/user_morningClassPosts">오전 클래스</a>
           <ul class="user-posts">
             <% if (data.morning) { %> <% data.morning.forEach(post => { %>
             <li>
@@ -37,7 +37,7 @@
 
         <div class="class-box">
           <h3>오후 클래스</h3>
-          <a href="/dashboard/user/class/a_afternoonClassPosts">오후 클래스</a>
+          <a href="/user/class/user_afternoonClassPosts">오후 클래스</a>
 
           <ul class="user-posts">
             <% if (data.afternoon) { %> <% data.afternoon.forEach(post => { %>
@@ -52,7 +52,7 @@
 
         <div class="class-box">
           <h3>종일 클래스</h3>
-          <a href="/dashboard/user/class/a_alldayClassPosts">종일 클래스</a>
+          <a href="/user/class/user_alldayClassPosts">종일 클래스</a>
 
           <ul class="user-posts">
             <% if (data.allday) { %> <% data.allday.forEach(post => { %>
@@ -67,7 +67,7 @@
 
         <div class="class-box">
           <h3>일일 클래스</h3>
-          <a href="/dashboard/user/class/a_onedayClassPosts">일일 클래스</a>
+          <a href="/user/class/user_onedayClassPosts">일일 클래스</a>
           <ul class="admin-posts">
             <% if (data.oneday) { %> <% data.oneday.forEach(post => { %>
             <li>
@@ -85,4 +85,4 @@
   </body>
 </html>
 
-<!-- views/dashboard/admin/adminpostlist.ejs -->
+<!-- views/user/dashboard/user_postlist.ejs -->

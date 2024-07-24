@@ -1,28 +1,21 @@
-<<<<<<< HEAD
+/* 노란색 #ffe65e 갈색 #934a16 */
 :root {
   --brown: #dd8e55;
   --yellow: #fbd663;
 }
 
-=======
-/* 노란색 #ffe65e 갈색 #934a16 */
-
 /* 전체 css */
->>>>>>> chae
 body {
   padding: 0px;
   margin: 0px;
   width: 100vw;
-<<<<<<< HEAD
-  overflow-x: hidden;
-  /*가로축 스크롤 제거*/
-=======
+  /* max-height: 500px;
+  min-height: 500px; */
   overflow-x: hidden; /*가로축 스크롤 제거*/
->>>>>>> chae
 }
 
 .single-day-regular {
-  font-family: "Single Day", cursive;
+  font-family: "Single Day";
   font-weight: 400;
   font-style: normal;
 }
@@ -127,14 +120,6 @@ footer div {
 
 
 /* 로그인 및 회원가입 페이지 */
-<<<<<<< HEAD
-=======
-:root { /* 커스텀 css 변수 정의 */
-  --brown: #934a16;
-  --yellow: #ffe65e; 
-}
-
->>>>>>> chae
 textarea {
   width: 410px;
   height: 50px;

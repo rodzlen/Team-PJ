@@ -12,34 +12,23 @@
     <div id="content">
       <div class="admin-title">
         <h2>종일반 - 관리자</h2>
-        <a href="/dashboard/admin/admindashboard" class="new-post-button">
+        <a href="/admin/admin_dashboard" class="new-post-button">
           새 게시물 추가
         </a>
       </div>
       <div class="search-form">
-        <form action="/dashboard/admin/search" method="GET">
-          <input
-            type="text"
-            id="searchInput"
-            name="keyword"
-            placeholder="검색어를 입력하세요"
-          />
-          <input type="submit" value="검색" class="btn" />
+        <form action="/admin/admin_afternoonClassPosts" method="GET">
+          <input type="text" name="search" placeholder="검색" />
+          <button type="submit">검색</button>
         </form>
       </div>
       <ul class="admin-posts">
         <% data.forEach(post => { %>
-        <li>
-            <a href="/user/userdashboard/<%= post._id %>">
-                <%= post.title %>
-            </a>
-            <div class="admin-post-controls">
-                <a href="/adminedit/<%= post._id %>" class="btn">편집</a>
-                <form action="/delete/<%= post._id %>?_method=DELETE" method="POST">
-                    <input type="submit" value="삭제" class="btn-delete btn">
-                </form>
-            </div>
-        </li>
+          <li>
+            <div class="post-title">
+              <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>"><%= post.pet_name %></a>
+            </div><br>
+          </li>
         <% }) %>
       </ul>
 
