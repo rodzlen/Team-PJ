@@ -530,17 +530,45 @@ router.post("/qna/answer/:id", checkAdminLogin, async (req, res) => {
   }
 });
 // 답변 삭제
-router.post("/qna/delete/:id", checkAdminLogin, async (req, res) => {
+router.post("/qna/delete/answer/:id", checkAdminLogin, async (req, res) => {
   const answerId = req.params.id;
-  const { questionId } = req.body;
   try {
-    await db.query("DELETE FROM Answers WHERE id = ?", [answerId]);
+    const [answer] = await db.query("SELECT question_id FROM Answers WHERE answer_id = ?", [answerId]);
+    if (!answer) {
+      return res.status(404).send("답변을 찾을 수 없습니다.");
+    }
+
+    const questionId = answer.question_id;
+    await db.query("DELETE FROM Answers WHERE answer_id = ?", [answerId]);
     res.redirect("/admin/qna/detail/" + questionId);
   } catch (err) {
     console.error(err);
     res.status(500).send("서버 오류");
   }
 });
+// 질문 삭제 라우터
+router.post(
+  "/qna/delete/:id",
+  checkAdminLogin,
+  asyncHandler(async (req, res) => {
+     // 세션에서 사용자 ID 가져오기
+    const questionId = req.params.id;
+
+    try {
+      // 질문과 관련된 답변 모두 삭제
+      await db.query("DELETE FROM Answers WHERE question_id = ?", [questionId]);
+      await db.query("DELETE FROM Questions WHERE question_id = ?", [
+        questionId,
+      ]);
+
+      res.redirect("/admin/qna");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("서버 오류");
+    }
+  })
+);
+
 
 // 수업 신청 상세 페이지
 router.get(
