@@ -819,7 +819,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const {
       current_password,
-      confirm_password,
+      new_password,
       user_phone,
       pet_name,
       sex,
@@ -829,17 +829,50 @@ router.post(
     const userId = req.session.user.user_id; // 세션에서 사용자 ID 가져오기
 
     // 비밀번호 변경 로직
-    if (current_password == confirm_password) {
-      return res.send(
-        '<script>alert("변경할 비밀번호를 입력하세요."); window.location.href="/users/mypage/info";</script>'
+    if (current_password && new_password) {
+      // 현재 비밀번호가 맞는지 확인
+      db.query(
+        "SELECT user_password FROM Users WHERE user_id = ?",
+        [userId],
+        async (err, results) => {
+          if (err) {
+            console.error("비밀번호 확인 중 에러 발생:", err);
+            return res.send(
+              '<script>alert("비밀번호 확인 중 오류가 발생했습니다."); window.location.href="/users/mypage/info";</script>'
+            );
+          }
+          const user = results[0];
+          const isMatch = await bcrypt.compare(current_password, user.user_password);
+          if (!isMatch) {
+            return res.send(
+              '<script>alert("현재 비밀번호가 일치하지 않습니다."); window.location.href="/users/mypage/info";</script>'
+            );
+          }
+
+          // 비밀번호 업데이트
+          const hashedPassword = await bcrypt.hash(new_password, 10);
+          db.query(
+            "UPDATE Users SET user_password = ? WHERE user_id = ?",
+            [hashedPassword, userId],
+            (err) => {
+              if (err) {
+                console.error("비밀번호 수정 중 에러 발생:", err);
+                return res.send(
+                  '<script>alert("비밀번호 수정 중 오류가 발생했습니다."); window.location.href="/users/mypage/info";</script>'
+                );
+              }
+            }
+          );
+        }
       );
     }
 
+    // 사용자 정보 업데이트
     const sql = `
-    UPDATE Users 
-    SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?
-    WHERE user_id = ?
-  `;
+      UPDATE Users 
+      SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?
+      WHERE user_id = ?
+    `;
 
     db.query(
       sql,
@@ -868,6 +901,40 @@ router.post(
     );
   })
 );
+
+// 회원 탈퇴 라우터
+router.post(
+  "/users/mypage/withdraw",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    const userId = req.session.user.user_id;
+
+    // 데이터베이스에서 사용자 삭제
+    const sql = "DELETE FROM Users WHERE user_id = ?";
+    db.query(sql, [userId], (err, results) => {
+      if (err) {
+        console.error("회원 탈퇴 중 에러 발생:", err);
+        return res.send(
+          '<script>alert("회원 탈퇴 중 오류가 발생했습니다."); window.location.href="/";</script>'
+        );
+      } else {
+        // 세션 삭제
+        req.session.destroy((err) => {
+          if (err) {
+            console.error("세션 삭제 중 에러 발생:", err);
+            return res.send(
+              '<script>alert("세션 삭제 중 오류가 발생했습니다."); window.location.href="/";</script>'
+            );
+          }
+          return res.send(
+            '<script>alert("회원 탈퇴가 완료되었습니다."); window.location.href="/";</script>'
+          );
+        });
+      }
+    });
+  })
+);
+
 
 // // 강아지 정보 유저 대시보드 라우트
 // router.get("/dashboard/user_dashboard/:id", async (req, res) => {
@@ -927,13 +994,14 @@ router.get(
 );
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
-router.get("/user_postlist", (req, res) => {
+router.get("/user_postlist",checkLogin, (req, res) => {
+  const locals = {user:req.session.user}
   db.query("SELECT * FROM Dogs", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("user/dashboard/user_postlist", { data: posts });
+    res.render("user/dashboard/user_postlist", {locals, data: posts ,layout:mainLayout});
   });
 });
 
