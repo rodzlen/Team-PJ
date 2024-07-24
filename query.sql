@@ -138,6 +138,13 @@ CREATE TABLE FreeBoard (
     image BLOB
 );
 
+INSERT INTO FreeBoard (title, content, image)
+VALUES ('우리 아이의 성장기', '우리 아이가 요즘 무슨 모습을 보이나요? 공유해 주세요.', NULL),
+       ('오늘의 일기', '오늘 하루 어떤 일이 있었나요? 기록해 보세요.', NULL),
+       ('가정에서의 재미있는 시간', '가정에서 함께 즐길 수 있는 활동이나 추천하고 싶은 책이나 게임이 있나요?', NULL),
+       ('휴일 계획', '다가오는 주말에 무엇을 계획하고 계십니까? 공유해 주세요.', NULL),
+       ('식당 후기', '최근에 방문한 맛집 후기를 나누어 주세요.', NULL);
+
 -- 질문 테이블
 CREATE TABLE Questions (
     question_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -217,4 +224,3 @@ CREATE TABLE ClassRegistration (
     admin_id INT, 
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id) 
 );
-
