@@ -192,7 +192,6 @@ CREATE TABLE ClassRegistration (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     admin_id INT,
     FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
-
 );
 
 --수강목록 테이블 
