@@ -33,6 +33,10 @@ form input[type="text"], form select {
   margin-right: 5px;
 }
 
+label {
+  
+}
+
 #btnBox {
   width: 50%;
   display: flex;
