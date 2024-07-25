@@ -18,9 +18,7 @@
                         <% staff.forEach((employee, index)=> { %>
                             <td>
                                 <div class="employee-card">
-                                    <img src="/img/<%=employee.staff_photo%>" alt="시설 사진" class="facility-image">
-                                    <img src="/img/<%=staff.staff_photo%>" alt="시설 사진" class="facility-image"
-                                        onerror="this.onerror=null; this.src='/img/wait2.png';">
+                                    <img src="/img/<%=employee.staff_photo%>" alt="시설 사진" class="facility-image" onerror="this.onerror=null; this.src='/img/wait2.png';">
                                     <ul class="employee-info">
                                         <li>이름: <%=employee.name %>
                                         </li>
