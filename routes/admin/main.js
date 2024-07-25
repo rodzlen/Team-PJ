@@ -1841,7 +1841,8 @@ router.get("/adminmainpage", (req, res) => {
 });
 
 router.get("/adminCalendar", (req, res) => {
-  res.render("admin/calendar/admin_Calendar");
+  const locals = {admin : req.session.admin}
+  res.render("admin/calendar/admin_Calendar",{locals, layout:adminLayout});
 });
 
 // 유저 목록 조회
