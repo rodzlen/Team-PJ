@@ -18,6 +18,13 @@ body {
     align-items: center;
 }
 
+#top {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
 form {
     padding-bottom: 20px;
 }
@@ -75,7 +82,7 @@ tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
-#backBtn {
+#backBtn, #addBtn {
     padding: 8px 15px;
     border: none;
     border-radius: 3px;
@@ -85,7 +92,7 @@ tbody tr:nth-child(even) {
     margin-top: 10px;
 }
 
-#backBtn:hover {
+#backBtn:hover, #addBtn:hover{
     background-color: #218838;
 }
 
