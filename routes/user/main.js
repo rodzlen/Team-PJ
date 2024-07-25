@@ -959,7 +959,7 @@ router.post(
 
 // 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
 router.get(
-  "/dashboard/user_dashboard/:dog_id",
+  "/dashboard/user_dashboard/:dog_id",checkLogin,
   asyncHandler(async (req, res) => {
     const postId = req.params.dog_id;
 
@@ -1018,7 +1018,7 @@ router.get("/search", (req, res) => {
 
 // 오전반 게시물 조회 라우트
 router.get(
-  "/class/user_morningClassPosts",
+  "/class/user_morningClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
@@ -1057,7 +1057,7 @@ router.get(
 
 // 오후반
 router.get(
-  "/class/user_afternoonClassPosts",
+  "/class/user_afternoonClassPosts", checkLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
@@ -1096,7 +1096,7 @@ router.get(
 
 // 종일
 router.get(
-  "/class/user_alldayClassPosts",
+  "/class/user_alldayClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
@@ -1135,7 +1135,7 @@ router.get(
 
 // 일일
 router.get(
-  "/class/user_onedayClassPosts",
+  "/class/user_onedayClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
@@ -1173,7 +1173,8 @@ router.get(
 );
 
 router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/user_Calendar");
+  const locals = req.session.user
+  res.render("user/calendar/user_Calendar",{locals, layout:mainLayout});
 });
 
 router.get("/mainpage", (req, res) => {
@@ -1182,6 +1183,7 @@ router.get("/mainpage", (req, res) => {
 
 // 유저 시설소개 직원소개 메인페이지
 router.get("/userfacilitiesMain", (req, res) => {
+  const locals =req.session.user;
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
 
@@ -1209,8 +1211,10 @@ router.get("/userfacilitiesMain", (req, res) => {
     .then(([facilitiesResult, staffResult]) => {
       res.render("user/facilities/user_FacilitiesMain", {
         // 경로 수정
+        locals,
         facilities: facilitiesResult,
         staff: staffResult,
+        layout:mainLayout
       });
     })
     .catch((err) => {
