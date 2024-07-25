@@ -715,6 +715,9 @@ router.post(
     });
   })
 );
+
+
+
 // 중복 확인 라우터
 router.post('/check-duplicate-id', (req, res) => {
   const locals ={showSignup: true}
@@ -735,6 +738,10 @@ router.post('/check-duplicate-id', (req, res) => {
     }
   });
 });
+
+
+
+
 // 로그인 처리
 router.post(
   "/users/login",
