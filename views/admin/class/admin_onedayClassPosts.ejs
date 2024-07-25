@@ -11,13 +11,13 @@
 <body>
   <div id="classification">
     <h2>오후반 - 관리자</h2>
-
+    <div id="top">
       <form action="/admin/class/admin_onedayClassPosts" method="GET">
         <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색" />
         <button type="submit">검색</button> &nbsp;
       </form>
       <button id="addBtn" onclick="location.href='/admin/admin_dashboard'">새 게시물 추가</button>
-
+    </div>
     <table>
       <thead>
         <tr>
