@@ -1,4 +1,4 @@
-/* :root {
+:root {
   --brown: #dd8e55;
   --yellow: #fbd663;
 }
@@ -8,21 +8,17 @@ body {
   margin: 0;
   width: 100vw;
   overflow-x: hidden;
+  background-origin: #000;
 }
 
-#container {
+#cover {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: #000;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  color: var(--brown);
-  text-align: center;
 }
 
 h2 {
@@ -53,4 +49,4 @@ h2 {
 
 #infoDisplay p:last-child {
   margin-bottom: 0;
-} */
+}
