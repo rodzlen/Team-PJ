@@ -15,24 +15,46 @@
       <div class="search-form">
         <form action="/admin/admin_alldayClassPosts" method="GET">
           <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
+
           <button type="submit">검색</button>
-        </form>
-          <input type="submit" value="검색" class="btn" />
-        </form>
+      </form>
+
+
       </div>
-      <ul class="admin-posts">
-        <% data.forEach(post => { %>
-        <li>
-          <a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">
-            <%= post.pet_name %>
-          </a>
 
-        </li>
-        <% }) %>
-      </ul>
-
+      <table>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>강아지 이름</th>
+            <th>주인 이름</th>
+            <th>등록일(시작/마지막)</th>
+            <th>정보 상세보기</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (data.length) { %>
+            <% data.forEach((post, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= post.pet_name %></td>
+              <td><%= post.owner_name %></td>
+              <td>
+                <!-- 날짜 형식 변환 및 기본값 설정 -->
+                <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
+                <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
+              </td>
+              <td><a href="/user/dashboard/user_dashboard/<%= post.dog_id %>">정보 상세 보기</a></td>
+            </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">데이터가 없습니다.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      
     <script src="/js/main.js"></script>
   </body>
 </html>
-
-<!-- views/userdashboard/user_morningClassPosts -->

@@ -1,0 +1,98 @@
+:root {
+  --brown: #dd8e55;
+  --yellow: #fbd663;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+#postlist {
+  width: 100%;
+}
+
+#cover {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0px;
+}
+
+.class-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.class-box {
+  flex: 1 1 300px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.class-box h3 {
+  color: var(--brown);
+}
+
+.class-box a {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.admin-posts {
+  list-style-type: none;
+  padding: 0;
+}
+
+.post-title {
+  font-size: 16px;
+}
+
+.post-title a {
+  color: #333;
+  text-decoration: none;
+}
+
+.post-title a:hover {
+  text-decoration: underline;
+}
+
+form {
+  margin-bottom: 20px;
+} 
+
+form input[type="text"], form select {
+  padding: 8px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}
+
+form button {
+  display: inline-block;
+  margin-top: 15px;
+  margin-right: 10px;
+  border: 2px solid var(--yellow);
+  background: var(--yellow);
+  border-radius: 3px;
+  padding: 4px 8px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #fff;
+  color: var(--yellow);
+}

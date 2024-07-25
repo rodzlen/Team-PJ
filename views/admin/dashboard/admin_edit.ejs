@@ -54,12 +54,19 @@
         />
       </div>
       <div>
-        <label for="walk_time"><b>산책 시간</b></label>
+        <label for="walk_starttime"><b>산책 시작 시간</b></label>
         <input
           type="time"
-          name="walk_time"
-          id="walk_time"
-          value="<%= post.walk_time %>"
+          name="walk_starttime"
+          id="walk_starttime"
+          value="<%= post.walk_starttime %>"
+        />
+        <label for="walk_endtime"><b>산책 끝 시간</b></label>
+        <input
+          type="time"
+          name="walk_endtime"
+          id="walk_endtime"
+          value="<%= post.walk_endtime %>"
         />
       </div>
       <div>

@@ -38,9 +38,9 @@
                 </tr>
             </thead>
             <tbody>
-                <% data.forEach(function(e1) { %>
+                <% data.forEach(function(e1, index) { %>
                 <tr>
-                    <td><%= e1.id %></td>
+                    <td><%=index +1 %></td>
                     <td class="notice-title"><a href="/admin/notice/detail/<%= e1.id %>"><%= e1.title %></a></td>
                     <td><%= e1.post_date %></td>
                     <td><%= e1.createBy %></td>

@@ -1,53 +1,45 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>유저 대시보드</title>
-    <link rel="stylesheet" href="/css/dashboardstyle.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>유저 대시보드</title>
+  <link rel="stylesheet" href="/css/dashboard_style.css" />
+</head>
 
-  <body>
-    <div id="container">
-      <h1>강아지 정보</h1>
+<body>
+  <div id="container">
+    <h1>강아지 정보</h1>
 
-      <!-- 강아지 사진 -->
-      <div class="photo-section">
-        <h2>강아지 사진</h2>
-        <img src="/img/<%= data.dog_photo %>" alt="Dog Photo" />
-      </div>
-      <hr />
+    <!-- 강아지 사진 섹션 -->
+    <div class="photo-section">
+      <h2>강아지 사진</h2>
+      <img src="/img/<%= data.dog_photo %>" alt="강아지 사진" />
+    </div>
+    <hr />
 
-      <!-- 날짜 선택 및 정보 표시 -->
-      <div class="date-info-section">
-        <h2>날짜 정보</h2>
-        <form action="/admin/getinfo" method="POST">
-          <label for="selectedDate">날짜 선택:</label>
-          <input type="date" id="selectedDate" name="selectedDate" required />
-          <button type="submit">조회</button>
-        </form>
-        <div id="infoDisplay">
-          <!-- 날짜별 정보 표시 -->
-          <% if (data.walk_date) { %>
-          <p>강아지 이름: <%= data.pet_name %></p>
-          <p>산책 시간: <%= data.walk_time %></p>
-          <img src="/img/<%= data.walk_photo %>" alt="오늘의 산책 사진" />
-          <p>수업 시간: <%= data.class_info %></p>
-          <p>담당자 이름: <%= data.teacher %></p>
-          <p>특이사항: <%= data.note_info %></p>
-          <% if(data.feed){%>
+    <!-- 날짜 정보 섹션 -->
+    <div class="date-info-section">
+      <h2><%= data.pet_name %></h2>
+      <div id="infoDisplay">
+        <!-- 날짜별 정보 표시 -->
+        <p>작성 날짜: <%= data.walk_date %></p>
+        <p>강아지 이름: <%= data.pet_name %></p>
+        <p>산책 시작 시간: <%= data.walk_starttime %></p>
+        <p>산책 끝 시간: <%= data.walk_endtime %></p>
+        <img src="/img/<%= data.walk_photo %>" alt="오늘의 산책 사진" />
+        <p>수업 시간: <%= data.class_info %></p>
+        <p>담당자 이름: <%= data.teacher %></p>
+        <p>특이사항: <%= data.note_info %></p>
+        
+        <% if(data.feed){ %>
           <p>급식 신청: 예</p>
-
-          <% } else{ %>
+        <% } else { %>
           <p>급식 신청: 아니오</p>
-
-          <% } %> <% } else { %>
-          <p>선택된 날짜의 정보가 없습니다.</p>
-          <% } %>
-        </div>
+        <% } %>
+        
       </div>
     </div>
-  </body>
+  </div>
+</body>
 </html>
-
-<!-- views/user/dashboard/user_dashboard -->

@@ -29,30 +29,34 @@
     <div class="main-content">
         <!-- 검색 폼 -->
         <form action="/freeboard" method="GET">
-            <input type="text" name="search" placeholder="검색">
+            <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
             <select name="type">
-                <option value="title">제목</option>
-                <option value="createBy">작성자</option>
-                <option value="title||createBy" selected>제목+작성자</option>
+                <option value="title" <%= typeQuery === 'title' ? 'selected' : '' %>>제목</option>
+      <option value="createBy" <%= typeQuery === 'createBy' ? 'selected' : '' %>>작성자</option>
+      <option value="title||createBy" <%= typeQuery === 'title||createBy' ? 'selected' : '' %>>제목+작성자</option>
             </select>
             <button type="submit">검색</button>
         </form>
 
+
         <!-- 게시글 목록 테이블 -->
-        <table>
+        <table id="freeTable">
             <thead>
                 <tr>
                     <th>번호</th>
                     <th>제목</th>
+                    <th>작성자</th>
                     <th>작성일</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 <% data.forEach((FreeBoard, index) => { %>
                     <tr>
                         <td><%= index + 1 %></td>
-                        <td><a href="/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
+                        <td><a href="/admin/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
                         <td><%= FreeBoard.post_date.toISOString().split('T')[0] %></td>
+                        <td><%= FreeBoard.createBy %></td>
                     </tr>
                 <% }); %>
             </tbody>
@@ -60,7 +64,7 @@
 
         <!-- 글쓰기 버튼 -->
         <div class="write-button">
-            <button onclick="location.href='/freeboard/add'">글쓰기</button>
+            <button onclick="location.href='/admin/freeboard/add'">글쓰기</button>
         </div>
     </div>
 </div>

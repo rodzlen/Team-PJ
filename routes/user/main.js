@@ -49,9 +49,21 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
-    let query = "SELECT * FROM noticeBoard";
+    let query = "SELECT * FROM noticeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -61,6 +73,8 @@ router.get(
         res.render("user/notice/user_notice_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
@@ -95,7 +109,6 @@ router.get(
   })
 );
 
-// 자유게시판 목록
 router.get(
   "/freeboard",
   asyncHandler(async (req, res) => {
@@ -105,7 +118,19 @@ router.get(
 
     let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -115,6 +140,8 @@ router.get(
         res.render("user/freeboard/user_freeboard_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
@@ -343,7 +370,7 @@ router.post(
   })
 );
 
-//qna 목록
+// qna 목록
 router.get(
   "/qna",
   asyncHandler(async (req, res) => {
@@ -353,7 +380,19 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE q.title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE q.title LIKE ? OR q.question_by LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
@@ -362,6 +401,8 @@ router.get(
         res.render("user/qna/user_qna_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: mainLayout,
         });
       }
@@ -506,12 +547,12 @@ router.post(
     try {
       // 데이터베이스에서 질문의 작성자 정보 조회
       const [question] = await db.query(
-        "SELECT createBy FROM Questions WHERE question_id = ?",
+        "SELECT question_by FROM Questions WHERE question_id = ?",
         [questionId]
       );
 
       // 작성자와 현재 사용자 비교
-      if (question.createBy !== userId) {
+      if (question.question_by !== userId) {
         return res.status(403).send("권한이 없습니다.");
       }
 
@@ -776,7 +817,7 @@ router.post(
   asyncHandler(async (req, res) => {
     const {
       current_password,
-      confirm_password,
+      new_password,
       user_phone,
       pet_name,
       sex,
@@ -786,17 +827,53 @@ router.post(
     const userId = req.session.user.user_id; // 세션에서 사용자 ID 가져오기
 
     // 비밀번호 변경 로직
-    if (current_password == confirm_password) {
-      return res.send(
-        '<script>alert("변경할 비밀번호를 입력하세요."); window.location.href="/users/mypage/info";</script>'
+    if (current_password && new_password) {
+      // 현재 비밀번호가 맞는지 확인
+      db.query(
+        "SELECT user_password FROM Users WHERE user_id = ?",
+        [userId],
+        async (err, results) => {
+          if (err) {
+            console.error("비밀번호 확인 중 에러 발생:", err);
+            return res.send(
+              '<script>alert("비밀번호 확인 중 오류가 발생했습니다."); window.location.href="/users/mypage/info";</script>'
+            );
+          }
+          const user = results[0];
+          const isMatch = await bcrypt.compare(
+            current_password,
+            user.user_password
+          );
+          if (!isMatch) {
+            return res.send(
+              '<script>alert("현재 비밀번호가 일치하지 않습니다."); window.location.href="/users/mypage/info";</script>'
+            );
+          }
+
+          // 비밀번호 업데이트
+          const hashedPassword = await bcrypt.hash(new_password, 10);
+          db.query(
+            "UPDATE Users SET user_password = ? WHERE user_id = ?",
+            [hashedPassword, userId],
+            (err) => {
+              if (err) {
+                console.error("비밀번호 수정 중 에러 발생:", err);
+                return res.send(
+                  '<script>alert("비밀번호 수정 중 오류가 발생했습니다."); window.location.href="/users/mypage/info";</script>'
+                );
+              }
+            }
+          );
+        }
       );
     }
 
+    // 사용자 정보 업데이트
     const sql = `
-    UPDATE Users 
-    SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?
-    WHERE user_id = ?
-  `;
+      UPDATE Users 
+      SET user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?
+      WHERE user_id = ?
+    `;
 
     db.query(
       sql,
@@ -826,6 +903,59 @@ router.post(
   })
 );
 
+// 회원 탈퇴 라우터
+router.post(
+  "/users/mypage/withdraw",
+  checkLogin,
+  asyncHandler(async (req, res) => {
+    const userId = req.session.user.user_id;
+
+    // 데이터베이스에서 사용자 삭제
+    const sql = "DELETE FROM Users WHERE user_id = ?";
+    db.query(sql, [userId], (err, results) => {
+      if (err) {
+        console.error("회원 탈퇴 중 에러 발생:", err);
+        return res.send(
+          '<script>alert("회원 탈퇴 중 오류가 발생했습니다."); window.location.href="/";</script>'
+        );
+      } else {
+        // 세션 삭제
+        req.session.destroy((err) => {
+          if (err) {
+            console.error("세션 삭제 중 에러 발생:", err);
+            return res.send(
+              '<script>alert("세션 삭제 중 오류가 발생했습니다."); window.location.href="/";</script>'
+            );
+          }
+          return res.send(
+            '<script>alert("회원 탈퇴가 완료되었습니다."); window.location.href="/";</script>'
+          );
+        });
+      }
+    });
+  })
+);
+
+// // 강아지 정보 유저 대시보드 라우트
+// router.get("/dashboard/user_dashboard/:id", async (req, res) => {
+//   const dog_id = req.params.id;
+//   const query = "SELECT * FROM dogs WHERE dog_id = ?";
+
+//   try {
+//     const [rows] = await db.query(query, [dog_id]);
+//     console.log("Query result:", rows); // 콘솔에서 쿼리 결과 확인
+
+//     if (rows.length > 0) {
+//       const dogData = rows[0];
+//       res.render("user/dashboard/user_dashboard", { data: dogData });
+//     } else {
+//       res.status(404).send("해당 정보를 찾을 수 없습니다.");
+//     }
+//   } catch (err) {
+//     console.error("Database query error:", err);
+//     res.status(500).send("서버 오류가 발생했습니다.");
+//   }
+// });
 
 // 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
 router.get(
@@ -864,13 +994,18 @@ router.get(
 );
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
-router.get("/class/user_postlist", (req, res) => {
+router.get("/user_postlist", checkLogin, (req, res) => {
+  const locals = { user: req.session.user };
   db.query("SELECT * FROM Dogs", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("user/dashboard/user_postlist", { data: posts });
+    res.render("user/dashboard/user_postlist", {
+      locals,
+      data: posts,
+      layout: mainLayout,
+    });
   });
 });
 
@@ -882,54 +1017,174 @@ router.get("/search", (req, res) => {
 });
 
 // 게시물 클래스별 라우트
-router.get("/class/user_morningClassPosts", (req, res) => {
-  db.query("SELECT * FROM Dogs WHERE class_info = '오전'", (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
-    }
-    res.render("user/class/user_morningClassPosts", { data: posts });
-  });
-});
+// router.get("/class/user_morningClassPosts", (req, res) => {
+//   const searchQuery = req.query.search || "";
 
-router.get("/class/user_afternoonClassPosts", (req, res) => {
-  db.query("SELECT * FROM dogs WHERE class_info = '오후'", (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
+//   let query = "SELECT * FROM Dogs WHERE class_info = '오전'";
+//   const queryParams = [];
+
+//   if (searchQuery) {
+//     query += " AND pet_name LIKE ?";
+//     queryParams.push(`%${searchQuery}%`);
+//   }
+
+//   db.query(query, queryParams, (err, posts) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).send("서버 오류");
+//     }
+//     res.render("user/class/user_morningClassPosts", {
+//       data: posts,
+//       searchQuery,
+//     });
+//   });
+// });
+
+// router.get("/class/user_afternoonClassPosts", (req, res) => {
+//   const searchQuery = req.query.search || "";
+
+//   let query = "SELECT * FROM Dogs WHERE class_info = '오후'";
+//   const queryParams = [];
+
+//   if (searchQuery) {
+//     query += " AND pet_name LIKE ?";
+//     queryParams.push(`%${searchQuery}%`);
+//   }
+
+//   db.query(query, queryParams, (err, posts) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(500).send("서버 오류");
+//     }
+//     res.render("user/class/user_afternoonClassPosts", {
+//       data: posts,
+//       searchQuery: searchQuery,
+//     });
+//   });
+// });
+
+// 오전반 게시물 조회 라우트
+router.get(
+  "/class/user_morningClassPosts",
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+
+    let query = `
+    SELECT 
+      d.dog_id, d.pet_name, d.owner_name, c.start_date, c.end_date
+    FROM 
+      Dogs d
+    LEFT JOIN 
+      ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
+    WHERE 
+      d.class_info = '오전'
+  `;
+    const queryParams = [];
+
+    if (searchQuery) {
+      query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
     }
-    res.render("user/class/user_afternoonClassPosts", {
-      data: posts,
+
+    db.query(query, queryParams, (err, posts) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("서버 오류가 발생했습니다.");
+      }
+      res.render("user/class/user_morningClassPosts", {
+        data: posts,
+        searchQuery,
+      });
     });
-  });
-});
+  })
+);
 
 router.get("/class/user_alldayClassPosts", (req, res) => {
-  db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
+  const searchQuery = req.query.search || "";
+
+  let query = "SELECT * FROM Dogs WHERE class_info = '종일'";
+  const queryParams = [];
+
+  if (searchQuery) {
+    query += " AND pet_name LIKE ?";
+    queryParams.push(`%${searchQuery}%`);
+  }
+
+  db.query(query, queryParams, (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
     res.render("user/class/user_alldayClassPosts", {
       data: posts,
+      searchQuery: searchQuery,
     });
   });
 });
 
+// router.get(
+//   "/user/class/user_alldayClassPosts",
+//   asyncHandler(async (req, res) => {
+//     const searchQuery = req.query.search || "";
+
+//     // 기본 쿼리 설정
+//     let query = `
+//     SELECT
+//       d.dog_id, d.pet_name, d.owner_name, d.walk_date, d.walk_starttime, d.walk_endtime,
+//       c.start_date, c.end_date
+//     FROM
+//       Dogs d
+//     JOIN
+//       ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
+//     WHERE
+//       c.class_name = '종일'
+//   `;
+//     const queryParams = [];
+
+//     // 검색어가 있을 경우 추가 조건 설정
+//     if (searchQuery) {
+//       query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
+//       queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+//     }
+
+//     // 데이터베이스 쿼리 실행
+//     db.query(query, queryParams, (err, results) => {
+//       if (err) {
+//         console.error(err);
+//         res.status(500).send("서버 오류가 발생했습니다.");
+//       } else {
+//         res.render("user/class/user_alldayClassPosts", { data: results });
+//       }
+//     });
+//   })
+// );
+
 router.get("/class/user_onedayClassPosts", (req, res) => {
-  db.query("SELECT * FROM Dogs WHERE class_info = '일일'", (err, posts) => {
+  const searchQuery = req.query.search || "";
+
+  let query = "SELECT * FROM Dogs WHERE class_info = '일일'";
+  const queryParams = [];
+
+  if (searchQuery) {
+    query += " AND pet_name LIKE ?";
+    queryParams.push(`%${searchQuery}%`);
+  }
+
+  db.query(query, queryParams, (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("user/class/user_onedayClassPosts", { data: posts });
+    res.render("user/class/user_onedayClassPosts", {
+      data: posts,
+      searchQuery: searchQuery,
+    });
   });
 });
 
 router.get("/userCalendar", (req, res) => {
   res.render("user/calendar/user_Calendar");
 });
-
 
 router.get("/mainpage", (req, res) => {
   res.render("mainpage");

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>관리자 강아지 정보 관리 페이지</title>
-  <link rel="stylesheet" href="/css/admin_dashboard_style.css" />
+  <link rel="stylesheet" href="/css/dashboard_style.css" />
 </head>
 
 <body>
@@ -40,8 +40,10 @@
         </div>
 
         <div class="form-group">
-          <label for="walk_time">산책 시간</label>
-          <input type="time" id="walk_time" name="walk_time" value="<%= formData.walk_time %>">
+          <label for="walk_starttime">산책 시작 시간</label>
+          <input type="time" id="walk_starttime" name="walk_starttime" value="<%= formData.walk_starttime %>">
+          <label for="walk_endtime">산책 끝 시간</label>
+          <input type="time" id="walk_endtime" name="walk_endtime" value="<%= formData.walk_endtime %>">
         </div>
 
         <!-- 오늘의 산책 사진 업로드 폼 -->

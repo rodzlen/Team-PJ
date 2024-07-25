@@ -2,7 +2,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QnA 상세</title>
-  <link rel="stylesheet" href="/css/qna_styles.css">
+  <link rel="stylesheet" href="/css/communityDetail_style.css">
 </head>
 <body>
   <h1>QnA 상세</h1>
@@ -35,6 +35,7 @@
 
   <h3>관리</h3>
   <form action="/admin/qna/delete/question/<%= question.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+    
       <button type="submit">질문 삭제</button>
   </form>
   <form action="/admin/qna/edit/<%= question.id %>" method="GET">
