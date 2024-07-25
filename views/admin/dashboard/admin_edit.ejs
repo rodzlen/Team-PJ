@@ -73,18 +73,14 @@
       <div id="btnBox">
         <div>
           <button id="editBtn" type="submit" onclick="return confirm('정말 수정하시겠습니까?')">수정</button>
-          <!-- <input type="submit" value="수정" class="btn" onclick="return confirm('정말 수정하시겠습니까?')" /> -->
         </div>
     </form>
     <!--delete 폼-->
     <form action="/admin/dashboard/delete/<%= post.dog_id %>" method="POST">
       <button id="delBtn" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
     </form>
-    <!-- <input type="submit" value="삭제" class="btn-delete btn" onclick="return confirm('정말 삭제하시겠습니까?')" /> -->
     <button id="backBtn" type="submit" onclick="window.location.href='/admin/class/admin_postlist'">뒤로</button>
   </div>
-  <!-- <input type="button" value="뒤로" class="btn" onclick="window.location.href='/admin/class/admin_postlist'" />
-    </form> -->
   </div>
 </body>
 
