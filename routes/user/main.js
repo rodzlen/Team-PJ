@@ -645,9 +645,11 @@ router.get(
     res.render("user/userManagement/user_login", {
       locals,
       layout: mainLayout,
+      showSignup: false
     });
   })
 );
+
 
 // 마이페이지(유저용)
 router.get(
@@ -713,7 +715,26 @@ router.post(
     });
   })
 );
-
+// 중복 확인 라우터
+router.post('/check-duplicate-id', (req, res) => {
+  const locals ={showSignup: true}
+  const { user_id } = req.body;
+  const query = 'SELECT COUNT(*) AS count FROM Users WHERE user_id = ?';
+  db.query(query, [user_id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const isDuplicate = results[0].count > 0;
+      res.render('user/userManagement/user_login', {
+        isDuplicate,
+        user_id,
+        layout: mainLayout, // 실제 사용 중인 레이아웃으로 변경
+        locals
+      });
+    }
+  });
+});
 // 로그인 처리
 router.post(
   "/users/login",
