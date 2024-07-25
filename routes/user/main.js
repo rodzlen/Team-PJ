@@ -1194,7 +1194,7 @@ router.get(
 );
 
 router.get("/userCalendar", (req, res) => {
-  const locals = req.session.user
+  const locals = {user:req.session.user}
   res.render("user/calendar/user_Calendar",{locals, layout:mainLayout});
 });
 
@@ -1204,7 +1204,7 @@ router.get("/mainpage", (req, res) => {
 
 // 유저 시설소개 직원소개 메인페이지
 router.get("/userfacilitiesMain", (req, res) => {
-  const locals =req.session.user;
+  const locals ={user:req.session.user};
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
 
