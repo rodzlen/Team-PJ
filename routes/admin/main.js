@@ -1617,7 +1617,8 @@ router.post("/dashboard/delete/:dog_id", (req, res) => {
 
 // 직원소개 및 시설소개 모든 데이터
 
-router.get("/adminfacilitiesMain", (req, res) => {
+router.get("/adminfacilitiesMain",checkAdminLogin, (req, res) => {
+  const locals = {admin: req.session.admin}
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
 
@@ -1646,6 +1647,8 @@ router.get("/adminfacilitiesMain", (req, res) => {
       res.render("admin/facilities/admin_FacilitiesMain", {
         facilities: facilitiesResult,
         staff: staffResult,
+        locals,
+        layout: adminLayout
       });
     })
     .catch((err) => {
@@ -1654,12 +1657,12 @@ router.get("/adminfacilitiesMain", (req, res) => {
 });
 
 // 시설 생성 페이지
-router.get("/adminfacilitiescreate", (req, res) => {
+router.get("/adminfacilitiescreate",checkAdminLogin, (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
 });
 // 시설 생성 처리
 router.post(
-  "/adminfacilitiescreate",
+  "/adminfacilitiescreate",checkAdminLogin,
   upload.single("facility_photo"),
   (req, res) => {
     try {
@@ -1688,7 +1691,7 @@ router.post(
 
 // 시설 수정 페이지
 
-router.get("/adminfacilitiesedit/:id", (req, res) => {
+router.get("/adminfacilitiesedit/:id", checkAdminLogin,(req, res) => {
   const ID = req.params.id;
   const query = "SELECT * FROM Facilities WHERE id = ?";
   db.query(query, [ID], (err, result) => {
@@ -1728,7 +1731,8 @@ router.post(
 );
 
 // 시설 정보 삭제 처리
-router.post("/delete", (req, res) => {
+router.post("/delete",  checkAdminLogin, (req, res) => {
+  const locals = {admin : req.session.admin}
   const id = req.body.id;
   const query = "DELETE FROM Facilities WHERE id = ?";
   db.query(query, [id], (err, result) => {
@@ -1767,6 +1771,7 @@ router.post("/adminstaffcreate", upload.single("staff_photo"), (req, res) => {
 
 // 직원 수정 페이지
 router.get("/adminstaffedit/:id", (req, res) => {
+  const locals = {admin: req.session.admin}
   const ID = req.params.id;
 
   const query = "SELECT * FROM staff WHERE staff_id = ?";
@@ -1776,7 +1781,7 @@ router.get("/adminstaffedit/:id", (req, res) => {
     } else if (result.length === 0) {
       res.send("찾으시는 페이지가 존재하지 않습니다.");
     } else {
-      res.render("admin/staff/admin_StaffEdit", { Data2: result[0] });
+      res.render("admin/staff/admin_StaffEdit", {locals,layout:adminLayout, Data2: result[0] });
     }
   });
 });

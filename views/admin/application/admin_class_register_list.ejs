@@ -46,7 +46,7 @@
                                     <%= reg.owner_name %>
                                 </a></td>
                             <td>
-                                <%= reg.created_at %>
+                                <%= reg.created_at.toISOString().split('T')[0] %>
                             </td>
                             <td>
                                 <%= reg.status %>
