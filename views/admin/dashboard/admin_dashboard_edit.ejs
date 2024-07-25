@@ -1,135 +1,83 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>관리자 강아지 정보 수정 페이지</title>
-    <link rel="stylesheet" href="/css/dashboardstyle.css" />
-  </head>
-  <body>
-    <form
-      action="/dashboard/admin/edit/<%= post.id %>?_method=PUT"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      <div class="admin-title">
-        <h2><%= title %></h2>
-      </div>
-      <div>
-        <label for="photo"><b>강아지 사진</b></label>
-        <input type="file" name="photo" id="photo" />
-        <img
-          src="/img/<%= post.dog_photo %>"
-          alt="강아지 사진"
-          style="max-width: 200px"
-        />
-      </div>
-      <div>
-        <label for="pet_name"><b>강아지 이름</b></label>
-        <input
-          type="text"
-          name="pet_name"
-          id="pet_name"
-          value="<%= post.pet_name %>"
-          readonly
-        />
-      </div>
-      <div>
-        <label for="owner_name"><b>주인 이름</b></label>
-        <input
-          type="text"
-          name="owner_name"
-          id="owner_name"
-          value="<%= post.owner_name %>"
-          readonly
-        />
-      </div>
-      <div>
-        <label for="walk_date"><b>날짜</b></label>
-        <input
-          type="date"
-          name="walk_date"
-          id="walk_date"
-          value="<%= post.walk_date %>"
-        />
-      </div>
-      <div>
-        <label for="walk_time"><b>산책 시간</b></label>
-        <input
-          type="time"
-          name="walk_time"
-          id="walk_time"
-          value="<%= post.walk_time %>"
-        />
-      </div>
-      <div>
-        <label for="walk_photo"><b>오늘의 산책 사진</b></label>
-        <input type="file" name="walk_photo" id="walk_photo" />
-        <img
-          src="/img/todaywalkphotos/<%= post.walk_photo %>"
-          alt="오늘의 산책 사진"
-          style="max-width: 200px"
-        />
-      </div>
-      <div>
-        <label for="teacher"><b>담당자 이름</b></label>
-        <input
-          type="text"
-          name="teacher"
-          id="teacher"
-          value="<%= post.teacher %>"
-        />
-      </div>
-      <div>
-        <label for="note_info"><b>특이 사항</b></label>
-        <textarea name="note_info" id="note_info" cols="50" rows="10">
-<%= post.note_info %></textarea
-        >
-      </div>
-      <div>
-        <label for="class_info"><b>수업 정보</b></label>
-        <textarea name="class_info" id="class_info" cols="50" rows="10">
-<%= post.class_info %></textarea
-        >
-      </div>
-      <div>
-        <label for="feed"><b>급식 신청</b></label>
-        <div>
-          <input type="radio" id="feedYes" name="feed" value="1" <%= post.feed ?
-          'checked' : '' %>> <label for="feedYes">예</label>
-        </div>
-        <div>
-          <input type="radio" id="feedNo" name="feed" value="0" <%= !post.feed ?
-          'checked' : '' %>> <label for="feedNo">아니오</label>
-        </div>
-      </div>
-      <div>
-        <input
-          type="submit"
-          value="수정"
-          class="btn"
-          onclick="return confirm('정말 수정하시겠습니까?')"
-        />
-      </div>
-      <form
-        action="/dashboard/admin/delete/<%= post.id %>?_method=DELETE"
-        method="POST"
-      >
-        <input
-          type="submit"
-          value="삭제"
-          class="btn-delete btn"
-          onclick="return confirm('정말 삭제하시겠습니까?')"
-        />
-        <input
-          type="button"
-          value="뒤로"
-          class="btn"
-          onclick="history.back()"
-        />
-      </form>
-    </form>
-  </body>
-</html>
 
-<!-- views/dashboard/admin/adminedit -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 강아지 정보 수정 페이지</title>
+  <link rel="stylesheet" href="/css/dashboard_style.css" />
+</head>
+
+<body>
+  <div id="userMyPage">
+    <form action="/dashboard/admin/edit/<%= post.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+
+      <h2>
+        <%= title %>
+      </h2>
+
+      <div id="coverU">
+        <fieldset id="userInfo">
+          <div class="photo-section">
+            <label for="photo"><b>강아지 사진</b></label>
+            <input type="file" name="photo" id="photo" />
+            <img src="/img/<%= post.dog_photo %>" alt="강아지 사진" />
+          </div>
+          <div>
+            <label for="pet_name"><b>강아지 이름</b></label>
+            <input type="text" name="pet_name" id="pet_name" value="<%= post.pet_name %>" readonly />
+          </div>
+          <div>
+            <label for="owner_name"><b>주인 이름</b></label>
+            <input type="text" name="owner_name" id="owner_name" value="<%= post.owner_name %>" readonly />
+          </div>
+          <div class="date-info-section">
+            <label for="walk_date"><b>날짜</b></label>
+            <input type="date" name="walk_date" id="walk_date" value="<%= post.walk_date %>" />
+          </div>
+          <div class="date-info-section">
+            <label for="walk_time"><b>산책 시간</b></label>
+            <input type="time" name="walk_time" id="walk_time" value="<%= post.walk_time %>" />
+          </div>
+          <div class="photo-section">
+            <label for="walk_photo"><b>오늘의 산책 사진</b></label>
+            <input type="file" name="walk_photo" id="walk_photo" />
+            <img src="/img/todaywalkphotos/<%= post.walk_photo %>" alt="오늘의 산책 사진" />
+          </div>
+          <div>
+            <label for="teacher"><b>담당자 이름</b></label>
+            <input type="text" name="teacher" id="teacher" value="<%= post.teacher %>" />
+          </div>
+          <div>
+            <label for="note_info"><b>특이 사항</b></label>
+            <textarea name="note_info" id="note_info" cols="50" rows="10"><%= post.note_info %></textarea>
+          </div>
+          <div>
+            <label for="class_info"><b>수업 정보</b></label>
+            <textarea name="class_info" id="class_info" cols="50" rows="10"><%= post.class_info %></textarea>
+          </div>
+          <div>
+            <label for="feed"><b>급식 신청</b></label>
+            <div>
+              <input type="radio" id="feedYes" name="feed" value="1" <%=post.feed ? 'checked' : '' %>> <label
+                for="feedYes">예</label>
+            </div>
+            <div>
+              <input type="radio" id="feedNo" name="feed" value="0" <%=!post.feed ? 'checked' : '' %>> <label
+                for="feedNo">아니오</label>
+            </div>
+          </div>
+          <div>
+            <input type="submit" value="수정" class="btn" onclick="return confirm('정말 수정하시겠습니까?')" />
+          </div>
+    </form>
+    <form action="/dashboard/admin/delete/<%= post.id %>?_method=DELETE" method="POST">
+      <input type="submit" value="삭제" class="btn-delete btn" onclick="return confirm('정말 삭제하시겠습니까?')" />
+      <input type="button" value="뒤로" class="btn" onclick="history.back()" />
+    </form>
+    </fieldset>
+  </div>
+  </div>
+</body>
+
+</html>
