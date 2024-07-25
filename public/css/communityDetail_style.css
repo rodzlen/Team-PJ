@@ -110,3 +110,29 @@ textarea {
     display: flex;
     justify-content: space-evenly;
 }
+
+/* admin_class_list_detail을 위한 거 */
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 15px 0px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    width: 30%;
+    background-color: #f2f2f2;
+}
+
+tbody {
+    width: 70%;
+    background-color: #f9f9f9;
+}

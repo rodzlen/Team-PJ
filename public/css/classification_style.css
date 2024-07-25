@@ -1,0 +1,112 @@
+:root {
+    --brown: #dd8e55;
+    --yellow: #fbd663;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    overflow-x: hidden;
+    /*가로축 스크롤 제거*/
+}
+
+#classification {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#top {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+
+form {
+    padding-bottom: 20px;
+}
+
+form input[type="text"],
+form select {
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+form button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+
+table a,
+table a:hover {
+    color: #000;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#backBtn, #addBtn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#backBtn:hover, #addBtn:hover{
+    background-color: #218838;
+}
+
+
+#searchBtn {
+    width: 120px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#searchBtn:hover {
+    background-color: #0056b3;
+}

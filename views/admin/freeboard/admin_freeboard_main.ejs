@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/freeboardMain_style.css"> 
+    <link rel="stylesheet" href="/css/communityMain_style.css"> 
 </head>
 <body>
     <div id = "freeboard">
@@ -55,6 +55,7 @@
                     <tr>
                         <td><%= index + 1 %></td>
                         <td><a href="/admin/freeboard/detail/<%= FreeBoard.id %>"><%= FreeBoard.title %></a></td>
+                        <td><%= FreeBoard.createBy%></td>
                         <td><%= FreeBoard.post_date.toISOString().split('T')[0] %></td>
                     </tr>
                 <% }); %>

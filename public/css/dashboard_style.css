@@ -8,51 +8,81 @@ body {
   margin: 0;
   width: 100vw;
   overflow-x: hidden;
+  background-origin: #000;
 }
 
-#container {
+#dashboard {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  color: var(--brown);
-  text-align: center;
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-h2 {
-  color: var(--brown);
+form input[type="text"], form select {
+  padding: 8px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
 }
 
-.photo-section, .date-info-section {
-  margin-bottom: 20px;
+label {
+  
 }
 
-.photo-section img, .date-info-section img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin-top: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+#btnBox {
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 10px 0px;
 }
 
-#infoDisplay {
-  margin-top: 10px;
+#editBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
 }
 
-#infoDisplay p {
-  margin-bottom: 10px;
-  font-size: 16px;
+#editBtn:hover {
+  background-color: #218838;
 }
 
-#infoDisplay p:last-child {
-  margin-bottom: 0;
+#backBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
 }
 
-/* 추가적으로 필요한 스타일링이 있으면 여기에 추가하세요 */
+#backBtn:hover {
+  background-color: #0056b3;
+}
+
+
+#delBtn {
+  width: 100px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 3px;
+  background-color: #fa5329;
+  color: #fff;
+  cursor: pointer;
+}
+
+#delBtn:hover {
+  background-color: #d6431f;
+}

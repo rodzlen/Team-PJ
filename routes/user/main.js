@@ -645,9 +645,11 @@ router.get(
     res.render("user/userManagement/user_login", {
       locals,
       layout: mainLayout,
+      showSignup: false
     });
   })
 );
+
 
 // 마이페이지(유저용)
 router.get(
@@ -713,7 +715,26 @@ router.post(
     });
   })
 );
-
+// 중복 확인 라우터
+router.post('/check-duplicate-id', (req, res) => {
+  const locals ={showSignup: true}
+  const { user_id } = req.body;
+  const query = 'SELECT COUNT(*) AS count FROM Users WHERE user_id = ?';
+  db.query(query, [user_id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const isDuplicate = results[0].count > 0;
+      res.render('user/userManagement/user_login', {
+        isDuplicate,
+        user_id,
+        layout: mainLayout, // 실제 사용 중인 레이아웃으로 변경
+        locals
+      });
+    }
+  });
+});
 // 로그인 처리
 router.post(
   "/users/login",
@@ -959,7 +980,7 @@ router.post(
 
 // 강아지 정보 유저 페이지: GET /user/dashboard/user_dashboard/:dog_id
 router.get(
-  "/dashboard/user_dashboard/:dog_id",
+  "/dashboard/user_dashboard/:dog_id",checkLogin,
   asyncHandler(async (req, res) => {
     const postId = req.params.dog_id;
 
@@ -1016,59 +1037,13 @@ router.get("/search", (req, res) => {
   res.render("dashboard/user/userpostlist", { data: filteredPosts });
 });
 
-// 게시물 클래스별 라우트
-// router.get("/class/user_morningClassPosts", (req, res) => {
-//   const searchQuery = req.query.search || "";
-
-//   let query = "SELECT * FROM Dogs WHERE class_info = '오전'";
-//   const queryParams = [];
-
-//   if (searchQuery) {
-//     query += " AND pet_name LIKE ?";
-//     queryParams.push(`%${searchQuery}%`);
-//   }
-
-//   db.query(query, queryParams, (err, posts) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).send("서버 오류");
-//     }
-//     res.render("user/class/user_morningClassPosts", {
-//       data: posts,
-//       searchQuery,
-//     });
-//   });
-// });
-
-// router.get("/class/user_afternoonClassPosts", (req, res) => {
-//   const searchQuery = req.query.search || "";
-
-//   let query = "SELECT * FROM Dogs WHERE class_info = '오후'";
-//   const queryParams = [];
-
-//   if (searchQuery) {
-//     query += " AND pet_name LIKE ?";
-//     queryParams.push(`%${searchQuery}%`);
-//   }
-
-//   db.query(query, queryParams, (err, posts) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).send("서버 오류");
-//     }
-//     res.render("user/class/user_afternoonClassPosts", {
-//       data: posts,
-//       searchQuery: searchQuery,
-//     });
-//   });
-// });
-
 // 오전반 게시물 조회 라우트
 router.get(
-  "/class/user_morningClassPosts",
+  "/class/user_morningClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
     const searchQuery = req.query.search || "";
 
+    // 기본 쿼리 설정
     let query = `
     SELECT 
       d.dog_id, d.pet_name, d.owner_name, c.start_date, c.end_date
@@ -1081,11 +1056,13 @@ router.get(
   `;
     const queryParams = [];
 
+    // 검색어가 있을 경우 추가 조건 설정
     if (searchQuery) {
       query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
       queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
     }
 
+    // 데이터베이스 쿼리 실행
     db.query(query, queryParams, (err, posts) => {
       if (err) {
         console.error(err);
@@ -1099,91 +1076,126 @@ router.get(
   })
 );
 
-router.get("/class/user_alldayClassPosts", (req, res) => {
-  const searchQuery = req.query.search || "";
+// 오후반
+router.get(
+  "/class/user_afternoonClassPosts", checkLogin,
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
 
-  let query = "SELECT * FROM Dogs WHERE class_info = '종일'";
-  const queryParams = [];
+    // 기본 쿼리 설정
+    let query = `
+    SELECT 
+      d.dog_id, d.pet_name, d.owner_name, c.start_date, c.end_date
+    FROM 
+      Dogs d
+    LEFT JOIN 
+      ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
+    WHERE 
+      d.class_info = '오후'
+  `;
+    const queryParams = [];
 
-  if (searchQuery) {
-    query += " AND pet_name LIKE ?";
-    queryParams.push(`%${searchQuery}%`);
-  }
-
-  db.query(query, queryParams, (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
+    // 검색어가 있을 경우 추가 조건 설정
+    if (searchQuery) {
+      query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
     }
-    res.render("user/class/user_alldayClassPosts", {
-      data: posts,
-      searchQuery: searchQuery,
+
+    // 데이터베이스 쿼리 실행
+    db.query(query, queryParams, (err, posts) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("서버 오류가 발생했습니다.");
+      }
+      res.render("user/class/user_afternoonClassPosts", {
+        data: posts,
+        searchQuery,
+      });
     });
-  });
-});
+  })
+);
 
-// router.get(
-//   "/user/class/user_alldayClassPosts",
-//   asyncHandler(async (req, res) => {
-//     const searchQuery = req.query.search || "";
+// 종일
+router.get(
+  "/class/user_alldayClassPosts",checkLogin,
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
 
-//     // 기본 쿼리 설정
-//     let query = `
-//     SELECT
-//       d.dog_id, d.pet_name, d.owner_name, d.walk_date, d.walk_starttime, d.walk_endtime,
-//       c.start_date, c.end_date
-//     FROM
-//       Dogs d
-//     JOIN
-//       ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
-//     WHERE
-//       c.class_name = '종일'
-//   `;
-//     const queryParams = [];
+    // 기본 쿼리 설정
+    let query = `
+    SELECT 
+      d.dog_id, d.pet_name, d.owner_name, c.start_date, c.end_date
+    FROM 
+      Dogs d
+    LEFT JOIN 
+      ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
+    WHERE 
+      d.class_info = '종일'
+  `;
+    const queryParams = [];
 
-//     // 검색어가 있을 경우 추가 조건 설정
-//     if (searchQuery) {
-//       query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
-//       queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
-//     }
-
-//     // 데이터베이스 쿼리 실행
-//     db.query(query, queryParams, (err, results) => {
-//       if (err) {
-//         console.error(err);
-//         res.status(500).send("서버 오류가 발생했습니다.");
-//       } else {
-//         res.render("user/class/user_alldayClassPosts", { data: results });
-//       }
-//     });
-//   })
-// );
-
-router.get("/class/user_onedayClassPosts", (req, res) => {
-  const searchQuery = req.query.search || "";
-
-  let query = "SELECT * FROM Dogs WHERE class_info = '일일'";
-  const queryParams = [];
-
-  if (searchQuery) {
-    query += " AND pet_name LIKE ?";
-    queryParams.push(`%${searchQuery}%`);
-  }
-
-  db.query(query, queryParams, (err, posts) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("서버 오류");
+    // 검색어가 있을 경우 추가 조건 설정
+    if (searchQuery) {
+      query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
     }
-    res.render("user/class/user_onedayClassPosts", {
-      data: posts,
-      searchQuery: searchQuery,
+
+    // 데이터베이스 쿼리 실행
+    db.query(query, queryParams, (err, posts) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("서버 오류가 발생했습니다.");
+      }
+      res.render("user/class/user_alldayClassPosts", {
+        data: posts,
+        searchQuery,
+      });
     });
-  });
-});
+  })
+);
+
+// 일일
+router.get(
+  "/class/user_onedayClassPosts",checkLogin,
+  asyncHandler(async (req, res) => {
+    const searchQuery = req.query.search || "";
+
+    // 기본 쿼리 설정
+    let query = `
+    SELECT 
+      d.dog_id, d.pet_name, d.owner_name, c.start_date, c.end_date
+    FROM 
+      Dogs d
+    LEFT JOIN 
+      ClassRegistration c ON d.pet_name = c.pet_name AND d.owner_name = c.owner_name
+    WHERE 
+      d.class_info = '일일'
+  `;
+    const queryParams = [];
+
+    // 검색어가 있을 경우 추가 조건 설정
+    if (searchQuery) {
+      query += " AND (d.pet_name LIKE ? OR d.owner_name LIKE ?)";
+      queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+    }
+
+    // 데이터베이스 쿼리 실행
+    db.query(query, queryParams, (err, posts) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("서버 오류가 발생했습니다.");
+      }
+      res.render("user/class/user_onedayClassPosts", {
+        data: posts,
+        searchQuery,
+      });
+    });
+  })
+);
 
 router.get("/userCalendar", (req, res) => {
-  res.render("user/calendar/user_Calendar");
+  const locals = {user:req.session.user}
+  res.render("user/calendar/user_Calendar",{locals, layout:mainLayout});
 });
 
 router.get("/mainpage", (req, res) => {
@@ -1192,6 +1204,7 @@ router.get("/mainpage", (req, res) => {
 
 // 유저 시설소개 직원소개 메인페이지
 router.get("/userfacilitiesMain", (req, res) => {
+  const locals ={user:req.session.user};
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
 
@@ -1219,8 +1232,10 @@ router.get("/userfacilitiesMain", (req, res) => {
     .then(([facilitiesResult, staffResult]) => {
       res.render("user/facilities/user_FacilitiesMain", {
         // 경로 수정
+        locals,
         facilities: facilitiesResult,
         staff: staffResult,
+        layout:mainLayout
       });
     })
     .catch((err) => {

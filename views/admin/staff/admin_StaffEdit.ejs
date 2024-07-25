@@ -31,13 +31,13 @@
         <input type="hidden" name="staff_photo" value="<%=Data2.staff_photo %>">
         <div id="btnBox">
           <button id="editBtn" type="submit" class="btn btn-primary mr-3">수정하기</button>
-          <button id="delBtn" type="submit" form="delete" class="btn btn-danger">삭제</button>
+          <button id="delBtn" type="submit" form="delete2" class="btn btn-danger">삭제</button>
           <button id="addBtn" type="button" class="btn btn-secondary" onclick="location.href='/admin/adminFacilitiesMain'">뒤로가기</button>
         </div>
     </form>
   </div>
-  
-  <form id="delete" action="/admin/delete2" method="post">
+
+  <form id="delete2" action="/admin/delete2" method="post">
     <input type="hidden" name="staff_id" value="<%=Data2.staff_id %>">
   </form>
   </div>
