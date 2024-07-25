@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/classification_style.css" />
   </head>
 
+<<<<<<< HEAD
   <body>
     <div id="classification">
       <h2>오후반 - 관리자</h2>
@@ -60,9 +61,71 @@
         </tbody>
       </table>
     </div>
+=======
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>게시물 리스트 - 관리자</title>
+  <link rel="stylesheet" href="/css/classification_style.css" />
+</head>
+
+<body>
+  <div id="classification">
+    <h2>오후반 - 관리자</h2>
+    <div id="top">
+      <form action="/admin/class/admin_afternoonClassPosts" method="GET">
+        <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색" />
+        <button type="submit">검색</button> &nbsp;
+      </form>
+      <button id="addBtn" onclick="location.href='/admin/admin_dashboard'">새 게시물 추가</button>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>강아지 이름</th>
+          <th>주인 이름</th>
+          <th>등록일(시작/마지막)</th>
+          <th>정보 상세보기</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (data.length) { %>
+          <% data.forEach((post, index) => { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= post.pet_name %></td>
+              <td><%= post.owner_name %></td>
+              <td>
+                <%= post.start_date ? new Date(post.start_date).toISOString().split('T')[0] : 'N/A' %> / 
+                <%= post.end_date ? new Date(post.end_date).toISOString().split('T')[0] : 'N/A' %>
+              </td>
+              <td>
+                <a href="/admin/dashboard/admin_edit/<%= post.dog_id %>">정보 상세 보기</a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } else { %>
+          <tr>
+            <td colspan="5">데이터가 없습니다.</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <button onclick="location.href='/admin/class/admin_postlist'">클래스 목록</button>
+  </div>
+
+  <script src="/js/main.js"></script>
+</body>
+>>>>>>> 6b8b8b4525ec9a3e7800f4880f84b1bcc3eda6bc
 
     <script src="/js/main.js"></script>
   </body>
 </html>
+<<<<<<< HEAD
 
 <!-- views/admin/class/admin_afternoonClassPosts -->
+=======
+>>>>>>> 6b8b8b4525ec9a3e7800f4880f84b1bcc3eda6bc

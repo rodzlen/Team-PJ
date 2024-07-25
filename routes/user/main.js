@@ -983,7 +983,7 @@ router.get(
   "/dashboard/user_dashboard/:dog_id",checkLogin,
   asyncHandler(async (req, res) => {
     const postId = req.params.dog_id;
-
+const locals = {user:req.session.user}
     const connection = await mysql.createConnection({
       host: "localhost",
       port: db.config.port,
@@ -1005,6 +1005,7 @@ router.get(
       }
 
       res.render("user/dashboard/user_dashboard", {
+        locals,
         title: "강아지 정보 확인",
         data: post, // 'data'로 전달
       });
