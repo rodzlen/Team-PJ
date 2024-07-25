@@ -645,9 +645,11 @@ router.get(
     res.render("user/userManagement/user_login", {
       locals,
       layout: mainLayout,
+      showSignup: false
     });
   })
 );
+
 
 // 마이페이지(유저용)
 router.get(
@@ -713,7 +715,26 @@ router.post(
     });
   })
 );
-
+// 중복 확인 라우터
+router.post('/check-duplicate-id', (req, res) => {
+  const locals ={showSignup: true}
+  const { user_id } = req.body;
+  const query = 'SELECT COUNT(*) AS count FROM Users WHERE user_id = ?';
+  db.query(query, [user_id], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+    } else {
+      const isDuplicate = results[0].count > 0;
+      res.render('user/userManagement/user_login', {
+        isDuplicate,
+        user_id,
+        layout: mainLayout, // 실제 사용 중인 레이아웃으로 변경
+        locals
+      });
+    }
+  });
+});
 // 로그인 처리
 router.post(
   "/users/login",
@@ -1173,7 +1194,7 @@ router.get(
 );
 
 router.get("/userCalendar", (req, res) => {
-  const locals = req.session.user
+  const locals = {user:req.session.user}
   res.render("user/calendar/user_Calendar",{locals, layout:mainLayout});
 });
 
@@ -1183,7 +1204,7 @@ router.get("/mainpage", (req, res) => {
 
 // 유저 시설소개 직원소개 메인페이지
 router.get("/userfacilitiesMain", (req, res) => {
-  const locals =req.session.user;
+  const locals ={user:req.session.user};
   const facilitiesQuery = "SELECT * FROM Facilities";
   const staffQuery = "SELECT * FROM Staff";
 
