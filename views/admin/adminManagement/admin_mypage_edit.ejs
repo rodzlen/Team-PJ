@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/admin_mypage_style.css">
+  <title>유저 수정</title>
+</head>
+
+<body>
+  <div id="adminMyPage">
+    <h2>유저 수정</h2>
+    <div id="userEdit">
+      <form action="/admin/userlist/edit/<%= user.u_id %>" method="post">
+        <fieldset>
+          <legend>견주 정보</legend>
+          <label for="user_name">견주 이름</label>
+          <input type="text" name="user_name" id="user_name" value="<%= user.user_name %>" required><br>
+          <label for="user_phone">견주 연락처</label>
+          <input type="tel" name="user_phone" id="user_phone" value="<%= user.user_phone %>" required><br>
+          <label for="pet_name">강아지 이름</label>
+          <input type="text" name="pet_name" id="pet_name" value="<%= user.pet_name %>" required><br>
+          <label for="pet_gender">강아지 성별</label>
+          <div>
+            <label>
+              <input type="radio" name="pet_gender" value="Male" <%= user.pet_gender === 'Male' ? 'checked' : '' %> required>
+              남
+            </label>
+            <label>
+              <input type="radio" name="pet_gender" value="Female" <%= user.pet_gender === 'Female' ? 'checked' : '' %> required>
+              여
+            </label>
+          </div><br>
+          <label for="pet_neutering">중성화 여부</label>
+          <div>
+            <label>
+              <input type="radio" name="pet_neutering" value="Yes" <%= user.pet_neutering === 'Yes' ? 'checked' : '' %> required>
+              예
+            </label>
+            <label>
+              <input type="radio" name="pet_neutering" value="No" <%= user.pet_neutering === 'No' ? 'checked' : '' %> required>
+              아니오
+            </label>
+          </div><br>
+          <label for="peculiarity">특이사항</label>
+          <textarea name="peculiarity" id="peculiarity"><%= user.peculiarity %></textarea><br>
+          <label for="program">신청 프로그램</label>
+          <input type="text" name="program" id="program" value="<%= user.program %>" required><br>
+          <label for="diet_status">식단 여부</label>
+          <input type="text" name="diet_status" id="diet_status" value="<%= user.diet_status %>" required><br>
+        </fieldset>
+        <div id="btnBox">
+          <button type="submit">저장</button>
+          <a href="/admin/userlist/detail/<%= user.u_id %>" class="button">돌아가기</a>
+        </div>
+      </form>
+      <form action="/admin/userlist/delete/<%= user.u_id %>" method="post" style="display: inline;">
+        <button type="submit" class="button" onclick="return confirm('정말로 유저를 삭제하시겠습니까?')">삭제하기</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

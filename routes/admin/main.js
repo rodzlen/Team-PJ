@@ -43,13 +43,25 @@ router.get(
   "/notice",
   checkAdminLogin,
   asyncHandler(async (req, res) => {
-    const locals = { user: req.session.user };
+    const locals = { admin: req.session.admin };
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
 
-    let query = "SELECT * FROM noticeBoard";
+    let query = "SELECT * FROM noticeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -58,7 +70,8 @@ router.get(
       } else {
         res.render("admin/notice/admin_notice_main", {
           locals,
-          data: results,
+          data: results,searchQuery, typeQuery,
+
           layout: adminLayout,
         });
       }
@@ -257,7 +270,19 @@ router.get(
 
     let query = "SELECT * FROM freeboard";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }}
+
 
     db.query(query, queryParams, (err, results) => {
       if (err) {
@@ -267,6 +292,8 @@ router.get(
         res.render("admin/freeboard/admin_freeboard_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: adminLayout,
         });
       }
@@ -450,6 +477,7 @@ router.post(
   })
 );
 
+// qna 메인
 router.get(
   "/qna",
   asyncHandler(async (req, res) => {
@@ -458,7 +486,19 @@ router.get(
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let queryParams = [];
-    search(query, searchQuery, typeQuery);
+    if (searchQuery) {
+      if (typeQuery === "title") {
+        query += " WHERE title LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "createBy") {
+        query += " WHERE createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`);
+      } else if (typeQuery === "title||createBy") {
+        query += " WHERE title LIKE ? OR createBy LIKE ?";
+        queryParams.push(`%${searchQuery}%`, `%${searchQuery}%`);
+      }
+    }
+
     db.query(query, queryParams, (err, results) => {
       if (err) {
         console.error(err);
@@ -467,6 +507,8 @@ router.get(
         res.render("admin/qna/admin_qna_main", {
           locals,
           data: results,
+          searchQuery,
+          typeQuery,
           layout: adminLayout,
         });
       }
@@ -1248,13 +1290,13 @@ function search(query, searchQuery, typeQuery) {
 }
 
 router.get(
-  "/admin_postlist",
+  "/admin_postlist",checkAdminLogin,
   asyncHandler(async (req, res) => {
+    const locals = {admin:req.session.admin}
     const searchQuery = req.query.search || "";
     const typeQuery = req.query.type || "";
     let query = "SELECT * FROM dogs";
     let queryParams = [];
-
     if (searchQuery) {
       if (typeQuery === "class_info") {
         query += " WHERE class_info LIKE ?";
@@ -1277,7 +1319,7 @@ router.get(
         console.error(err);
         res.status(500).send("서버 오류가 발생했습니다.");
       } else {
-        res.render("admin/dashboard/admin_postlist", { data: results });
+        res.render("admin/dashboard/admin_postlist", { locals, data: results, layout:adminLayout });
       }
     });
   })
@@ -1287,6 +1329,7 @@ router.get(
 router.get(
   "/admin_afternoonClassPosts",
   asyncHandler(async (req, res) => {
+    
     const searchQuery = req.query.search || "";
 
     let query = "SELECT * FROM dogs WHERE class_info = '오후'";
@@ -1399,57 +1442,64 @@ router.get(
 
 // 게시물 리스트 라우트: GET /admin/class/admin_postlist
 router.get("/class/admin_postlist", (req, res) => {
+  const locals = {admin:req.session.user};
   db.query("SELECT * FROM Dogs", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("admin/dashboard/admin_postlist", { data: posts });
+    res.render("admin/dashboard/admin_postlist", {locals, data: posts ,layout:adminLayout});
   });
 });
 
 // 게시물 클래스별 라우트
 router.get("/class/admin_morningClassPosts", (req, res) => {
+  const locals = {admin:req.session.user};
   db.query("SELECT * FROM Dogs WHERE class_info = '오전'", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("admin/class/admin_morningClassPosts", { data: posts });
+    res.render("admin/class/admin_morningClassPosts", {locals, data: posts ,layout:adminLayout});
   });
 });
 
 router.get("/class/admin_afternoonClassPosts", (req, res) => {
+  const locals = {admin:req.session.user};
   db.query("SELECT * FROM dogs WHERE class_info = '오후'", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
     res.render("admin/class/admin_afternoonClassPosts", {
-      data: posts,
+      locals,
+      data: posts,layout:adminLayout
     });
   });
 });
 
 router.get("/class/admin_alldayClassPosts", (req, res) => {
+  const locals = {admin:req.session.user};
   db.query("SELECT * FROM Dogs WHERE class_info = '종일'", (err, posts) => {
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
     res.render("admin/class/admin_alldayClassPosts", {
-      data: posts,
+      locals,
+      data: posts,layout:adminLayout
     });
   });
 });
 
 router.get("/class/admin_onedayClassPosts", (req, res) => {
   db.query("SELECT * FROM Dogs WHERE class_info = '일일'", (err, posts) => {
+    const locals = {admin:req.session.user};
     if (err) {
       console.error(err);
       return res.status(500).send("서버 오류");
     }
-    res.render("admin/class/admin_onedayClassPosts", { data: posts });
+    res.render("admin/class/admin_onedayClassPosts", {locals, data: posts ,layout:adminLayout});
   });
 });
 
@@ -1785,6 +1835,100 @@ router.get("/adminmainpage", (req, res) => {
 
 router.get("/adminCalendar", (req, res) => {
   res.render("admin/calendar/admin_Calendar");
+});
+
+
+
+
+
+// 유저 목록 조회
+router.get('/userlist',checkAdminLogin, async (req, res) => {
+  const locals = {admin: req.session.admin}
+  try {
+    const query = 'SELECT * FROM Users';
+    db.query(query, (err, results) => {
+      if (err) throw err;
+      res.render('admin/adminManagement/admin_mypage', { locals,users: results });
+    });
+  } catch (error) {
+    console.error('Error fetching user list:', error);
+    res.status(500).send('서버 오류가 발생했습니다.');
+  }
+});
+
+// 유저 상세 정보 조회
+router.get('/userlist/detail/:id',checkAdminLogin ,async (req, res) => {
+  const locals = {admin: req.session.admin}
+  const userId = req.params.id;
+  try {
+    const query = 'SELECT * FROM Users WHERE u_id = ?';
+    db.query(query, [userId], (err, results) => {
+      if (err) throw err;
+      if (results.length > 0) {
+        res.render('admin/adminManagement/admin_mypage_detail', { locals, user: results[0] });
+      } else {
+        res.status(404).send('유저를 찾을 수 없습니다.');
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).send('서버 오류가 발생했습니다.');
+  }
+});
+
+// 유저 수정 페이지 조회
+router.get('/userlist/edit/:id', checkAdminLogin,async (req, res) => {
+  const locals = {admin: req.session.admin}
+  const userId = req.params.id;
+  try {
+    const query = 'SELECT * FROM Users WHERE u_id = ?';
+    db.query(query, [userId], (err, results) => {
+      if (err) throw err;
+      if (results.length > 0) {
+        res.render('admin/adminManagement/admin_mypage_edit', { locals,user: results[0] });
+      } else {
+        res.status(404).send('유저를 찾을 수 없습니다.');
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching user for edit:', error);
+    res.status(500).send('서버 오류가 발생했습니다.');
+  }
+});
+
+// 유저 정보 수정 처리
+router.post('/users/edit/:id',checkAdminLogin, async (req, res) => {
+  const userId = req.params.id;
+  const { user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity, program, diet_status } = req.body;
+  try {
+    const query = `
+      UPDATE Users 
+      SET user_name = ?, user_phone = ?, pet_name = ?, pet_gender = ?, pet_neutering = ?, peculiarity = ?, program = ?, diet_status = ?
+      WHERE u_id = ?
+    `;
+    db.query(query, [user_name, user_phone, pet_name, pet_gender, pet_neutering, peculiarity, program, diet_status, userId], (err, results) => {
+      if (err) throw err;
+      res.redirect(`/admin/userlist/detail/${userId}`);
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).send('서버 오류가 발생했습니다.');
+  }
+});
+
+// 유저 삭제 처리
+router.post('/userlist/delete/:id', checkAdminLogin,async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const query = 'DELETE FROM Users WHERE u_id = ?';
+    db.query(query, [userId], (err, results) => {
+      if (err) throw err;
+      res.redirect('/admin/userlist');
+    });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send('서버 오류가 발생했습니다.');
+  }
 });
 
 module.exports = router;

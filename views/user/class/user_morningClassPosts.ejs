@@ -13,16 +13,10 @@
       </div>
 
       <div class="search-form">
-        <form action="/admin/classAttendanceList" method="GET">
-          <input type="text" name="search" placeholder="검색">
-          <select name="type">
-              <option value="pet_name">강아지 이름</option>
-              <option value="owner_name">견주</option>
-              <option value="pet_name||owner_name" selected>강아지 이름+견주</option>
-          </select>
+        <form action="/user/class/user_morningClassPosts" method="GET">
+          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
           <button type="submit">검색</button>
-      </form>
-
+        </form>
       </div>
 
       <table>
@@ -61,3 +55,5 @@
     <script src="/js/main.js"></script>
   </body>
 </html>
+
+<!-- views/user/class/user_morningClassPosts.ejs -->

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>직원 수정/삭제</title>
-  <link rel="stylesheet" href="/css/admin_facilitiesFucntion_style.css">
+  <link rel="stylesheet" href="/css/facilitiesFucntion_style.css">
 </head>
 
 <body>
@@ -16,31 +16,35 @@
       <div id="cover">
         <input type="hidden" name="staff_id" value="<%=Data2.staff_id %>">
         <div class="in">
-          직원 이름  &nbsp;<input name="name" class="w-50 form-control text-center" type="text" value="<%=Data2.name %>" required />
+          직원 이름 &nbsp;<input name="name" class="w-50 form-control text-center" type="text" value="<%=Data2.name %>"
+            required />
         </div>
         <div class="in">
-          직원 직급  &nbsp;<input name="role" class="w-50 form-control text-center" type="text" value="<%=Data2.role %>" required />
+          직원 직급 &nbsp;<input name="role" class="w-50 form-control text-center" type="text" value="<%=Data2.role %>"
+            required />
         </div>
         <div class="in">
-          직원 경력  &nbsp;<input name="contact_info" class="w-50 form-control text-center" type="text"
+          직원 경력 &nbsp;<input name="contact_info" class="w-50 form-control text-center" type="text"
             value="<%=Data2.contact_info %>" required />
         </div>
         <div class="ln">
-          <label for="staff_photo">직원 사진:  &nbsp;</label>
+          <label for="staff_photo">직원 사진: &nbsp;</label>
           <input name="staff_photo" class="form-control-file" type="file" />
         </div>
         <input type="hidden" name="staff_photo" value="<%=Data2.staff_photo %>">
         <div id="btnBox">
           <button id="editBtn" type="submit" class="btn btn-primary mr-3">수정하기</button>
           <button id="delBtn" type="submit" form="delete" class="btn btn-danger">삭제</button>
-        </div>
     </form>
+    <button id="addBtn" type="button" class="btn btn-secondary"
+      onclick="location.href='/admin/adminFacilitiesMain'">뒤로가기</button>
+  </div>
 
-    <form action="/admin/delete2" method="post">
-      <input type="hidden" name="staff_id" value="<%=Data2.staff_id %>">
-    </form>
+  <form id="delete" action="/admin/delete2" method="post">
+
+  </form>
   </div>
-  </div>
+  </div> 
 </body>
 
 </html>
