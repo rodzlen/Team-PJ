@@ -13,12 +13,10 @@
       </div>
 
       <div class="search-form">
-        <form action="/admin/classAttendanceList" method="GET">
+        <form action="/user/class/user_morningClassPosts" method="GET">
           <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
-
           <button type="submit">검색</button>
-      </form>
-
+        </form>
       </div>
 
       <table>
@@ -57,3 +55,5 @@
     <script src="/js/main.js"></script>
   </body>
 </html>
+
+<!-- views/user/class/user_morningClassPosts.ejs -->
