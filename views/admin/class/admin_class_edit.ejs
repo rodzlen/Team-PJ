@@ -1,62 +1,77 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.title %></title>
+    <title>
+        <%= locals.title %>
+    </title>
     <link rel="stylesheet" href="/css/user_class_register_style.css"> <!-- CSS 파일 임포트 -->
 </head>
+
 <body>
-    <div class="Attendance-edit">
-        <h1><%= locals.title %></h1>
-        <form action="/admin/classAttendance/edit/<%= data.id %>" method="POST">
-            <table>
-                <tr>
-                    <th>신청자</th>
-                    <td><input type="text" name="owner_name" value="<%= data.owner_name %>" required></td>
-                </tr>
-                <tr>
-                    <th>반려동물 이름</th>
-                    <td><input type="text" name="pet_name" value="<%= data.pet_name %>" required></td>
-                </tr>
-                <tr>
-                    <th>수업 이름</th>
-                    <td><input type="text" name="class_name" value="<%= data.class_name %>" required></td>
-                </tr>
-                <tr>
-                    <th>급식 여부</th>
-                    <td>
-                        <select name="feed_status">
-                            <option value="1" <%= data.feed_status ? 'selected' : '' %>>예</option>
-                            <option value="0" <%= !data.feed_status ? 'selected' : '' %>>아니오</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>픽업 여부</th>
-                    <td>
-                        <select name="pickup_status">
-                            <option value="1" <%= data.pickup_status ? 'selected' : '' %>>예</option>
-                            <option value="0" <%= !data.pickup_status ? 'selected' : '' %>>아니오</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>시작 날짜</th>
-                    <td><input type="date" name="start_date" value="<%= data.start_date.toISOString().split('T')[0] %>" required></td>
-                </tr>
-                <tr>
-                    <th>종료 날짜</th>
-                    <td><input type="date" name="end_date" value="<%= data.end_date.toISOString().split('T')[0] %>" required></td>
-                </tr>
-                <tr>
-                    <th>상담 내용</th>
-                    <td><textarea name="consultation" required><%= data.consultation %></textarea></td>
-                </tr>
-            </table>
-            <button type="submit">수정하기</button>
-        </form>
-        <a href="/admin/classAttendance/detail/<%= data.id %>">취소</a>
+    <div id="register">
+        <h1>
+            <%= locals.title %>
+        </h1>
+        <div id="cover">
+            <form action="/admin/classAttendance/edit/<%= data.id %>" method="POST">
+                <table>
+                    <tr>
+                        <th>신청자</th>
+                        <td><input type="text" name="owner_name" value="<%= data.owner_name %>" required></td>
+                    </tr>
+                    <tr>
+                        <th>반려동물 이름</th>
+                        <td><input type="text" name="pet_name" value="<%= data.pet_name %>" required></td>
+                    </tr>
+                    <tr>
+                        <th>수업 이름</th>
+                        <td><input type="text" name="class_name" value="<%= data.class_name %>" required></td>
+                    </tr>
+                    <tr>
+                        <th>급식 여부</th>
+                        <td>
+                            <select name="feed_status">
+                                <option value="1" <%=data.feed_status ? 'selected' : '' %>>예</option>
+                                <option value="0" <%=!data.feed_status ? 'selected' : '' %>>아니오</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>픽업 여부</th>
+                        <td>
+                            <select name="pickup_status">
+                                <option value="1" <%=data.pickup_status ? 'selected' : '' %>>예</option>
+                                <option value="0" <%=!data.pickup_status ? 'selected' : '' %>>아니오</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>시작 날짜</th>
+                        <td><input type="date" name="start_date"
+                                value="<%= data.start_date.toISOString().split('T')[0] %>" required></td>
+                    </tr>
+                    <tr>
+                        <th>종료 날짜</th>
+                        <td><input type="date" name="end_date" value="<%= data.end_date.toISOString().split('T')[0] %>"
+                                required></td>
+                    </tr>
+                    <tr>
+                        <th>상담 내용</th>
+                        <td><textarea name="consultation" required><%= data.consultation %></textarea></td>
+                    </tr>
+                </table>
+                <div id="btnBox">
+                    <button id="addBtn" type="submit">수정하기</button>
+
+            </form>
+            <button id="backBtn" onclick="location.href='/admin/classAttendance/detail/<%= data.id %>'">취소</button>
+            <!-- <a href="/admin/classAttendance/detail/<%= data.id %>">취소</a> -->
+        </div>
+    </div>
     </div>
 </body>
+
 </html>
