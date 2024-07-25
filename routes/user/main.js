@@ -1117,7 +1117,7 @@ router.get("/class/user_alldayClassPosts", (req, res) => {
     }
     res.render("user/class/user_alldayClassPosts", {
       data: posts,
-      searchQuery: searchQuery,
+      searchQuery,
     });
   });
 });
