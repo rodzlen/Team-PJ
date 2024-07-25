@@ -4,18 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>게시물 리스트 - 관리자</title>
-    <link rel="stylesheet" href="/css/postlist.css" />
+    <link rel="stylesheet" href="/css/classification_style.css" />
   </head>
-  <body>
-    <div id="content">
-      <div class="admin-title">
-        <h2>오후반 - 관리자</h2>
-        <a href="/admin/admin_dashboard" class="new-post-button">
-          새 게시물 추가
-        </a>
-      </div>
 
-      <div class="search-form">
+  <body>
+    <div id="classification">
+      <h2>오후반 - 관리자</h2>
+      <div id="top">
         <form action="/admin/class/admin_afternoonClassPosts" method="GET">
           <input
             type="text"
@@ -23,10 +18,12 @@
             value="<%= searchQuery %>"
             placeholder="검색"
           />
-          <button type="submit">검색</button>
+          <button type="submit">검색</button> &nbsp;
         </form>
+        <button id="addBtn" onclick="location.href='/admin/admin_dashboard'">
+          새 게시물 추가
+        </button>
       </div>
-
       <table>
         <thead>
           <tr>
@@ -38,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          <% if (data.length) { %> <% data.forEach((post, index) => { %>
+          <% if (data.length) { %> <% data.forEach((post, index)=> { %>
           <tr>
             <td><%= index + 1 %></td>
             <td><%= post.pet_name %></td>
@@ -62,7 +59,6 @@
           <% } %>
         </tbody>
       </table>
-      <button onclick="location.href='/admin/class/admin_postlist'">클래스 목록</button>
     </div>
 
     <script src="/js/main.js"></script>
