@@ -1,61 +1,97 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= locals.title %></title>
-    <link rel="stylesheet" href="/css/user_class_register_style.css"> <!-- CSS 파일 임포트 -->
+    <title>
+        <%= locals.title %>
+    </title>
+    <link rel="stylesheet" href="/css/communityDetail_style.css"> <!-- CSS 파일 임포트 -->
 </head>
+
 <body>
-    <div class="Attendance-detail">
-        <h1><%= locals.title %></h1>
-        <table>
-            <tr>
-                <th>no</th>
-                <td><%= data.id %></td>
-            </tr>
-            <tr>
-                <th>신청자</th>
-                <td><%= data.owner_name %></td>
-            </tr>
-            <tr>
-                <th>반려동물 이름</th>
-                <td><%= data.pet_name %></td>
-            </tr>
-            <tr>
-                <th>수업 이름</th>
-                <td><%= data.class_name %></td>
-            </tr>
-            <tr>
-                <th>급식 여부</th>
-                <td><%= data.feed_status ? '예' : '아니오' %></td>
-            </tr>
-            <tr>
-                <th>픽업 여부</th>
-                <td><%= data.pickup_status ? '예' : '아니오' %></td>
-            </tr>
-            <tr>
-                <th>시작 날짜</th>
-                <td><%= data.start_date.toISOString().split('T')[0] %></td>
-            </tr>
-            <tr>
-                <th>종료 날짜</th>
-                <td><%= data.end_date.toISOString().split('T')[0] %></td>
-            </tr>
-            <tr>
-                <th>상담 내용</th>
-                <td><%= data.consultation %></td>
-            </tr>
-            <tr>
-                <th>등록일</th>
-                <td><%= data.created_at.toISOString().split('T')[0] %></td>
-            </tr>
-        </table>
-        <a href="/admin/classAttendance/edit/<%= data.id %>">수정하기</a> 
-        <form action="/admin/classAttendance/delete/<%= data.id %>" method="POST" style="display:inline;">
-            <button type="submit">삭제하기</button>
-        </form>
-        <a href="/admin/classAttendanceList">목록으로</a>
+    <div id="detail">
+
+        <div id="cover">
+            <h1>
+                <%= locals.title %>
+            </h1>
+            <table>
+                <tr>
+                    <th>no</th>
+                    <td>
+                        <%= data.id %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>신청자</th>
+                    <td>
+                        <%= data.owner_name %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>반려동물 이름</th>
+                    <td>
+                        <%= data.pet_name %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>수업 이름</th>
+                    <td>
+                        <%= data.class_name %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>급식 여부</th>
+                    <td>
+                        <%= data.feed_status ? '예' : '아니오' %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>픽업 여부</th>
+                    <td>
+                        <%= data.pickup_status ? '예' : '아니오' %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>시작 날짜</th>
+                    <td>
+                        <%= data.start_date.toISOString().split('T')[0] %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>종료 날짜</th>
+                    <td>
+                        <%= data.end_date.toISOString().split('T')[0] %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>상담 내용</th>
+                    <td>
+                        <%= data.consultation %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>등록일</th>
+                    <td>
+                        <%= data.created_at.toISOString().split('T')[0] %>
+                    </td>
+                </tr>
+            </table>
+            <div id="btnBox">
+                <button id="editBtn" onclick="location.href='/admin/classAttendance/edit/<%= data.id %>'">수정하기</button>
+                <!-- <a href="/admin/classAttendance/edit/<%= data.id %>">수정하기</a> -->
+
+                <form action="/admin/classAttendance/delete/<%= data.id %>" method="POST" style="display:inline;">
+                    <button id="delBtn" type="submit">삭제하기</button>
+                </form>
+
+                <button id="backBtn" onclick="location.href='/admin/classAttendanceList'">목록으로</button>
+                <!-- <a href="/admin/classAttendanceList">목록으로</a> -->
+            </div>
+        </div>
     </div>
 </body>
+
 </html>
