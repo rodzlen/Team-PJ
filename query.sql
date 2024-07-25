@@ -120,9 +120,11 @@ CREATE TABLE NoticeBoard (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    image BLOB
+    image BLOB,
+    createBy VARCHAR(50) NOT NULL,
+    admin_id INT,
+    FOREIGN KEY (admin_id) REFERENCES Admin(a_id)
 );
-
 INSERT INTO NoticeBoard (title, content, image)
 VALUES ('여름 휴가 안내', '8월 1일부터 8월 15일까지 여름 휴가입니다. 새학기는 8월 16일부터 시작됩니다.', NULL),
        ('식단 변경 안내', '다음 주부터 아침에 시리얼 대신 요거트를 제공할 예정입니다.', NULL),
@@ -136,7 +138,10 @@ CREATE TABLE FreeBoard (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     post_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    image BLOB
+    image BLOB,
+    createBy VARCHAR(50) NOT NULL,
+    a_id INT,
+    FOREIGN KEY (a_id) REFERENCES Admin(a_id)
 );
 
 -- 질문 테이블

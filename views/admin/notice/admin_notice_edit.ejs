@@ -6,16 +6,27 @@
   <title><%= locals.title %></title>
   <link rel="stylesheet" href="/css/notice_style.css"> <!-- CSS 파일 임포트 -->
 </head>
-<div>
-  <h1 ><%= locals.title%></h1>
-  <form action="/admin/notice/edit/<%= post.id %>" method="POST">
-      <input type="text" name="title" placeholder="<%= post.title %>">
-      <input type="textarea" name="content" placeholder="<%= post._content %>" >
-      <input type="file" name="image" placeholder="<%= post.image %>">
-      <img src="/img/<%= post.image %>">
-      <button type="submit" >수정</button>
-      <form action="/admin/notice/delete/:<%= post.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-        <button type="submit">삭제</button>
+
+<body>
+  <div id="add">
+    <h3>
+      <%= locals.title%>
+    </h3>
+    <div id="cover">
+      <form action="/admin/notice/edit/<%= post.id %>" method="POST">
+        <label>
+          <input type="text" name="title" placeholder="<%= post.title %>">
+          <input type="file" name="image" placeholder="<%= post.image %>">
+        </label>
+        <textarea name="content" placeholder="<%= post._content %>" required></textarea>
+
+        <div id="btnBox">
+          <button id="editBtn" type="submit">수정</button>
+          <form action="/admin/notice/delete/:<%= post.id %>" method="POST" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+            <button id="delBtn" type="submit">삭제</button>
+          </form>
+          <button id="backBtn" onclick="location.href='/admin/notice'">뒤로가기</button>
+        </div>
       </form>
     <a href="/admin/notice">뒤로가기</a>   
 
