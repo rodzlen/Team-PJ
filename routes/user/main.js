@@ -1039,8 +1039,10 @@ router.get("/search", (req, res) => {
 
 // 오전반 게시물 조회 라우트
 router.get(
+  
   "/class/user_morningClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
+    const locals = {user:req.session.user};
     const searchQuery = req.query.search || "";
 
     // 기본 쿼리 설정
@@ -1070,6 +1072,7 @@ router.get(
       }
       res.render("user/class/user_morningClassPosts", {
         data: posts,
+        locals,
         searchQuery,
       });
     });
@@ -1080,6 +1083,7 @@ router.get(
 router.get(
   "/class/user_afternoonClassPosts", checkLogin,
   asyncHandler(async (req, res) => {
+    const locals = {user:req.session.user}
     const searchQuery = req.query.search || "";
 
     // 기본 쿼리 설정
@@ -1110,6 +1114,7 @@ router.get(
       res.render("user/class/user_afternoonClassPosts", {
         data: posts,
         searchQuery,
+        locals
       });
     });
   })
@@ -1119,6 +1124,7 @@ router.get(
 router.get(
   "/class/user_alldayClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
+    const locals = {user:req.session.user}
     const searchQuery = req.query.search || "";
 
     // 기본 쿼리 설정
@@ -1149,6 +1155,7 @@ router.get(
       res.render("user/class/user_alldayClassPosts", {
         data: posts,
         searchQuery,
+        locals
       });
     });
   })
@@ -1158,6 +1165,7 @@ router.get(
 router.get(
   "/class/user_onedayClassPosts",checkLogin,
   asyncHandler(async (req, res) => {
+    const locals = {user:req.session.user}
     const searchQuery = req.query.search || "";
 
     // 기본 쿼리 설정
@@ -1188,6 +1196,7 @@ router.get(
       res.render("user/class/user_onedayClassPosts", {
         data: posts,
         searchQuery,
+        locals
       });
     });
   })
