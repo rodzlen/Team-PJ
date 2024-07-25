@@ -9,12 +9,12 @@
   <body>
     <div id="content">
       <div class="admin-title">
-        <h2>일일반 - 유저</h2>
+        <h2>오전반 - 유저</h2>
       </div>
 
       <div class="search-form">
-        <form action="/admin/admin_afternoonClassPosts" method="GET">
-          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색" />
+        <form action="/user/class/user_onedayClassPosts" method="GET">
+          <input type="text" name="search" value="<%= searchQuery %>" placeholder="검색">
           <button type="submit">검색</button>
         </form>
       </div>
@@ -55,3 +55,4 @@
     <script src="/js/main.js"></script>
   </body>
 </html>
+
