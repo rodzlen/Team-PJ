@@ -1656,6 +1656,8 @@ router.get("/adminfacilitiesMain",checkAdminLogin, (req, res) => {
     });
 });
 
+
+
 // 시설 생성 페이지
 router.get("/adminfacilitiescreate",checkAdminLogin, (req, res) => {
   res.render("admin/facilities/admin_FacilitiesCreate");
@@ -1746,6 +1748,7 @@ router.post("/delete",  checkAdminLogin, (req, res) => {
 });
 
 // --------------------------------------------------------------------------
+
 
 // 직원 생성 페이지
 router.get("/adminstaffcreate", (req, res) => {
