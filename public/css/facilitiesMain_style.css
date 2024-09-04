@@ -51,10 +51,16 @@ table td {
   align-items: center;
 }
 
-.employee-card img,
-.facility-card img {
-  max-width: 100%;
+.employee-card img{
+  max-width: 150px;
   height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.facility-card img {
+  max-width: 200px;
+  
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -70,13 +76,6 @@ table td {
 .employee-info li,
 .facility-info li {
   margin-bottom: 5px;
-}
-
-.employee-card img {
-  max-width: 100px;
-  /* 원하는 크기로 수정 */
-  max-height: 100px;
-  /* 원하는 크기로 수정 */
 }
 
 #editBtn {
