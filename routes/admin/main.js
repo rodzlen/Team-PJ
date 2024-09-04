@@ -1667,7 +1667,7 @@ router.post(
   (req, res) => {
     try {
       const { facility_name, main_facilities = "" } = req.body;
-      const facility_photo = req.file ? req.file.path : "";
+      const facility_photo = req.file ? req.file.filename : null;
 
       const query = `INSERT INTO Facilities (facility_name, main_facilities, facility_photo) VALUES (?, ?, ?)`;
 
@@ -1714,7 +1714,7 @@ router.post(
     const name = req.body.facility_name || "default_name";
     const features = req.body.main_facilities || "default_features";
     const facility_photo = req.file
-      ? req.file.path.replace(/\\/g, "/")
+      ? req.file.filename.replace(/\\/g, "/")
       : req.body.facility_photo;
 
     const query = `UPDATE Facilities SET facility_name = ?, main_facilities = ?, facility_photo = ? WHERE id = ?`;
@@ -1755,7 +1755,7 @@ router.get("/adminstaffcreate", (req, res) => {
 // 직원 생성
 router.post("/adminstaffcreate", upload.single("staff_photo"), (req, res) => {
   const { name, role, contact_info = "" } = req.body;
-  const staff_photo = req.file ? req.file.path : "";
+  const staff_photo = req.file ? req.file.filename   : null;
 
   const query = `INSERT INTO Staff (name, role, staff_photo, contact_info) VALUES (?, ?, ?, ?)`;
 
@@ -1795,7 +1795,7 @@ router.post("/adminstaffedit/:id", upload.single("staff_photo"), (req, res) => {
     ? req.body.contact_info.trim()
     : "default_contact_info";
   const staff_photo = req.file
-    ? req.file.path.replace(/\\/g, "/")
+    ? req.file.filename.replace(/\\/g, "/")
     : req.body.staff_photo;
 
   // 필수 필드가 존재하지 않으면 오류 처리
